@@ -17,6 +17,15 @@ app.get("/", (_, res) => {
   res.status(200).send(hello);
 });
 
+app.get("*", (_, res) => {
+  const notFound = {
+    status: 404,
+    message: "Resource not found!",
+  };
+
+  res.status(404).send(notFound);
+});
+
 const port = process.env["PORT"] || 3000;
 server.listen(port, () => {
   console.log("Listening on port ", port);
