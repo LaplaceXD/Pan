@@ -1,34 +1,83 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import './App.css'
+import { useState } from "react";
 
-function App() {
-  const [count, setCount] = useState(0)
+import ArticleList from "./components/ArticleList";
+
+const articleList = [
+  {
+    id: 1,
+    title: "R",
+    paragraph: "Paragraph R",
+    color: "red",
+  },
+  {
+    id: 2,
+    title: "B",
+    paragraph: "Paragraph B",
+    color: "blue",
+  },
+  {
+    id: 3,
+    title: "G",
+    paragraph: "Paragraph G",
+    color: "green",
+  },
+  {
+    id: 4,
+    title: "B",
+    paragraph: "Paragraph B",
+    color: "black",
+  },
+];
+
+function ArticleForm({ onAdd }) {
+  const [title, setTitle] = useState("");
+  const [paragraph, setParagraph] = useState("");
 
   return (
-    <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </div>
-  )
+    <form
+      method="POST"
+      onSubmit={(e) => {
+        e.preventDefault();
+
+        onAdd((articles) => [...articles, { id: articles.length + 1, title, paragraph, color: "red" }]);
+        setTitle("");
+        setParagraph("");
+      }}
+    >
+      <label htmlFor="title">Title</label>
+      <input
+        type="text"
+        id="title"
+        name="title"
+        value={title}
+        onChange={(e) => setTitle(e.currentTarget.value)}
+        style={{ color: "black" }}
+      />
+      <label htmlFor="paragraph">Paragraph</label>
+      <input
+        type="text"
+        id="paragraph"
+        name="paragraph"
+        value={paragraph}
+        onChange={(e) => setParagraph(e.currentTarget.value)}
+        style={{ color: "black" }}
+      />
+
+      <input type="submit" style={{ color: "black" }} value="Add Article" />
+    </form>
+  );
 }
 
-export default App
+function App() {
+  const [articles, setArticles] = useState(articleList);
+
+  return (
+    <main>
+      <ArticleList articles={articles} onArticleDelete={setArticles} />
+      <br />
+      <ArticleForm onAdd={setArticles} />
+    </main>
+  );
+}
+
+export default App;
