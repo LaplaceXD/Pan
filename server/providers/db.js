@@ -4,6 +4,7 @@ const config = require("config");
 async function connect() {
   return await mysql.createConnection({
     ...config.get("db"),
+    namedPlaceholders: true,
   });
 }
 
