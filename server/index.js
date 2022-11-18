@@ -1,29 +1,25 @@
 require("dotenv").config();
 
+const helmet = require("helmet");
+const cors = require("cors");
 const express = require("express");
 const http = require("http");
 
 const app = express();
 const server = http.createServer(app);
 
+app.use(helmet());
+app.use(cors());
+
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 app.get("/", (_, res) => {
-  const hello = {
-    status: "OK",
-    message: "Hello",
-  };
-
-  res.status(200).send(hello);
+  res.status(200).send({ error: false, status: 200, message: "Hello World!" });
 });
 
-app.get("*", (_, res) => {
-  const notFound = {
-    status: 404,
-    message: "Resource not found!",
-  };
-
-  res.status(404).send(notFound);
+app.use("*", (_, res) => {
+  res.status(404).send({ error: true, status: 404, message: "Resource not found!" });
 });
 
 const port = process.env["PORT"] || 3000;
