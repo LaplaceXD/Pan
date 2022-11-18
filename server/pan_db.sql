@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS `Employee` (
     date_employed	DATE	                    NOT NULL,
     image_src	    VARCHAR(128)	            NOT NULL,
     role	        ENUM('manager', 'employee')	NOT NULL DEFAULT 'employee',	
-    is_active	    TINYINT	                    NOT NULL DEFAULT 1,
+    is_active	    ENUM('0', '1')	                    NOT NULL DEFAULT '1',
     CONSTRAINT PK_Employee PRIMARY KEY (employee_id),
     CONSTRAINT UC_Employee_Email UNIQUE (email)
 );
@@ -44,7 +44,7 @@ CREATE TABLE IF NOT EXISTS `Category`	(
     category_id	    INT	            NOT NULL AUTO_INCREMENT,
     name	        VARCHAR(100)	NOT NULL,	
     image_src	    VARCHAR(128)	NOT NULL,	
-    is_available	TINYINT	        NOT NULL DEFAULT 1,
+    is_available	ENUM('0', '1')	NOT NULL DEFAULT '1',
     CONSTRAINT PK_Category PRIMARY KEY (category_id)	
 );
 
@@ -57,7 +57,7 @@ CREATE TABLE IF NOT EXISTS `Product` (
     description	    TEXT,
     unit_price	    DECIMAL(7, 2)	NOT NULL,	
     image_src	    VARCHAR(128)	NOT NULL,
-    is_available	TINYINT	        NOT NULL DEFAULT 1,
+    is_available	ENUM('0', '1')	NOT NULL DEFAULT '1',
     CONSTRAINT PK_Product PRIMARY KEY (product_id),
     CONSTRAINT FK_Product_Category FOREIGN KEY (category_id) REFERENCES Category(category_id),
     CONSTRAINT FK_Product_Employee FOREIGN KEY (creator_id) REFERENCES Employee(employee_id)    
@@ -83,7 +83,7 @@ CREATE TABLE IF NOT EXISTS `Supplier` (
     zip_code	    VARCHAR(10)	    NOT NULL,	
     contact_no	    VARCHAR(11)	    NOT NULL,
     email	        VARCHAR(300)	NOT NULL,	
-    is_active	    TINYINT	        NOT NULL DEFAULT 1,
+    is_active	    ENUM('0', '1')	NOT NULL DEFAULT '1',
     CONSTRAINT PK_Supplier PRIMARY KEY (supplier_id)
 );
 
