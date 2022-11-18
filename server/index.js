@@ -8,8 +8,8 @@ const http = require("http");
 const app = express();
 const server = http.createServer(app);
 
-app.use(helmet());
 app.use(cors());
+app.use(helmet());
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
