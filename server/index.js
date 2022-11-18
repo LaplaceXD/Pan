@@ -5,6 +5,8 @@ const cors = require("cors");
 const express = require("express");
 const http = require("http");
 
+const employeeRoutes = require("./src/routes/employee.route");
+
 const app = express();
 const server = http.createServer(app);
 
@@ -17,6 +19,8 @@ app.use(express.json());
 app.get("/", (_, res) => {
   res.status(200).send({ error: false, status: 200, message: "Hello World!" });
 });
+
+app.use("/api/v1/employee", employeeRoutes);
 
 app.use("*", (_, res) => {
   res.status(404).send({ error: true, status: 404, message: "Resource not found!" });
