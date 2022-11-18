@@ -11,7 +11,7 @@ class Employee {
     this.dateEmployed = employee.dateEmployed;
     this.imageSrc = employee.imageSrc;
     this.role = employee.role || "employee";
-    this.isActive = employee.isActive || 1;
+    this.isActive = employee.isActive || true;
   }
 
   // Saves the employee into the database
