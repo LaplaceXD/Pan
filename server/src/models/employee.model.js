@@ -1,3 +1,4 @@
+const Joi = require("joi");
 const db = require("../../providers/db");
 
 class Employee {
@@ -50,6 +51,31 @@ class Employee {
     }
 
     return resp;
+  }
+
+  static validate(employee) {
+    const schema = Joi.object({
+      firstName: Joi.string().label("First Name").min(2).max(300).required(),
+      lastName: Joi.string().label("Last Name").min(2).max(300).required(),
+      password: Joi.string()
+        .label("Password")
+        .min(8)
+        .max(32)
+        .regex(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,32}$/)
+        .message(
+          "Password must have at least one uppercase letter, one lowercase letter, a special character, and a number."
+        ),
+      email: Joi.string().label("Email").email().required(),
+      contactNo: Joi.string()
+        .label("Contact Number")
+        .length(11)
+        .regex(/^\d{11}$/)
+        .message("Contact number must contain digits only."),
+      dateEmployed: Joi.date().label("Date Employed").required(),
+      imageSrc: Joi.string().label("Image Source"),
+    });
+
+    return schema.validate(employee);
   }
 }
 
