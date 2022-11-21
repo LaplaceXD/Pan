@@ -54,6 +54,22 @@ class Employee {
     return resp;
   }
 
+  static async findByEmail(email) {
+    const resp = { error: null, data: null };
+
+    try {
+      const conn = await db.connect();
+      const [data] = await conn.execute("SELECT * FROM employee WHERE email = :email", { email });
+
+      if (data.length !== 0) resp.data = data[0];
+    } catch (err) {
+      console.log("[EMPLOYEE ERROR]", err.message);
+      resp.error = err.message;
+    }
+
+    return resp;
+  }
+
   static validate(employee) {
     const schema = Joi.object({
       first_name: Joi.string().label("First Name").min(2).max(300).required(),

@@ -4,5 +4,6 @@
     "user": "",
     "database": "",
     "password": ""
-  }
+  },
+  "jwtSecret": ""
 }

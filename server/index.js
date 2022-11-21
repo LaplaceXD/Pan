@@ -5,6 +5,7 @@ const cors = require("cors");
 const express = require("express");
 const http = require("http");
 
+const authRoutes = require("./src/routes/auth.route");
 const employeeRoutes = require("./src/routes/employee.route");
 
 const app = express();
@@ -27,6 +28,7 @@ app.get("/", (_, res) => {
   res.status(200).send({ message: "Hello World!" });
 });
 
+app.use("/api/v1", authRoutes);
 app.use("/api/v1/employees", employeeRoutes);
 
 app.use("*", (_, res) => {
