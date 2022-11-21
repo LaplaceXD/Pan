@@ -3,16 +3,16 @@ const db = require("../../providers/db");
 
 class Employee {
   constructor(employee) {
-    this.id = employee.id || 0;
-    this.firstName = employee.firstName;
-    this.lastName = employee.lastName;
+    this.employee_id = employee.employee_id || 0;
+    this.first_name = employee.first_name;
+    this.last_name = employee.last_name;
     this.password = employee.password || "";
-    this.contactNo = employee.contactNo;
+    this.contact_no = employee.contact_no;
     this.email = employee.email;
-    this.dateEmployed = employee.dateEmployed;
-    this.imageSrc = employee.imageSrc;
+    this.date_employed = employee.date_employed;
+    this.image_src = employee.image_src;
     this.role = employee.role || "employee";
-    this.isActive = employee.isActive || true;
+    this.is_active = employee.is_active || true;
   }
 
   // Saves the employee into the database
@@ -32,19 +32,19 @@ class Employee {
           image_src
         )
         VALUES (
-          :firstName, 
-          :lastName,
+          :first_name, 
+          :last_name,
           :password,
-          :contactNo,
+          :contact_no,
           :email,
-          :dateEmployed,
-          :imageSrc
+          :date_employed,
+          :image_src
         )`,
         this
       );
 
-      console.log(data);
-      resp.data = data.insertId;
+      this.employee_id = data.insertId;
+      resp.data = this;
     } catch (err) {
       console.log("[EMPLOYEE ERROR]", err.message);
       resp.error = err.message;
@@ -55,8 +55,8 @@ class Employee {
 
   static validate(employee) {
     const schema = Joi.object({
-      firstName: Joi.string().label("First Name").min(2).max(300).required(),
-      lastName: Joi.string().label("Last Name").min(2).max(300).required(),
+      first_name: Joi.string().label("First Name").min(2).max(300).required(),
+      last_name: Joi.string().label("Last Name").min(2).max(300).required(),
       password: Joi.string()
         .label("Password")
         .min(8)
@@ -66,13 +66,13 @@ class Employee {
           "Password must have at least one uppercase letter, one lowercase letter, a special character, and a number."
         ),
       email: Joi.string().label("Email").email().required(),
-      contactNo: Joi.string()
+      contact_no: Joi.string()
         .label("Contact Number")
         .length(11)
         .regex(/^\d{11}$/)
         .message("Contact number must contain digits only."),
-      dateEmployed: Joi.date().label("Date Employed").required(),
-      imageSrc: Joi.string().label("Image Source"),
+      date_employed: Joi.date().label("Date Employed").required(),
+      image_src: Joi.string().label("Image Source"),
     });
 
     return schema.validate(employee);
