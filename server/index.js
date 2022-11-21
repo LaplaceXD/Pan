@@ -3,10 +3,12 @@ require("dotenv").config();
 const helmet = require("helmet");
 const cors = require("cors");
 const express = require("express");
+require("express-async-errors");
 const http = require("http");
 
 const authRoutes = require("./src/routes/auth.route");
 const employeeRoutes = require("./src/routes/employee.route");
+const error = require("./middleware/error");
 
 const app = express();
 const server = http.createServer(app);
@@ -34,6 +36,8 @@ app.use("/api/v1/employees", employeeRoutes);
 app.use("*", (_, res) => {
   res.status(404).send({ message: "Resource not found!" });
 });
+
+app.use(error);
 
 process.on("uncaughtException", (error) => {
   console.log("[UNCAUGHT EXCEPTION]", error);
