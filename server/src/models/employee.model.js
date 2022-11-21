@@ -1,5 +1,6 @@
 const Joi = require("joi");
 const db = require("../../providers/db");
+const { status, role } = require("../../constants/employee");
 
 class Employee {
   constructor(employee) {
@@ -11,8 +12,8 @@ class Employee {
     this.email = employee.email;
     this.date_employed = employee.date_employed;
     this.image_src = employee.image_src;
-    this.role = employee.role || "employee";
-    this.is_active = employee.is_active || true;
+    this.role = employee.role || role.EMPLOYEE;
+    this.is_active = employee.is_active || status.ACTIVE;
   }
 
   // Saves the employee into the database
