@@ -1,5 +1,5 @@
 const { BadRequest, InternalServerError } = require("../../helpers/errors");
-const { hashPassword } = require("../../providers/hash");
+const { hash } = require("../../providers");
 const Employee = require("../models/employee.model");
 
 const create = async (req, res) => {
@@ -10,7 +10,7 @@ const create = async (req, res) => {
     );
 
   const employee = new Employee(req.body);
-  employee.password = await hashPassword(employee.password);
+  employee.password = await hash.hashPassword(employee.password);
 
   const data = await employee.save();
   if (!data) throw new InternalServerError();

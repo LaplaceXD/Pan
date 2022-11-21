@@ -1,8 +1,6 @@
 const express = require("express");
 
-const auth = require("../../middleware/auth");
-const allowFor = require("../../middleware/allowFor");
-
+const { auth, allowFor } = require("../../middleware");
 const { role } = require("../../constants/employee");
 
 const employeeController = require("../controllers/employee.controller");

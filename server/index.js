@@ -8,7 +8,7 @@ const http = require("http");
 
 const authRoutes = require("./src/routes/auth.route");
 const employeeRoutes = require("./src/routes/employee.route");
-const error = require("./middleware/error");
+const { error } = require("./middleware");
 
 const app = express();
 const server = http.createServer(app);

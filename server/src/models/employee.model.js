@@ -1,6 +1,5 @@
 const Joi = require("joi");
-const db = require("../../providers/db");
-const jwt = require("../../providers/jwt");
+const { db, jwt } = require("../../providers");
 const { InternalServerError } = require("../../helpers/errors");
 const { status, role } = require("../../constants/employee");
 

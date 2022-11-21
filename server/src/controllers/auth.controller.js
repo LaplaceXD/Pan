@@ -1,5 +1,5 @@
 const { BadRequest } = require("../../helpers/errors");
-const hash = require("../../providers/hash");
+const { hash } = require("../../providers");
 const Employee = require("../models/employee.model");
 
 const login = async (req, res) => {
