@@ -1,6 +1,7 @@
 const Joi = require("joi");
 const db = require("../../providers/db");
 const jwt = require("../../providers/jwt");
+const { InternalServerError } = require("../../helpers/errors");
 const { status, role } = require("../../constants/employee");
 
 class Employee {
@@ -28,7 +29,7 @@ class Employee {
 
   // Saves the employee into the database
   async save() {
-    const resp = { error: null, data: null };
+    let retVal = null;
 
     try {
       const conn = await db.connect();
@@ -55,29 +56,29 @@ class Employee {
       );
 
       this.employee_id = data.insertId;
-      resp.data = this;
+      retVal = this;
     } catch (err) {
       console.log("[EMPLOYEE ERROR]", err.message);
-      resp.error = err.message;
+      throw new InternalServerError();
     }
 
-    return resp;
+    return retVal;
   }
 
   static async findByEmail(email) {
-    const resp = { error: null, data: null };
+    let retVal = null;
 
     try {
       const conn = await db.connect();
       const [data] = await conn.execute("SELECT * FROM employee WHERE email = :email", { email });
 
-      if (data.length !== 0) resp.data = new Employee(data[0]);
+      if (data.length !== 0) retVal = new Employee(data[0]);
     } catch (err) {
       console.log("[EMPLOYEE ERROR]", err.message);
-      resp.error = err.message;
+      throw new InternalServerError();
     }
 
-    return resp;
+    return retVal;
   }
 
   static validate(employee) {

@@ -12,11 +12,8 @@ const create = async (req, res) => {
   const employee = new Employee(req.body);
   employee.password = await hashPassword(employee.password);
 
-  const {
-    error,
-    data: { password, ...data },
-  } = await employee.save();
-  if (error) throw new InternalServerError();
+  const data = await employee.save();
+  if (!data) throw new InternalServerError();
 
   res.status(200).send(data);
 };
