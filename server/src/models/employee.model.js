@@ -1,5 +1,6 @@
 const Joi = require("joi");
 const db = require("../../providers/db");
+const jwt = require("../../providers/jwt");
 const { status, role } = require("../../constants/employee");
 
 class Employee {
@@ -14,6 +15,15 @@ class Employee {
     this.image_src = employee.image_src;
     this.role = employee.role || role.EMPLOYEE;
     this.is_active = employee.is_active || status.ACTIVE;
+  }
+
+  tokenize() {
+    return jwt.sign({
+      first_name: this.first_name,
+      last_name: this.last_name,
+      image_src: this.image_src,
+      role: this.role,
+    });
   }
 
   // Saves the employee into the database
@@ -61,7 +71,7 @@ class Employee {
       const conn = await db.connect();
       const [data] = await conn.execute("SELECT * FROM employee WHERE email = :email", { email });
 
-      if (data.length !== 0) resp.data = data[0];
+      if (data.length !== 0) resp.data = new Employee(data[0]);
     } catch (err) {
       console.log("[EMPLOYEE ERROR]", err.message);
       resp.error = err.message;
