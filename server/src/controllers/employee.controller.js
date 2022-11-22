@@ -1,7 +1,7 @@
 const { BadRequest, InternalServerError, NotFound } = require("../../helpers/errors");
 const { hash } = require("../providers");
 const Employee = require("../models/employee.model");
-const generator = require('generate-password');
+const crypto = require("crypto");
 
 const create = async (req, res) => {
   const { error: validationError } = Employee.validate(req.body);
@@ -10,11 +10,7 @@ const create = async (req, res) => {
       validationError.details.map((e) => ({ label: e.context.label, message: e.message }))
     );
 
-    const generated_pass = generator.generate({
-      length: 10,
-      numbers: true,
-      symbols: true
-    })
+  const generated_pass = crypto.randomBytes(8).toString("base64").replace("==", "");
 
   const employee = new Employee(req.body);
   employee.password = await hash.hashPassword(generated_pass);
@@ -46,17 +42,13 @@ const reset = async (req, res) => {
   const employee = await Employee.findById(req.params.id);
   if (!employee) throw new NotFound();
 
-  const generated_pass = generator.generate({
-    length: 10,
-    numbers: true,
-    symbols: true
-  })
+  const generated_pass = crypto.randomBytes(8).toString("base64").replace("==", "");
   
   new_pass = await hash.hashPassword(generated_pass);
+  employee.password = new_pass;
   
-  employee.deactivate();
-
   const data = await employee.reset();
+
   if (!data) throw new InternalServerError();
 
   res.status(200).send({ 
@@ -66,27 +58,23 @@ const reset = async (req, res) => {
     new_password:generated_pass });
 }
 
-const deactivate = async (req, res) => {
-  const { error: validationError } = Employee.validateID(req.body);
-  if (validationError)
-    throw new BadRequest(
-      validationError.details.map((e) => ({ label: e.context.label, message: e.message }))
-    );
+const toggleStatus = async (req, res) => {
+  const employee = await Employee.findById(req.params.id);
+  if (!employee) throw new NotFound("Employee not Found");
 
-  const employee = new Employee(req.body);
-  const data = employee.deactivate();
+  if (!req.query.hasOwnProperty("active")) throw BadRequest();
 
-  if (!data) throw new InternalServerError();
+  await employee.toggleStatus(req.query.active === "true");
 
   res.status(200).send({ 
     error:false, 
     status:200, 
-    message:"Successfully deactivated employee account."});
+    message:"Successfully changed employee status."});
 }
 
 module.exports = {
   create,
   edit,
   reset,
-  deactivate,
+  toggleStatus,
 };

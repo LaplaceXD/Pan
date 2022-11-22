@@ -135,29 +135,27 @@ class Employee {
   }
 
   // Deactivates account with given employee ID
-  async deactivate() {
-    let retVal = null;
-
+  async toggleStatus(status) {
     try {
       const conn = await db.connect();
-      const data = await conn.execute(
+      await conn.execute (
         `UPDATE Employee 
 
         SET 
-          is_active = '0'
+          is_active = :is_active
 
         WHERE
           employee_id = :employee_id;
         `,
-        this
+        { ...this, is_active:status?'1':'0' }
+
       );
+      
       
     } catch (err) {
       console.log("[EMPLOYEE ERROR]", err.message);
       throw new InternalServerError();
     }
-
-    return retVal;
   }
 
   static async findByEmail(email) {
