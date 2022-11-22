@@ -1,6 +1,6 @@
 const Joi = require("joi");
 
-const { InternalServerError } = require("../../helpers/errors");
+const { InternalServerError, BadRequest, NotFound } = require("../../helpers/errors");
 
 const { db, jwt } = require("../providers");
 const { status, role } = require("../constants/employee");
@@ -29,7 +29,7 @@ class Employee {
   }
 
   // Saves the employee into the database
-  async save() {
+  async create() {
     let retVal = null;
 
     try {
@@ -59,8 +59,95 @@ class Employee {
       this.employee_id = data.insertId;
       retVal = this;
     } catch (err) {
-      console.log("[EMPLOYEE DB ERROR]", err.message);
-      throw new InternalServerError(err);
+      console.log("[EMPLOYEE ERROR]", err.message);
+      throw new InternalServerError();
+    }
+
+    return retVal;
+  }
+
+  // Updates given employee values
+  async edit(edited_details) {
+    let retVal = null;
+    const params = {...this, ...edited_details};
+
+    try {
+      const conn = await db.connect();
+      await conn.execute(
+        `UPDATE Employee 
+
+        SET 
+          first_name = :first_name,
+          last_name = :last_name,
+          contact_no = :contact_no,
+          email = :email,
+          date_employed = :date_employed,
+          image_src = :image_src
+
+        WHERE
+          employee_id = :employee_id;
+        `,
+        params
+      );
+      retVal = new Employee(params);
+
+    } catch (err) {
+      console.log("[EMPLOYEE ERROR]", err.message);
+      throw new InternalServerError();
+    }
+
+    return retVal;
+  }
+  
+  // Deletes password and saves new value
+  async reset() {
+    let retVal = null;
+
+    try {
+      const conn = await db.connect();
+      const data = await conn.execute(
+        `UPDATE Employee 
+
+        SET 
+          password = :password
+
+        WHERE
+          employee_id = :employee_id;
+        `,
+        this
+      );
+
+      this.employee_id = data.insertId;
+      retVal = this;
+    } catch (err) {
+      console.log("[EMPLOYEE ERROR]", err.message);
+      throw new InternalServerError();
+    }
+
+    return retVal;
+  }
+
+  // Deactivates account with given employee ID
+  async deactivate() {
+    let retVal = null;
+
+    try {
+      const conn = await db.connect();
+      const data = await conn.execute(
+        `UPDATE Employee 
+
+        SET 
+          is_active = '0'
+
+        WHERE
+          employee_id = :employee_id;
+        `,
+        this
+      );
+      
+    } catch (err) {
+      console.log("[EMPLOYEE ERROR]", err.message);
+      throw new InternalServerError();
     }
 
     return retVal;
@@ -82,18 +169,60 @@ class Employee {
     return retVal;
   }
 
+  static async findById(employee_id) {
+    let retVal = null;
+
+    try {
+
+      
+      const conn = await db.connect();
+      const [data] = await conn.execute(
+        `SELECT *
+        FROM Employee
+        WHERE employee_id = :employee_id`, {employee_id}
+      );
+      
+      if (data.length !== 0) {
+        retVal = new Employee(data[0]);
+      }
+      
+    } catch (err) {
+      console.log("[EMPLOYEE ERROR]", err.message);
+      throw new InternalServerError();
+    }
+
+    return retVal;
+  } 
+
+  async getEmail(given_email) {
+    this.email = given_email;
+
+    try {
+      const conn = await db.connect();
+      const [data] = await conn.query(
+        `SELECT 
+          * 
+
+        FROM 
+          Supplier 
+
+        WHERE 
+          email = ':email'`
+        ,this)
+
+        console.log(this.email);
+        if (!data[0]) throw new BadRequest();
+    
+    } catch (err) {
+      console.log("[EMPLOYEE ERROR]", err.message);
+      throw new InternalServerError();
+    }
+  }
+
   static validate(employee) {
     const schema = Joi.object({
       first_name: Joi.string().label("First Name").min(2).max(300).required(),
       last_name: Joi.string().label("Last Name").min(2).max(300).required(),
-      password: Joi.string()
-        .label("Password")
-        .min(8)
-        .max(32)
-        .regex(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,32}$/)
-        .message(
-          "Password must have at least one uppercase letter, one lowercase letter, a special character, and a number."
-        ),
       email: Joi.string().label("Email").email().required(),
       contact_no: Joi.string()
         .label("Contact Number")
