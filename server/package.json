@@ -19,9 +19,11 @@
     "express-async-errors": "^3.1.1",
     "generate-password": "^1.7.0",
     "helmet": "^6.0.0",
+    "ioredis": "^5.2.4",
     "joi": "^17.7.0",
     "jsonwebtoken": "^8.5.1",
-    "mysql2": "^2.3.3"
+    "mysql2": "^2.3.3",
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.20"

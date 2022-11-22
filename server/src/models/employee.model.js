@@ -19,13 +19,20 @@ class Employee {
     this.is_active = employee.is_active || status.ACTIVE;
   }
 
-  tokenize() {
-    return jwt.sign({
-      first_name: this.first_name,
-      last_name: this.last_name,
-      image_src: this.image_src,
-      role: this.role,
-    });
+  async tokenize() {
+    try {
+      const token = await jwt.sign({
+        first_name: this.first_name,
+        last_name: this.last_name,
+        image_src: this.image_src,
+        role: this.role,
+      });
+
+      return token;
+    } catch (err) {
+      console.log("[JWT ERROR]", err);
+      throw new InternalServerError(err);
+    }
   }
 
   // Saves the employee into the database
