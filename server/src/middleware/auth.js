@@ -1,5 +1,5 @@
-const jwt = require("../providers/jwt");
-const { Unauthorized } = require("../helpers/errors");
+const { jwt } = require("../providers");
+const { Unauthorized } = require("../../helpers/errors");
 
 const auth = (req, _, next) => {
   const authValue = req.get("Authorization");

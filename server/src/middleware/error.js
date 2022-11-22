@@ -1,4 +1,4 @@
-const { HTTPError } = require("../helpers/errors");
+const { HTTPError } = require("../../helpers/errors");
 
 const error = (err, req, res, next) => {
   if (err instanceof HTTPError) {

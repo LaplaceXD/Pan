@@ -1,7 +1,9 @@
 const Joi = require("joi");
-const { db, jwt } = require("../../providers");
+
 const { InternalServerError } = require("../../helpers/errors");
-const { status, role } = require("../../constants/employee");
+
+const { db, jwt } = require("../providers");
+const { status, role } = require("../constants/employee");
 
 class Employee {
   constructor(employee) {

@@ -1,9 +1,9 @@
-const allowFor = require("./allowFor");
+const allow = require("./allow");
 const auth = require("./auth");
 const error = require("./error");
 
 module.exports = {
-  allowFor,
+  allow,
   auth,
   error,
 };

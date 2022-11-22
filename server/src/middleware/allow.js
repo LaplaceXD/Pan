@@ -1,6 +1,6 @@
-const { Prohibited } = require("../helpers/errors");
+const { Prohibited } = require("../../helpers/errors");
 
-const allowFor = (...allowedRoles) => {
+const allow = (...allowedRoles) => {
   return (req, _, next) => {
     if (!allowedRoles.includes(req.auth.role)) throw new Prohibited();
 
@@ -8,4 +8,4 @@ const allowFor = (...allowedRoles) => {
   };
 };
 
-module.exports = allowFor;
+module.exports = allow;
