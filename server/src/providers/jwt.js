@@ -24,7 +24,7 @@ function verify(token) {
       if (err) reject(err);
 
       // check if it is currently in the redis cache
-      client.get(`jwt_abel:${payload.jti}`, function (err, result) {
+      client.get(`jwt_label:${payload.jti}`, function (err, result) {
         if (err) reject(err);
         else if (result) reject("Invalidated token.");
 
@@ -42,10 +42,12 @@ function destroy(token) {
 
         client.set(key, true, function (err, _) {
           if (err) reject(err);
-          resolve(key);
+          resolve("OK");
         });
       })
-      .catch((err) => console.log(err));
+      .catch((_) => {
+        resolve("OK");
+      });
   });
 }
 
