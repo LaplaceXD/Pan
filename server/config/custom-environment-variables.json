@@ -5,5 +5,15 @@
     "database": "DB_DATABASE",
     "password": "DB_PASSWORD"
   },
-  "jwtSecret": "JWT_SECRET"
+  "redis": {
+    "host": "REDIS_HOST",
+    "username": "REDIS_USERNAME",
+    "password": "REDIS_PASSWORD",
+    "port": "REDIS_PORT"
+  },
+  "jwt": {
+    "secret": "JWT_SECRET",
+    "issuer": "JWT_ISSUER",
+    "expiresIn": "JWT_EXP"
+  }
 }

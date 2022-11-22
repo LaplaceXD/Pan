@@ -1,20 +1,27 @@
 const config = require("config");
+const { v4: uuid } = require("uuid");
 const jwt = require("jsonwebtoken");
 
-function sign(payload, options) {
-  return jwt.sign(payload, config.get("jwtSecret"), options);
+function sign(payload) {
+  const { secret, ...options } = config.get("jwt");
+
+  return new Promise((resolve, reject) => {
+    jwt.sign({ ...payload, jti: uuid() }, secret, options, function (err, token) {
+      if (err) reject(err);
+      resolve(token);
+    });
+  });
 }
 
-function verify(token, options) {
-  let resp = { error: null, payload: null };
+function verify(token) {
+  const { secret, ...options } = config.get("jwt");
 
-  try {
-    resp.payload = jwt.verify(token, config.get("jwtSecret"), options);
-  } catch (err) {
-    resp.error = err;
-  }
-
-  return resp;
+  return new Promise((resolve, reject) => {
+    jwt.verify(token, secret, options, function (err, payload) {
+      if (err) reject(err);
+      resolve(payload);
+    });
+  });
 }
 
 module.exports = {

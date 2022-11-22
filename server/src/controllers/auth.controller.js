@@ -9,7 +9,7 @@ const login = async (req, res) => {
   if (!data || !hash.compare(req.body.password, data.password))
     throw new BadRequest("Invalid credentials.");
 
-  const token = data.tokenize();
+  const token = await data.tokenize();
   res.status(200).send({ token });
 };
 

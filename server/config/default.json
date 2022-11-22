@@ -5,5 +5,15 @@
     "database": "",
     "password": ""
   },
-  "jwtSecret": ""
+  "redis": {
+    "host": "",
+    "username": "",
+    "password": "",
+    "port": ""
+  },
+  "jwt": {
+    "secret": "",
+    "issuer": "",
+    "expiresIn": ""
+  }
 }
