@@ -59,8 +59,8 @@ class Employee {
       this.employee_id = data.insertId;
       retVal = this;
     } catch (err) {
-      console.log("[EMPLOYEE ERROR]", err.message);
-      throw new InternalServerError();
+      console.log("[EMPLOYEE DB ERROR]", err.message);
+      throw new InternalServerError(err);
     }
 
     return retVal;
@@ -75,8 +75,8 @@ class Employee {
 
       if (data.length !== 0) retVal = new Employee(data[0]);
     } catch (err) {
-      console.log("[EMPLOYEE ERROR]", err.message);
-      throw new InternalServerError();
+      console.log("[EMPLOYEE DB ERROR]", err.message);
+      throw new InternalServerError(err);
     }
 
     return retVal;
