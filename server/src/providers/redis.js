@@ -1,12 +1,20 @@
 const config = require("config");
 const Redis = require("ioredis");
 
-function connect() {
-  return new Redis({
-    ...config.get("redis"),
-  });
+const redis = new Redis({ ...config.get("redis") });
+
+async function set(key, value) {
+  return await redis.set(key, value);
+}
+
+async function getAndDelete(key) {
+  const data = await redis.get(key);
+  await redis.del(key);
+
+  return data;
 }
 
 module.exports = {
-  connect,
+  set,
+  getAndDelete,
 };

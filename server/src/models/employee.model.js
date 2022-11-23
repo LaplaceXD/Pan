@@ -79,6 +79,23 @@ class Employee {
     return retVal;
   }
 
+  static async findById(id) {
+    let retVal = null;
+
+    try {
+      const conn = await db.connect();
+      const [data] = await conn.execute("SELECT * FROM employee WHERE employee_id = :id", { id });
+      await conn.end();
+
+      if (data.length !== 0) retVal = new Employee(data[0]);
+    } catch (err) {
+      console.log("[EMPLOYEE DB ERROR]", err.message);
+      throw new InternalServerError(err);
+    }
+
+    return retVal;
+  }
+
   static async validate(employee) {
     const match = await Employee.findByEmail(employee.email);
 

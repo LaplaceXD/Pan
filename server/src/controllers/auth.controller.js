@@ -17,23 +17,20 @@ const validateAuthBody = (body) => {
 };
 
 const login = async (req, res) => {
-  const INVALID_MSG = "Invalid credentials.";
+  const DEFAULT_INVALID_MSG = "Invalid credentials.";
 
   const { error } = validateAuthBody(req.body);
-  if (error) throw new BadRequest(INVALID_MSG);
+  if (error) throw new BadRequest(DEFAULT_INVALID_MSG);
 
   const data = await Employee.findByEmail(req.body.email);
-  if (!data || data.is_active === status.INACTIVE) throw new BadRequest(INVALID_MSG);
+  if (!data || data.is_active === status.INACTIVE) throw new BadRequest(DEFAULT_INVALID_MSG);
 
   const passMatch = await hash.compare(req.body.password, data.password);
-  if (!passMatch) throw new BadRequest(INVALID_MSG);
+  if (!passMatch) throw new BadRequest(DEFAULT_INVALID_MSG);
 
-  // create rotating tokens
   const { token: access, jti } = await data.tokenize();
   const { token: refresh } = await jwt.sign({ jti }, token.REFRESH);
-
-  const client = redis.connect();
-  await client.set(`jwt_token:${jti}`, refresh);
+  await redis.set(`jwt_token:${jti}`, refresh);
 
   res.status(200).send({ token: access });
 };
@@ -42,26 +39,29 @@ const refresh = async (req, res) => {
   if (!req.body.token) throw new BadRequest("Token is required.");
   else if (typeof req.body.token !== "string") throw new BadRequest("Token must be a string");
 
-  const { isExpired: accessIsExpired } = await jwt.verify(req.body.token);
-  if (!accessIsExpired) return res.status(200).send({ token: req.body.token });
+  const { isExpired: accessExpired } = await jwt.verify(req.body.token);
+  if (!accessExpired) return res.status(200).send({ token: req.body.token });
 
-  const { jti, exp, aud, iss, iat, ...payload } = jwt.decode(req.body.token);
-  if (!jti) throw new BadRequest("Invalid token.");
+  const { jti, id } = jwt.decode(req.body.token);
+  if (!jti || !id) throw new BadRequest("Invalid token.");
 
-  // check redis cache for existence
-  const client = redis.connect();
+  // Token gets deleted since it would be replaced if it is valid,
+  // or would never be used since it is invalid
+  const refresh = await redis.getAndDelete(`jwt_token:${jti}`);
+  if (!refresh) throw new BadRequest("Refresh token expired.");
 
-  const refresh = await client.get(`jwt_token:${jti}`);
-  if (!refresh) throw new BadRequest("Invalid token.");
-  await client.del(`jwt_token:${jti}`);
+  const { isExpired: refreshExpired } = await jwt.verify(refresh);
+  if (refreshExpired) throw new BadRequest("Refresh token expired.");
 
-  const { isExpired: refreshIsExpired } = await jwt.verify(refresh);
-  if (refreshIsExpired) throw new BadRequest("Invalid token.");
+  // Get the employee, since we want to make sure that the employee was not
+  // deleted nor deactivated within the timeframe that the access token expired
+  const data = await Employee.findById(id);
+  if (!data || data.is_active === status.INACTIVE) throw new BadRequest("Invalid token.");
 
-  const { token: newAccess, jti: newJti } = await jwt.sign(payload, token.ACCESS);
-  const { token: newRefresh } = await jwt.sign(newJti, token.REFRESH);
+  const { token: newAccess, jti: newJti } = await data.tokenize();
+  const { token: newRefresh } = await jwt.sign({ jti: newJti }, token.REFRESH);
+  await redis.set(`jwt_token:${newJti}`, newRefresh);
 
-  await client.set(`jwt_token:${newJti}`, newRefresh);
   res.status(200).send({ token: newAccess });
 };
 
