@@ -37,8 +37,8 @@ class Supplier {
         FROM 
           Supplier`
       );
+      await conn.end();
       retVal = data;
-
     } catch (err) {
       console.log("[SUPPLIER ERROR]", err.message);
     }
@@ -75,7 +75,7 @@ class Supplier {
         )`,
         this
       );
-
+      await conn.end();
           
       this.supplier_id = data.insertId;
       retVal = this;
@@ -114,6 +114,7 @@ class Supplier {
         `,
         params
       );
+      await conn.end();
       retVal = new Supplier(params);
 
     } catch (err) {
@@ -141,7 +142,7 @@ class Supplier {
         `
         , [newVal, this.supplier_id]);
 
-      await conn.close();
+      await conn.end();
       
     } catch (err) {
       console.log("[EMPLOYEE ERROR]", err.message);
@@ -159,11 +160,10 @@ class Supplier {
         FROM Supplier
         WHERE supplier_id = :supplier_id`, {supplier_id}
       );
-      
+      await conn.end();
       if (data.length !== 0) {
         retVal = new Supplier(data[0]);
       }
-      
     } catch (err) {
       console.log("[EMPLOYEE ERROR]", err.message);
       throw new InternalServerError();

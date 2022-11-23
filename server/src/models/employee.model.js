@@ -54,7 +54,7 @@ class Employee {
           Employee`
       );
       retVal = data;
-
+      await conn.end();
     } catch (err) {
       console.log("[EMPLOYEE ERROR]", err.message);
     }
@@ -108,8 +108,8 @@ class Employee {
         `,
         params
       );
+      await conn.end();
       retVal = new Employee(params);
-
     } catch (err) {
       console.log("[EMPLOYEE ERROR]", err.message);
       throw new InternalServerError();
@@ -135,7 +135,7 @@ class Employee {
         `,
         this
       );
-
+      await conn.end();
       this.employee_id = data.insertId;
       retVal = this;
     } catch (err) {
@@ -160,11 +160,8 @@ class Employee {
 
         WHERE
           employee_id = ?;
-        `
-        , [newVal, this.employee_id]);
-      
-      await conn.close();
-
+        `, [newVal, this.employee_id]);
+      await conn.end();
     } catch (err) {
       console.log("[EMPLOYEE ERROR]", err.message);
       throw new InternalServerError();
@@ -192,19 +189,17 @@ class Employee {
     let retVal = null;
 
     try {
-
-      
       const conn = await db.connect();
       const [data] = await conn.execute(
         `SELECT *
         FROM Employee
         WHERE employee_id = :employee_id`, {employee_id}
       );
+      await conn.end();
       
       if (data.length !== 0) {
         retVal = new Employee(data[0]);
       }
-      
     } catch (err) {
       console.log("[EMPLOYEE ERROR]", err.message);
       throw new InternalServerError();
@@ -228,7 +223,7 @@ class Employee {
         WHERE 
           email = ':email'`
         ,this)
-
+        await conn.end();
         console.log(this.email);
         if (!data[0]) throw new BadRequest();
     
