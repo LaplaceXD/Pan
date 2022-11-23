@@ -21,7 +21,7 @@ const logout = async (req, res) => {
     res.status(204).send();
   } catch (err) {
     console.log("[JWT ERROR]", err);
-    throw InternalServerError(err);
+    throw new InternalServerError(err);
   }
 };
 
