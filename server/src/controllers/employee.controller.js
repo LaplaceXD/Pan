@@ -64,7 +64,7 @@ const toggleStatus = async (req, res) => {
 
   if (!req.query.hasOwnProperty("active")) throw BadRequest();
 
-  await employee.toggleStatus(req.query.active === "true");
+  await employee.toggleStatus(req.query.active === "true")
 
   res.status(200).send({ 
     error:false, 
