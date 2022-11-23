@@ -53,12 +53,12 @@ const reset = async (req, res) => {
 }
 
 const toggleStatus = async (req, res) => {
+
+  
   const employee = await Employee.findById(req.params.id);
   if (!employee) throw new NotFound("Employee not Found");
-
-  if (!req.query.hasOwnProperty("active")) throw BadRequest();
-
-  await employee.toggleStatus(req.query.active === "true")
+  
+  await employee.toggleStatus();
 
   res.status(200).send({ 
     error:false, 

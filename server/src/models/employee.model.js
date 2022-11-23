@@ -120,23 +120,23 @@ class Employee {
   }
 
   // Deactivates account with given employee ID
-  async toggleStatus(status) {
+  async toggleStatus() {
     try {
+      const newVal = this.is_active === '1' ? '0' : '1';
+      
       const conn = await db.connect();
       await conn.execute (
         `UPDATE Employee 
 
         SET 
-          is_active = :is_active
+          is_active = ?
 
         WHERE
-          employee_id = :employee_id;
-        `,
-        { ...this, is_active:status?'1':'0' }
-
-      );
+          employee_id = ?;
+        `
+        , [newVal, this.employee_id]);
       
-      
+      await conn.close();
     } catch (err) {
       console.log("[EMPLOYEE ERROR]", err.message);
       throw new InternalServerError();
