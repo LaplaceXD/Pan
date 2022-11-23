@@ -124,59 +124,52 @@ class Supplier {
   }
 
   // Deactivates supplier with given supplier ID
-  async deactivate() {
+  // Deactivates account with given employee ID
+  async toggleStatus() {
+    try {
+      const newVal = this.is_active === '1' ? '0' : '1';
+      
+      const conn = await db.connect();
+      await conn.execute (
+        `UPDATE Employee 
+
+        SET 
+          is_active = ?
+
+        WHERE
+          employee_id = ?;
+        `
+        , [newVal, this.employee_id]);
+      
+      await conn.close();
+      
+    } catch (err) {
+      console.log("[EMPLOYEE ERROR]", err.message);
+      throw new InternalServerError();
+    }
+  }
+
+  static async findById(supplier_id) {
     let retVal = null;
 
     try {
       const conn = await db.connect();
       const [data] = await conn.execute(
-        `UPDATE 
-          Supplier 
-        
-        SET
-          is_active = '0'
-        
-        WHERE
-          supplier_id = :supplier_id
-        `,
-        this
+        `SELECT *
+        FROM Supplier
+        WHERE supplier_id = :supplier_id`, {supplier_id}
       );
-
-      retVal = {
-        supplier_id: this.supplier_id,
-        name: this.name,
-        contact_no: this.contact_no,
-        email: this.email,
-      };
-
+      
+      if (data.length !== 0) {
+        retVal = new Supplier(data[0]);
+      }
+      
     } catch (err) {
-      console.log("[SUPPLIER ERROR]", err.message);
+      console.log("[EMPLOYEE ERROR]", err.message);
       throw new InternalServerError();
     }
 
     return retVal;
-  }
-
-  async getId(given_id) {
-    this.supplier_id = given_id;
-
-    try {
-      const conn = await db.connect();
-      const [data] = await conn.query(
-        `SELECT 
-          * 
-        FROM 
-          Supplier 
-        WHERE 
-          supplier_id = :supplier_id`
-        ,this)
-
-        if (!data[0]) throw new BadRequest();
-      
-    } catch (err) {
-      console.log("[SUPPLIER ERROR]", err.message);
-      throw new InternalServerError();
-    }
   }
 
 

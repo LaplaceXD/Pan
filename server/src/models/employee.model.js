@@ -137,6 +137,7 @@ class Employee {
         , [newVal, this.employee_id]);
       
       await conn.close();
+      
     } catch (err) {
       console.log("[EMPLOYEE ERROR]", err.message);
       throw new InternalServerError();

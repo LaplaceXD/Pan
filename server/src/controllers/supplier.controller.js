@@ -45,16 +45,17 @@ const edit = async (req, res) => {
   res.status(200).send(data);
 };
 
-const deactivate = async (req, res) => {
+const toggleStatus = async (req, res) => {
   
-  const supplier = new Supplier(req.body);
-  await supplier.getId(req.params["id"]);
+  const supplier = await supplier.getId(req.params["id"]);
 
-  const data = await supplier.deactivate();
-  
-  if (!data) throw new InternalServerError();
+  await supplier.toggleStatus();
 
-  res.status(200).send(data);
+  res.status(200).send({
+    "error": false,
+    "status": 200,
+    "message": "Successfully changed supplier status"
+  });
 
   
 };
@@ -63,5 +64,5 @@ module.exports = {
     view,
     create,
     edit,
-    deactivate,
+    toggleStatus,
 }

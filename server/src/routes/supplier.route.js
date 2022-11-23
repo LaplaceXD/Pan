@@ -9,6 +9,6 @@ const router = express.Router();
 router.get("/", [auth, allow(role.MANAGER)], supplierController.view);
 router.post("/", [auth, allow(role.MANAGER)], supplierController.create);
 router.put("/:id", [auth, allow(role.MANAGER)], supplierController.edit);
-router.post("/:id/status", [auth, allow(role.MANAGER)], supplierController.deactivate);
+router.put("/:id/status", [auth, allow(role.MANAGER)], supplierController.toggleStatus);
 
 module.exports = router;
