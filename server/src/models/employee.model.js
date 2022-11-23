@@ -4,6 +4,7 @@ const { InternalServerError } = require("../../helpers/errors");
 
 const { db, jwt } = require("../providers");
 const { status, role } = require("../constants/employee");
+const token = require("../constants/token");
 
 class Employee {
   constructor(employee) {
@@ -21,14 +22,17 @@ class Employee {
 
   async tokenize() {
     try {
-      const token = await jwt.sign({
-        id: this.employee_id,
-        first_name: this.first_name,
-        last_name: this.last_name,
-        role: this.role,
-      });
+      const accessToken = await jwt.sign(
+        {
+          id: this.employee_id,
+          first_name: this.first_name,
+          last_name: this.last_name,
+          role: this.role,
+        },
+        token.ACCESS
+      );
 
-      return token;
+      return accessToken;
     } catch (err) {
       console.log("[JWT ERROR]", err);
       throw new InternalServerError(err);

@@ -15,6 +15,9 @@
     "secret": "",
     "issuer": "",
     "audience": "",
-    "expiresIn": ""
+    "expiresIn": {
+      "access": "",
+      "refresh": ""
+    }
   }
 }

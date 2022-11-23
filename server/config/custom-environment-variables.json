@@ -15,6 +15,9 @@
     "secret": "JWT_SECRET",
     "issuer": "JWT_ISSUER",
     "audience": "JWT_AUDIENCE",
-    "expiresIn": "JWT_EXP"
+    "expiresIn": {
+      "access": "JWT_ACCESS_EXP",
+      "refresh": "JWT_REFRESH_EXP"
+    }
   }
 }
