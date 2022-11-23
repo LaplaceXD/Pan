@@ -17,11 +17,6 @@ const create = async (req, res) => {
 };
 
 const edit = async (req, res) => {
-  const { error: validationError } = Employee.validate(req.body);
-  if (validationError)
-    throw new BadRequest(
-      validationError.details.map((e) => ({ label: e.context.label, message: e.message }))
-    );
 
   const employee = await Employee.findById(req.params.id);
   if (!employee) throw new NotFound();
@@ -34,11 +29,8 @@ const edit = async (req, res) => {
 
 const reset = async (req, res) => {  
 
-  
   const employee = await Employee.findById(req.params.id);
   if (!employee) throw new NotFound();
-
-  
 
   const generated_pass = crypto.randomBytes(8).toString("base64").replace("==", "");
   

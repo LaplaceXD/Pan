@@ -10,11 +10,6 @@ const view = async (_, res) => {
 }
 
 const create = async (req, res) => {
-  const { error: validationError } = Supplier.validate(req.body);
-  if (validationError) 
-    throw new BadRequest(
-      validationError.details.map((e) => ({ label: e.context.label, message: e.message }))
-    );
 
   const supplier = new Supplier(req.body);
   const data = await supplier.save();
@@ -25,21 +20,13 @@ const create = async (req, res) => {
 };
 
 const edit = async (req, res) => {
-  const { error: validationError } = Supplier.validate(req.body);
-  console.log(validationError.details);
-  if (validationError) 
-
-    throw new BadRequest(
-      validationError.details.map((e) => ({ label: e.context.label, message: e.message }))
-    );
-
-
-
-  const supplier = new Supplier(req.body);
-  await supplier.getId(req.params["id"]);
-
-  const data = await supplier.edit();
   
+  const supplier = await Supplier.findById(req.params.id);
+  if (!supplier) throw new NotFound();
+
+  console.log(supplier);
+
+  const data = await supplier.edit(req.body);
   if (!data) throw new InternalServerError();
 
   res.status(200).send(data);

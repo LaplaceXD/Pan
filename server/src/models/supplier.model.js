@@ -89,8 +89,9 @@ class Supplier {
   }
 
   // Saves the supplier into the database
-  async edit() {
+  async edit(edited_details) {
     let retVal = null;
+    const params = {...this, ...edited_details};
 
     try {
       const conn = await db.connect();
@@ -111,9 +112,9 @@ class Supplier {
         WHERE
           supplier_id = :supplier_id
         `,
-        this
+        params
       );
-      retVal = this;
+      retVal = new Supplier(params);
 
     } catch (err) {
       console.log("[SUPPLIER ERROR]", err.message);

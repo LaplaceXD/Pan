@@ -13,7 +13,11 @@ router.post(
     [auth, allow(roles(role.MANAGER)), validate(Employee.validate)],
     employeeController.create
 );
-router.put("/:id", [auth, allow(roles(role.MANAGER))], employeeController.edit);
+router.post(
+    "/:id",
+    [auth, allow(roles(role.MANAGER)), validate(Employee.validate)],
+    employeeController.edit
+);
 router.post("/:id", [auth, allow(roles(role.MANAGER))], employeeController.reset);
 router.put("/:id/status", [auth, allow(roles(role.MANAGER))], employeeController.toggleStatus);
 
