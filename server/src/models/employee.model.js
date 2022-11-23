@@ -22,9 +22,9 @@ class Employee {
   async tokenize() {
     try {
       const token = await jwt.sign({
+        id: this.employee_id,
         first_name: this.first_name,
         last_name: this.last_name,
-        image_src: this.image_src,
         role: this.role,
       });
 
