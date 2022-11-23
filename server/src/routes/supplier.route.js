@@ -8,7 +8,11 @@ const Supplier = require("../models/supplier.model");
 const supplierController = require("../controllers/supplier.controller");
 const router = express.Router();
 
-router.get("/", [auth, allow(roles(role.MANAGER))], supplierController.view);
+router.get(
+    "/", 
+    [auth, allow(roles(role.MANAGER))], 
+    supplierController.view
+);
 router.post(
     "/", 
     [auth, allow(roles(role.MANAGER)), validate(Supplier.validate)], 
@@ -17,7 +21,12 @@ router.post(
 router.put(
     "/:id", 
     [auth, allow(roles(role.MANAGER)), validate(Supplier.validate)], 
-    supplierController.edit);
-router.put("/:id/status", [auth, allow(roles(role.MANAGER))], supplierController.toggleStatus);
+    supplierController.edit
+);
+router.put(
+    "/:id/status", 
+    [auth, allow(roles(role.MANAGER))], 
+    supplierController.toggleStatus
+);
 
 module.exports = router;

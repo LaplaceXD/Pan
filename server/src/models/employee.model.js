@@ -35,6 +35,33 @@ class Employee {
     }
   }
 
+  // Displays all employee data
+  static async view() {
+    let retVal = null;
+
+    try {
+      const conn = await db.connect();
+      const [data] = await conn.query(
+        `SELECT  
+          first_name,
+          last_name,
+          email,
+          contact_no,
+          date_employed,
+          image_src
+
+        FROM 
+          Employee`
+      );
+      retVal = data;
+
+    } catch (err) {
+      console.log("[EMPLOYEE ERROR]", err.message);
+    }
+
+    return retVal;
+  }
+
   // Saves the employee into the database
   async create() {
     let retVal = null;

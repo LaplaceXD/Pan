@@ -8,6 +8,11 @@ const Employee = require("../models/employee.model");
 const employeeController = require("../controllers/employee.controller");
 const router = express.Router();
 
+router.get(
+    "/", 
+    [auth, allow(roles(role.MANAGER))], 
+    employeeController.view
+);
 router.post(
     "/",
     [auth, allow(roles(role.MANAGER)), validate(Employee.validate)],
@@ -18,8 +23,16 @@ router.post(
     [auth, allow(roles(role.MANAGER)), validate(Employee.validate)],
     employeeController.edit
 );
-router.post("/:id", [auth, allow(roles(role.MANAGER))], employeeController.reset);
-router.put("/:id/status", [auth, allow(roles(role.MANAGER))], employeeController.toggleStatus);
+router.post(
+    "/:id", 
+    [auth, allow(roles(role.MANAGER))], 
+    employeeController.reset
+);
+router.put(
+    "/:id/status", 
+    [auth, allow(roles(role.MANAGER))], 
+    employeeController.toggleStatus
+);
 
 
 module.exports = router;

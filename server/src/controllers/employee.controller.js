@@ -16,6 +16,13 @@ const create = async (req, res) => {
   res.status(200).send(data);
 };
 
+const view = async (_, res) => {
+  const data = await Employee.view();
+  if (!data) throw new InternalServerError();
+
+  res.status(200).send(data);
+}
+
 const edit = async (req, res) => {
 
   const employee = await Employee.findById(req.params.id);
@@ -63,6 +70,7 @@ const toggleStatus = async (req, res) => {
 }
 
 module.exports = {
+  view,
   create,
   edit,
   reset,
