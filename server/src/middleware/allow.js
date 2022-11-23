@@ -1,10 +1,15 @@
 const { Prohibited } = require("../../helpers/errors");
 
-const allow = (...allowedRoles) => {
-  return (req, _, next) => {
-    if (!allowedRoles.includes(req.auth.role)) throw new Prohibited();
+const allow = (...permissions) => {
+  return async (req, _, next) => {
+    for (const cb of permissions) {
+      let authorized = cb(req, req.auth);
+      if (authorized instanceof Promise) authorized = await authorized;
 
-    next();
+      if (authorized) return next();
+    }
+
+    throw new Prohibited();
   };
 };
 

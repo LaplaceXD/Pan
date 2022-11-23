@@ -33,8 +33,12 @@ const edit = async (req, res) => {
 }
 
 const reset = async (req, res) => {  
+
+  
   const employee = await Employee.findById(req.params.id);
   if (!employee) throw new NotFound();
+
+  
 
   const generated_pass = crypto.randomBytes(8).toString("base64").replace("==", "");
   

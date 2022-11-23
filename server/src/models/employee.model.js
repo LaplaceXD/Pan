@@ -22,9 +22,9 @@ class Employee {
   async tokenize() {
     try {
       const token = await jwt.sign({
+        id: this.employee_id,
         first_name: this.first_name,
         last_name: this.last_name,
-        image_src: this.image_src,
         role: this.role,
       });
 
@@ -137,7 +137,7 @@ class Employee {
         , [newVal, this.employee_id]);
       
       await conn.close();
-      
+
     } catch (err) {
       console.log("[EMPLOYEE ERROR]", err.message);
       throw new InternalServerError();
