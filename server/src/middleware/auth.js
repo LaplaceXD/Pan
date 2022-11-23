@@ -10,7 +10,6 @@ const auth = async (req, _, next) => {
 
   try {
     const { payload, isExpired } = await jwt.verify(token);
-    console.log(payload);
     if (isExpired) throw new Unauthorized();
 
     req.auth = payload;
