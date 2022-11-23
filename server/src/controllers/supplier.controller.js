@@ -47,7 +47,8 @@ const edit = async (req, res) => {
 
 const toggleStatus = async (req, res) => {
   
-  const supplier = await supplier.getId(req.params["id"]);
+  const supplier = await Supplier.findById(req.params["id"]);
+  if (!supplier) throw new BadRequest();
 
   await supplier.toggleStatus();
 

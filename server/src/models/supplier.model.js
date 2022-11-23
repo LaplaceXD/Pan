@@ -124,23 +124,22 @@ class Supplier {
   }
 
   // Deactivates supplier with given supplier ID
-  // Deactivates account with given employee ID
   async toggleStatus() {
     try {
       const newVal = this.is_active === '1' ? '0' : '1';
       
       const conn = await db.connect();
       await conn.execute (
-        `UPDATE Employee 
+        `UPDATE Supplier 
 
         SET 
           is_active = ?
 
         WHERE
-          employee_id = ?;
+          supplier_id = ?;
         `
-        , [newVal, this.employee_id]);
-      
+        , [newVal, this.supplier_id]);
+
       await conn.close();
       
     } catch (err) {
