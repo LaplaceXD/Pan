@@ -21,14 +21,12 @@ class Employee {
 
   async tokenize() {
     try {
-      const token = await jwt.sign({
+      return await jwt.fromPayload({
         id: this.employee_id,
         first_name: this.first_name,
         last_name: this.last_name,
         role: this.role,
       });
-
-      return token;
     } catch (err) {
       console.log("[JWT ERROR]", err);
       throw new InternalServerError(err);
@@ -185,52 +183,21 @@ class Employee {
     return retVal;
   }
 
-  static async findById(employee_id) {
+  static async findById(id) {
     let retVal = null;
 
     try {
       const conn = await db.connect();
-      const [data] = await conn.execute(
-        `SELECT *
-        FROM Employee
-        WHERE employee_id = :employee_id`, {employee_id}
-      );
+      const [data] = await conn.execute("SELECT * FROM employee WHERE employee_id = :id", { id });
       await conn.end();
-      
-      if (data.length !== 0) {
-        retVal = new Employee(data[0]);
-      }
+
+      if (data.length !== 0) retVal = new Employee(data[0]);
     } catch (err) {
-      console.log("[EMPLOYEE ERROR]", err.message);
-      throw new InternalServerError();
+      console.log("[EMPLOYEE DB ERROR]", err.message);
+      throw new InternalServerError(err);
     }
 
     return retVal;
-  } 
-
-  async getEmail(given_email) {
-    this.email = given_email;
-
-    try {
-      const conn = await db.connect();
-      const [data] = await conn.query(
-        `SELECT 
-          * 
-
-        FROM 
-          Supplier 
-
-        WHERE 
-          email = ':email'`
-        ,this)
-        await conn.end();
-        console.log(this.email);
-        if (!data[0]) throw new BadRequest();
-    
-    } catch (err) {
-      console.log("[EMPLOYEE ERROR]", err.message);
-      throw new InternalServerError();
-    }
   }
 
   static async validate(employee) {

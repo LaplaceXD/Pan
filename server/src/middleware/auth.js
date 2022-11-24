@@ -9,9 +9,10 @@ const auth = async (req, _, next) => {
   if (prefix !== "Bearer") throw new Unauthorized();
 
   try {
-    const payload = await jwt.verify(token);
-    req.auth = payload;
+    const { payload, isExpired, isInvalid } = await jwt.verify(token);
+    if (isExpired || isInvalid) throw new Unauthorized();
 
+    req.auth = payload;
     next();
   } catch (err) {
     console.log("[JWT ERROR]", err);
