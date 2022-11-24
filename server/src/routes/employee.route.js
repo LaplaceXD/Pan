@@ -1,6 +1,6 @@
 const express = require("express");
 
-const { auth, allow, validate } = require("../middleware");
+const { auth, permit, validate } = require("../middleware");
 const { role } = require("../constants/employee");
 const { roles } = require("../providers/permissions");
 
@@ -10,7 +10,7 @@ const router = express.Router();
 
 router.post(
   "/",
-  [auth, allow(roles(role.MANAGER)), validate(Employee.validate)],
+  [auth, permit({ allow: [roles(role.MANAGER)] }), validate(Employee.validate)],
   employeeController.create
 );
 
