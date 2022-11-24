@@ -37,8 +37,9 @@ const refresh = async (req, res) => {
   if (!req.body.token) throw new BadRequest("Token is required.");
   else if (typeof req.body.token !== "string") throw new BadRequest("Token must be a string");
 
-  const { isExpired: accessExpired } = await jwt.verify(req.body.token);
-  if (!accessExpired) return res.status(200).send({ token: req.body.token });
+  const { isExpired: accessExpired, isInvalid } = await jwt.verify(req.body.token);
+  if (isInvalid) throw new BadRequest("Invalid token.");
+  else if (!accessExpired) return res.status(200).send({ token: req.body.token });
 
   const oldToken = await jwt.fromAccessToken(req.body.token);
   if (!oldToken) throw new BadRequest("Invalid token.");

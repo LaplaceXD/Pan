@@ -73,14 +73,14 @@ class Token {
   static async verify(token) {
     const { secret, expiresIn, ...options } = config.get("jwt");
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve, _) => {
       jwt.verify(token, secret, options, function (err, payload) {
         if (err instanceof jwt.TokenExpiredError) {
-          resolve({ payload: null, isExpired: true });
+          resolve({ payload: null, isExpired: true, isInvalid: false });
         } else if (err) {
-          reject(err);
+          resolve({ payload: null, isExpired: false, isInvalid: true });
         } else {
-          resolve({ payload, isExpired: false });
+          resolve({ payload, isExpired: false, isInvalid: false });
         }
       });
     });

@@ -9,8 +9,8 @@ const auth = async (req, _, next) => {
   if (prefix !== "Bearer") throw new Unauthorized();
 
   try {
-    const { payload, isExpired } = await jwt.verify(token);
-    if (isExpired) throw new Unauthorized();
+    const { payload, isExpired, isInvalid } = await jwt.verify(token);
+    if (isExpired || isInvalid) throw new Unauthorized();
 
     req.auth = payload;
     next();
