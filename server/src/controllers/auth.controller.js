@@ -1,9 +1,8 @@
 const Joi = require("joi");
 
 const { BadRequest } = require("../../helpers/errors");
-const { hash, jwt, redis } = require("../providers");
+const { hash, jwt } = require("../providers");
 const { status } = require("../constants/employee");
-const token = require("../constants/token");
 
 const Employee = require("../models/employee.model");
 
@@ -28,11 +27,10 @@ const login = async (req, res) => {
   const passMatch = await hash.compare(req.body.password, data.password);
   if (!passMatch) throw new BadRequest(DEFAULT_INVALID_MSG);
 
-  const { token: access, jti } = await data.tokenize();
-  const { token: refresh } = await jwt.sign({ jti }, token.REFRESH);
-  await redis.set(`jwt_token:${jti}`, refresh);
+  const token = await data.tokenize();
+  await token.save();
 
-  res.status(200).send({ token: access });
+  res.status(200).send({ token: token.access });
 };
 
 const refresh = async (req, res) => {
@@ -42,27 +40,25 @@ const refresh = async (req, res) => {
   const { isExpired: accessExpired } = await jwt.verify(req.body.token);
   if (!accessExpired) return res.status(200).send({ token: req.body.token });
 
-  const { jti, id } = jwt.decode(req.body.token);
-  if (!jti || !id) throw new BadRequest("Invalid token.");
+  const oldToken = await jwt.fromAccessToken(req.body.token);
+  if (!oldToken) throw new BadRequest("Invalid token.");
 
-  // Token gets deleted since it would be replaced if it is valid,
-  // or would never be used since it is invalid
-  const refresh = await redis.getAndDelete(`jwt_token:${jti}`);
-  if (!refresh) throw new BadRequest("Refresh token expired.");
-
-  const { isExpired: refreshExpired } = await jwt.verify(refresh);
-  if (refreshExpired) throw new BadRequest("Refresh token expired.");
+  const isRefreshable = await oldToken.isRefreshable();
+  if (!isRefreshable) throw new BadRequest("Refresh token expired.");
 
   // Get the employee, since we want to make sure that the employee was not
   // deleted nor deactivated within the timeframe that the access token expired
+  const { id } = oldToken.credentials();
+  if (!id) throw new BadRequest("Invalid token.");
+
   const data = await Employee.findById(id);
   if (!data || data.is_active === status.INACTIVE) throw new BadRequest("Invalid token.");
 
-  const { token: newAccess, jti: newJti } = await data.tokenize();
-  const { token: newRefresh } = await jwt.sign({ jti: newJti }, token.REFRESH);
-  await redis.set(`jwt_token:${newJti}`, newRefresh);
+  const token = await data.tokenize();
+  await oldToken.delete();
+  await token.save();
 
-  res.status(200).send({ token: newAccess });
+  res.status(200).send({ token: token.access });
 };
 
 module.exports = {

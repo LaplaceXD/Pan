@@ -1,6 +1,10 @@
 const config = require("config");
 const { v4: uuid } = require("uuid");
 const jwt = require("jsonwebtoken");
+const Redis = require("ioredis");
+
+const redis = new Redis({ ...config.get("redis") });
+const token = require("../constants/token");
 
 function sign(payload, tokenType) {
   const { secret, ...options } = config.get("jwt");
@@ -9,36 +13,78 @@ function sign(payload, tokenType) {
     let expiresIn = options.expiresIn[tokenType];
     if (!expiresIn) reject("Invalid Token Type.");
 
-    const jti = uuid();
-    jwt.sign({ jti, ...payload }, secret, { ...options, expiresIn }, function (err, token) {
+    jwt.sign(payload, secret, { ...options, expiresIn }, function (err, token) {
       if (err) reject(err);
-      resolve({ token, jti });
+      resolve(token);
     });
   });
 }
 
-function verify(token) {
-  const { secret, expiresIn, ...options } = config.get("jwt");
+class Token {
+  constructor({ jti, access, refresh }) {
+    this.jti = jti;
+    this.access = access;
+    this.refresh = refresh;
+  }
 
-  return new Promise((resolve, reject) => {
-    jwt.verify(token, secret, options, function (err, payload) {
-      if (err instanceof jwt.TokenExpiredError) {
-        resolve({ payload: null, isExpired: true });
-      } else if (err) {
-        reject(err);
-      } else {
-        resolve({ payload, isExpired: false });
-      }
+  credentials() {
+    return jwt.decode(this.access);
+  }
+
+  async save() {
+    await redis.set(`jwt_token:${this.jti}`, this.refresh);
+  }
+
+  async delete() {
+    await redis.del(`jwt_token:${this.jti}`);
+  }
+
+  async isRefreshable() {
+    if (!this.refresh) return false;
+
+    const { isExpired } = await Token.verify(this.refresh);
+    if (isExpired) {
+      // delete the refresh token from redis if it is already
+      // expired, since it would no longer be used
+      await this.delete();
+      return false;
+    }
+
+    return true;
+  }
+
+  static async fromPayload(payload) {
+    const jti = uuid();
+
+    return new Token({
+      jti,
+      access: await sign({ ...payload, jti }, token.ACCESS),
+      refresh: await sign({ jti }, token.REFRESH),
     });
-  });
+  }
+
+  static async fromAccessToken(access) {
+    const { jti } = jwt.decode(access);
+    if (!jti) return null;
+
+    return new Token({ jti, access, refresh: await redis.get(`jwt_token:${jti}`) });
+  }
+
+  static async verify(token) {
+    const { secret, expiresIn, ...options } = config.get("jwt");
+
+    return new Promise((resolve, reject) => {
+      jwt.verify(token, secret, options, function (err, payload) {
+        if (err instanceof jwt.TokenExpiredError) {
+          resolve({ payload: null, isExpired: true });
+        } else if (err) {
+          reject(err);
+        } else {
+          resolve({ payload, isExpired: false });
+        }
+      });
+    });
+  }
 }
 
-function decode(token) {
-  return jwt.decode(token);
-}
-
-module.exports = {
-  sign,
-  verify,
-  decode,
-};
+module.exports = Token;
