@@ -10,8 +10,7 @@ function owner(req, auth) {
 
 function ownerIf(getCondition) {
   return async (req, auth) => {
-    let condition = getCondition(req, auth);
-    if (condition instanceof Promise) condition = await condition;
+    let condition = await getCondition(req, auth);
 
     // only check if owner if the condition is satisfied
     // else default to true
