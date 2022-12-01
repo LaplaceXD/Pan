@@ -31,7 +31,7 @@ app.get("/", (_, res) => {
   res.status(200).send({ message: "Hello World!" });
 });
 
-app.use("/api/v1", authRoutes);
+app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/employees", employeeRoutes);
 app.use("/api/v1/categories", categoryRoutes);
 

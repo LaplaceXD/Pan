@@ -6,9 +6,9 @@ const error = (err, _req, res, _next) => {
     console.log(err);
   } else if (err instanceof HTTPError) {
     res.status(err.status).send({ error: err.message });
-    console.log("[ERROR]", err.message);
+    console.log("[REQUEST ERROR]", err.message);
   } else {
-    console.log("[ERROR]", err.message);
+    console.log("[ERROR]", err);
   }
 };
 
