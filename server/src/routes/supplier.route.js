@@ -10,7 +10,7 @@ const router = express.Router();
 
 router.get(
     "/", 
-    [auth, permit({ allow: [roles(role.MANAGER)] }), validate(Supplier.validate)],
+    [auth, permit({ allow: [roles(role.MANAGER)] })],
     supplierController.view
 );
 router.post(
@@ -25,7 +25,7 @@ router.put(
 );
 router.put(
     "/:id/status", 
-    [auth, permit({ allow: [roles(role.MANAGER)] }), validate(Supplier.validate)], 
+    [auth, permit({ allow: [roles(role.MANAGER)] })], 
     supplierController.toggleStatus
 );
 
