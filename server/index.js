@@ -7,6 +7,7 @@ require("express-async-errors");
 const http = require("http");
 
 const authRoutes = require("./src/routes/auth.route");
+const categoryRoutes = require("./src/routes/categories.route");
 const employeeRoutes = require("./src/routes/employee.route");
 const { error } = require("./src/middleware");
 
@@ -32,6 +33,7 @@ app.get("/", (_, res) => {
 
 app.use("/api/v1", authRoutes);
 app.use("/api/v1/employees", employeeRoutes);
+app.use("/api/v1/categories", categoryRoutes);
 
 app.use("*", (_, res) => {
   res.status(404).send({ message: "Resource not found!" });
