@@ -1,6 +1,6 @@
 const { Prohibited } = require("../../helpers/errors");
 
-const permit = ({ allow, deny }) => {
+const permit = ({ allow = [], deny = [] }) => {
   return async (req, _, next) => {
     const allowList = allow.map((fn) => fn(req, req.auth));
     const denyList = deny.map((fn) => fn(req, req.auth));
