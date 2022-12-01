@@ -39,28 +39,24 @@ class Product {
     return retVal;
   }
 
-//   // Saves the employee into the database
-//   async create() {
-//     let retVal = null;
+  // Saves the employee into the database
+  async create() {
+    try {
+      const conn = await db.connect();
+      const [data] = await conn.execute(
+        `INSERT INTO Product (creator_id, date_created, name, description, unit_price, image_src)
+        VALUES (:creator_id, :date_created, :name, :description, :unit_price, :image_src)`,
+        this
+      );
+      await conn.end();
 
-//     try {
-//       const conn = await db.connect();
-//       const [data] = await conn.execute(
-//         `INSERT INTO Employee (first_name, last_name, password, contact_no, email, date_employed, image_src)
-//         VALUES (:first_name, :last_name, :password, :contact_no, :email, :date_employed, :image_src)`,
-//         this
-//       );
-//       await conn.end();
+    } catch (err) {
+      console.log("[EMPLOYEE ERROR]", err.message);
+      throw new InternalServerError();
+    }
 
-//       this.employee_id = data.insertId;
-//       retVal = this;
-//     } catch (err) {
-//       console.log("[EMPLOYEE ERROR]", err.message);
-//       throw new InternalServerError();
-//     }
-
-//     return retVal;
-//   }
+    return retVal;
+  }
 
 //   // Updates given employee values
 //   async edit(edited_details) {
@@ -182,15 +178,14 @@ class Product {
   static async validate(product) {
     const schema = Joi.object()
       .keys({
-        creator_id: Joi.string().number().greater(0).label("Creator ID").required(),
         name: Joi.string().label("Name").min(2).max(300).required().trim(),
         description: Joi.string().label("Description").min(2).max(300).required().trim(),
         unit_price: Joi.number()
           .label("Unit Price")
           .precision(2)
-          .required()
-          .trim(),
+          .required(),
         date_created: Joi.date().label("Date Created").max("now").iso().required(),
+        creator_id: Joi.number().greater(0).label("Creator ID").required(),
       })
       .options({ abortEarly: false, allowUnknown: true });
 

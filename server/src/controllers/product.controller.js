@@ -8,18 +8,14 @@ const view = async (_, res) => {
     res.status(200).send(data);
   }
 
-// const create = async (req, res) => {
-//   const generated_pass = crypto.randomBytes(8).toString("base64").replace("==", "");
+const create = async (req, res) => {
+  const product = new Product(req.body);
 
-//   const employee = new Employee(req.body);
-//   employee.password = await hash.hashPassword(generated_pass);
+  const data = await product.create();
+  if (!data) throw new InternalServerError();
 
-//   const data = await employee.create();
-//   if (!data) throw new InternalServerError();
-
-//   data.password = generated_pass;
-//   res.status(200).send(data);
-// };
+  res.status(200).send(data);
+};
 
 // const edit = async (req, res) => {
 
@@ -69,7 +65,7 @@ const view = async (_, res) => {
 
 module.exports = {
   view,
-//   create,
+  create,
 //   edit,
 //   reset,
 //   toggleStatus,
