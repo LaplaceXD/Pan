@@ -3,20 +3,19 @@ const Joi = require("joi");
 const { InternalServerError, BadRequest, NotFound } = require("../../helpers/errors");
 
 const { db, jwt } = require("../providers");
-const { status, role } = require("../constants/employee");
+const { availability } = require("../constants/employee");
 
 class Product {
   constructor(product) {
-    this.employee_id = employee.employee_id || 0;
-    this.first_name = employee.first_name;
-    this.last_name = employee.last_name;
-    this.password = employee.password || "";
-    this.contact_no = employee.contact_no;
-    this.email = employee.email;
-    this.date_employed = employee.date_employed;
-    this.image_src = employee.image_src;
-    this.role = employee.role || role.EMPLOYEE;
-    this.is_active = employee.is_active || status.ACTIVE;
+    this.product_id = product.product_id || 0;
+    this.category_id = product.category_id || 0;
+    this.creator_id = product.creator_id || 0;
+    this.date_created = product.date_created;
+    this.name = product.name;
+    this.description = product.description;
+    this.unit_price = product.unit_price;
+    this.image_src = product.image_src;
+    this.is_available = product.is_available || availability.AVAILABLE;
   }
 
   // Displays all employee data
