@@ -95,73 +95,48 @@ class Product {
 
     return retVal;
   }
-  
-//   // Deletes password and saves new value
-//   async reset() {
-//     let retVal = null;
 
-//     try {
-//       const conn = await db.connect();
-//       const data = await conn.execute(
-//         `UPDATE Employee 
-
-//         SET 
-//           password = :password
-
-//         WHERE
-//           employee_id = :employee_id;
-//         `,
-//         this
-//       );
-//       await conn.end();
-//       this.employee_id = data.insertId;
-//       retVal = this;
-//     } catch (err) {
-//       console.log("[EMPLOYEE ERROR]", err.message);
-//       throw new InternalServerError();
-//     }
-
-//     return retVal;
-//   }
-
-//   // Deactivates account with given employee ID
-//   async toggleStatus() {
-//     try {
-//       const newVal = this.is_active === '1' ? '0' : '1';
+  // Deletes given product ID
+  async delete() {
+    try {
+      const conn = await db.connect();
+      await conn.execute(
+        `DELETE FROM
+          Product
+          
+        WHERE
+          product_id = :product_id;
+        `, this
+      );
       
-//       const conn = await db.connect();
-//       await conn.execute (
-//         `UPDATE Employee 
+      await conn.end();
+    } catch (err) {
+      console.log("[PRODUCT ERROR]", err.message);
+      throw new InternalServerError();
+    }
+  }
 
-//         SET 
-//           is_active = ?
+  // Toggles availability of given product 
+  async toggleStatus() {
+    try {
+      const newVal = this.is_available === '1' ? '0' : '1';
+      
+      const conn = await db.connect();
+      await conn.execute (
+        `UPDATE Product 
 
-//         WHERE
-//           employee_id = ?;
-//         `, [newVal, this.employee_id]);
-//       await conn.end();
-//     } catch (err) {
-//       console.log("[EMPLOYEE ERROR]", err.message);
-//       throw new InternalServerError();
-//     }
-//   }
+        SET 
+          is_available = ?
 
-//   static async findByEmail(email) {
-//     let retVal = null;
-
-//     try {
-//       const conn = await db.connect();
-//       const [data] = await conn.execute("SELECT * FROM employee WHERE email = :email", { email });
-//       await conn.end();
-
-//       if (data.length !== 0) retVal = new Employee(data[0]);
-//     } catch (err) {
-//       console.log("[EMPLOYEE DB ERROR]", err.message);
-//       throw new InternalServerError(err);
-//     }
-
-//     return retVal;
-//   }
+        WHERE
+          product_id = ?;
+        `, [newVal, this.product_id]);
+      await conn.end();
+    } catch (err) {
+      console.log("[PRODUCT ERROR]", err.message);
+      throw new InternalServerError();
+    }
+  }
 
   static async findById(id) {
     let retVal = null;

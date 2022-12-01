@@ -23,16 +23,16 @@ router.put(
     [auth, permit({ allow: [roles(role.MANAGER)] }), validate(Product.validate)],
     productController.edit
 );
-// router.post(
-//     "/:id", 
-//     [auth, permit({ allow: [roles(role.MANAGER)] })],
-//     employeeController.reset
-// );
-// router.put(
-//     "/:id/status", 
-//     [auth, permit({ allow: [roles(role.MANAGER)] })],
-//     employeeController.toggleStatus
-// );
+router.delete(
+    "/:id",
+    [auth, permit({ allow: [roles(role.MANAGER)] })],
+    productController.remove
+);
+router.put(
+    "/:id/status", 
+    [auth, permit({ allow: [roles(role.MANAGER)] })],
+    productController.toggleStatus
+);
 
 
 module.exports = router;

@@ -28,45 +28,36 @@ const edit = async (req, res) => {
   res.status(200).send(data);
 }
 
-// const reset = async (req, res) => {  
+const remove = async (req, res) => {
+    
+    const product = await Product.findById(req.params.id);
+    if (!product) throw new NotFound();
 
-//   const employee = await Employee.findById(req.params.id);
-//   if (!employee) throw new NotFound();
+    await product.delete();
 
-//   const generated_pass = crypto.randomBytes(8).toString("base64").replace("==", "");
+    res.status(200).send({ 
+        error:false, 
+        status:200, 
+        message:"Successfully deleted product."});
+}
+
+const toggleStatus = async (req, res) => {
+
+  const product = await Product.findById(req.params.id);
+  if (!product) throw new NotFound("Product not Found");
   
-//   new_pass = await hash.hashPassword(generated_pass);
-//   employee.password = new_pass;
-  
-//   const data = await employee.reset();
+  await product.toggleStatus();
 
-//   if (!data) throw new InternalServerError();
-
-//   res.status(200).send({ 
-//     error:false, 
-//     status:200, 
-//     message:"Successfully reset password.", 
-//     new_password:generated_pass });
-// }
-
-// const toggleStatus = async (req, res) => {
-
-  
-//   const employee = await Employee.findById(req.params.id);
-//   if (!employee) throw new NotFound("Employee not Found");
-  
-//   await employee.toggleStatus();
-
-//   res.status(200).send({ 
-//     error:false, 
-//     status:200, 
-//     message:"Successfully changed employee status."});
-// }
+  res.status(200).send({ 
+    error:false, 
+    status:200, 
+    message:"Successfully changed product status."});
+}
 
 module.exports = {
   view,
   create,
   edit,
-//   reset,
-//   toggleStatus,
+  remove,
+  toggleStatus,
 };
