@@ -44,3 +44,11 @@ input {
 input[type="submit"]:hover {
   cursor: pointer;
 }
+
+button {
+  border: none;
+}
+
+button:hover {
+  cursor: pointer;
+}

@@ -36,6 +36,6 @@
   padding: 0 5.5rem;
 }
 
-.form > input[type="submit"] {
+.form > button[type="submit"] {
   margin-top: 3em;
 }

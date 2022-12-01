@@ -1,6 +1,6 @@
 import banner from "@assets/imgs/login_banner.jpg";
 import logo from "@assets/Logo_128x128.svg";
-import { Field, Submit } from "@components/common";
+import { Button, Field } from "@components/common";
 
 import styles from "./Login.module.css";
 
@@ -17,7 +17,7 @@ function Login() {
           <Field label="User ID:" type="text" id="user_id" name="user" />
           <Field label="Password:" type="password" id="password" name="pass" />
 
-          <Submit label="Login" />
+          <Button label="Login" type="submit" />
         </form>
       </div>
     </main>
