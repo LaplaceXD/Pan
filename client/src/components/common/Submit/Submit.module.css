@@ -18,5 +18,5 @@
 }
 
 .submit:active {
-  transform: translateY(4px);
+  transform: translateY(2px);
 }
