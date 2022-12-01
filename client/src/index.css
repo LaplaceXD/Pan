@@ -40,3 +40,7 @@ body {
 input {
   border: none;
 }
+
+input[type="submit"]:hover {
+  cursor: pointer;
+}
