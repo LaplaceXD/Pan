@@ -18,23 +18,17 @@ class Product {
     this.is_available = product.is_available || availability.AVAILABLE;
   }
 
-  // Displays all employee data
+  // Displays all product data
   static async view() {
     let retVal = null;
 
     try {
       const conn = await db.connect();
       const [data] = await conn.query(
-        `SELECT  
-          first_name,
-          last_name,
-          email,
-          contact_no,
-          date_employed,
-          image_src
+        `SELECT *
 
         FROM 
-          Employee`
+          Product`
       );
       retVal = data;
       await conn.end();
