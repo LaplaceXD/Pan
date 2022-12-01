@@ -9,7 +9,7 @@ class Product {
   constructor(product) {
     this.product_id = product.product_id || 0;
     this.category_id = product.category_id || 0;
-    this.creator_id = product.creator_id || 0;
+    this.creator_id = product.creator_id;
     this.date_created = product.date_created;
     this.name = product.name;
     this.description = product.description;
@@ -179,35 +179,23 @@ class Product {
 //     return retVal;
 //   }
 
-//   static async validate(employee) {
-//     const match = await Employee.findByEmail(employee.email);
+  static async validate(product) {
+    const schema = Joi.object()
+      .keys({
+        creator_id: Joi.string().number().greater(0).label("Creator ID").required(),
+        name: Joi.string().label("Name").min(2).max(300).required().trim(),
+        description: Joi.string().label("Description").min(2).max(300).required().trim(),
+        unit_price: Joi.number()
+          .label("Unit Price")
+          .precision(2)
+          .required()
+          .trim(),
+        date_created: Joi.date().label("Date Created").max("now").iso().required(),
+      })
+      .options({ abortEarly: false, allowUnknown: true });
 
-//     const schema = Joi.object()
-//       .keys({
-//         first_name: Joi.string().label("First Name").min(2).max(300).required().trim(),
-//         last_name: Joi.string().label("Last Name").min(2).max(300).required().trim(),
-//         email: Joi.string()
-//           .label("Email")
-//           .email()
-//           .not(match?.email ?? "")
-//           .required()
-//           .messages({
-//             "any.invalid": "{{#label}} is already in use.",
-//           })
-//           .trim(),
-//         contact_no: Joi.string()
-//           .label("Contact Number")
-//           .length(11)
-//           .regex(/^\d+$/)
-//           .message("{{#label}} must contain digits only.")
-//           .required()
-//           .trim(),
-//         date_employed: Joi.date().label("Date Employed").max("now").iso().required(),
-//       })
-//       .options({ abortEarly: false, allowUnknown: true });
-
-//     return schema.validate(employee);
-//   }
+    return schema.validate(product);
+  }
 }
 
 module.exports = Product;
