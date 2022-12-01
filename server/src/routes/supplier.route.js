@@ -1,6 +1,6 @@
 const express = require("express");
 
-const { auth, allow, validate } = require("../middleware");
+const { auth, permit, validate } = require("../middleware");
 const { role } = require("../constants/employee");
 const { roles } = require("../providers/permissions");
 
@@ -10,22 +10,22 @@ const router = express.Router();
 
 router.get(
     "/", 
-    [auth, allow(roles(role.MANAGER))], 
+    [auth, permit({ allow: [roles(role.MANAGER)] }), validate(Supplier.validate)],
     supplierController.view
 );
 router.post(
     "/", 
-    [auth, allow(roles(role.MANAGER)), validate(Supplier.validate)], 
+    [auth, permit({ allow: [roles(role.MANAGER)] }), validate(Supplier.validate)],
     supplierController.create
 );
 router.put(
     "/:id", 
-    [auth, allow(roles(role.MANAGER)), validate(Supplier.validate)], 
+    [auth, permit({ allow: [roles(role.MANAGER)] }), validate(Supplier.validate)],
     supplierController.edit
 );
 router.put(
     "/:id/status", 
-    [auth, allow(roles(role.MANAGER))], 
+    [auth, permit({ allow: [roles(role.MANAGER)] }), validate(Supplier.validate)], 
     supplierController.toggleStatus
 );
 

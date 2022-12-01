@@ -10,7 +10,7 @@ const router = express.Router();
 
 router.get(
     "/", 
-    [auth, permit({ allow: [roles(role.MANAGER)] }), validate(Employee.validate)],
+    [auth, permit({ allow: [roles(role.MANAGER)] })],
     employeeController.view
 );
 router.post(
@@ -25,14 +25,13 @@ router.put(
 );
 router.post(
     "/:id", 
-    [auth, permit({ allow: [roles(role.MANAGER)] }), validate(Employee.validate)],
+    [auth, permit({ allow: [roles(role.MANAGER)] })],
     employeeController.reset
 );
 router.put(
     "/:id/status", 
-    [auth, permit({ allow: [roles(role.MANAGER)] }), validate(Employee.validate)],
+    [auth, permit({ allow: [roles(role.MANAGER)] })],
     employeeController.toggleStatus
-  
 );
 
 
