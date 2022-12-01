@@ -33,13 +33,13 @@ class Product {
       retVal = data;
       await conn.end();
     } catch (err) {
-      console.log("[EMPLOYEE ERROR]", err.message);
+      console.log("[PRODUCT ERROR]", err.message);
     }
 
     return retVal;
   }
 
-  // Saves the employee into the database
+  // Saves the product into the database
   async create() {
     let retVal = null;
 
@@ -55,45 +55,46 @@ class Product {
       this.product_id = data.insertId;
       retVal = this;
     } catch (err) {
-      console.log("[EMPLOYEE ERROR]", err.message);
+      console.log("[PRODUCT ERROR]", err.message);
       throw new InternalServerError();
     }
 
     return retVal;
   }
 
-//   // Updates given employee values
-//   async edit(edited_details) {
-//     let retVal = null;
-//     const params = {...this, ...edited_details};
+  // Updates given product values
+  async edit(edited_details) {
+    let retVal = null;
+    const params = {...this, ...edited_details};
 
-//     try {
-//       const conn = await db.connect();
-//       await conn.execute(
-//         `UPDATE Employee 
+    try {
+      const conn = await db.connect();
+      await conn.execute(
+        `UPDATE Product 
 
-//         SET 
-//           first_name = :first_name,
-//           last_name = :last_name,
-//           contact_no = :contact_no,
-//           email = :email,
-//           date_employed = :date_employed,
-//           image_src = :image_src
+        SET 
+          creator_id = :creator_id, 
+          category_id = :category_id, 
+          date_created = :date_created, 
+          name = :name, 
+          description = :description, 
+          unit_price = :unit_price, 
+          image_src = :image_src
 
-//         WHERE
-//           employee_id = :employee_id;
-//         `,
-//         params
-//       );
-//       await conn.end();
-//       retVal = new Employee(params);
-//     } catch (err) {
-//       console.log("[EMPLOYEE ERROR]", err.message);
-//       throw new InternalServerError();
-//     }
+        WHERE
+          product_id = :product_id;
+        `,
+        params
+      );
+      await conn.end();
+      retVal = new Product(params);
+    } catch (err) {
+      console.log("[PRODUCT ERROR]", err.message);
+      throw new InternalServerError();
+    }
 
-//     return retVal;
-//   }
+    return retVal;
+  }
   
 //   // Deletes password and saves new value
 //   async reset() {
@@ -162,22 +163,22 @@ class Product {
 //     return retVal;
 //   }
 
-//   static async findById(id) {
-//     let retVal = null;
+  static async findById(id) {
+    let retVal = null;
 
-//     try {
-//       const conn = await db.connect();
-//       const [data] = await conn.execute("SELECT * FROM employee WHERE employee_id = :id", { id });
-//       await conn.end();
+    try {
+      const conn = await db.connect();
+      const [data] = await conn.execute("SELECT * FROM product WHERE product_id = :id", { id });
+      await conn.end();
 
-//       if (data.length !== 0) retVal = new Employee(data[0]);
-//     } catch (err) {
-//       console.log("[EMPLOYEE DB ERROR]", err.message);
-//       throw new InternalServerError(err);
-//     }
+      if (data.length !== 0) retVal = new Product(data[0]);
+    } catch (err) {
+      console.log("[EMPLOYEE DB ERROR]", err.message);
+      throw new InternalServerError(err);
+    }
 
-//     return retVal;
-//   }
+    return retVal;
+  }
 
   static async validate(product) {
     const schema = Joi.object()

@@ -17,16 +17,16 @@ const create = async (req, res) => {
   res.status(200).send(data);
 };
 
-// const edit = async (req, res) => {
+const edit = async (req, res) => {
 
-//   const employee = await Employee.findById(req.params.id);
-//   if (!employee) throw new NotFound();
+  const product = await Product.findById(req.params.id);
+  if (!product) throw new NotFound();
 
-//   const {password, ...data} = await employee.edit(req.body);
-//   if (!data) throw new InternalServerError();
+  const data = await product.edit(req.body);
+  if (!data) throw new InternalServerError();
 
-//   res.status(200).send(data);
-// }
+  res.status(200).send(data);
+}
 
 // const reset = async (req, res) => {  
 
@@ -66,7 +66,7 @@ const create = async (req, res) => {
 module.exports = {
   view,
   create,
-//   edit,
+  edit,
 //   reset,
 //   toggleStatus,
 };

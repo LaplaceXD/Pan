@@ -18,11 +18,11 @@ router.post(
     [auth, permit({ allow: [roles(role.MANAGER)] }), validate(Product.validate)],
     productController.create
 );
-// router.put(
-//     "/:id",
-//     [auth, permit({ allow: [roles(role.MANAGER)] }), validate(Employee.validate)],
-//     employeeController.edit
-// );
+router.put(
+    "/:id",
+    [auth, permit({ allow: [roles(role.MANAGER)] }), validate(Product.validate)],
+    productController.edit
+);
 // router.post(
 //     "/:id", 
 //     [auth, permit({ allow: [roles(role.MANAGER)] })],
