@@ -41,15 +41,19 @@ class Product {
 
   // Saves the employee into the database
   async create() {
+    let retVal = null;
+
     try {
       const conn = await db.connect();
       const [data] = await conn.execute(
-        `INSERT INTO Product (creator_id, date_created, name, description, unit_price, image_src)
-        VALUES (:creator_id, :date_created, :name, :description, :unit_price, :image_src)`,
+        `INSERT INTO Product (creator_id, category_id, date_created, name, description, unit_price, image_src)
+        VALUES (:creator_id, :category_id, :date_created, :name, :description, :unit_price, :image_src)`,
         this
       );
       await conn.end();
 
+      this.product_id = data.insertId;
+      retVal = this;
     } catch (err) {
       console.log("[EMPLOYEE ERROR]", err.message);
       throw new InternalServerError();
@@ -186,6 +190,7 @@ class Product {
           .required(),
         date_created: Joi.date().label("Date Created").max("now").iso().required(),
         creator_id: Joi.number().greater(0).label("Creator ID").required(),
+        category_id: Joi.number().greater(0).label("Category ID"),
       })
       .options({ abortEarly: false, allowUnknown: true });
 
