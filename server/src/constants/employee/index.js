@@ -1,4 +1,4 @@
-const avaialbility = require("./availability");
+const availability = require("./availability");
 const status = require("./status");
 const role = require("./role");
 

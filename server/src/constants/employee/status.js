@@ -3,4 +3,4 @@ const status = Object.freeze({
   INACTIVE: "0",
 });
 
-module.exports = { status, availablility };
+module.exports = status;

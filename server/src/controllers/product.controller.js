@@ -69,8 +69,8 @@ const view = async (_, res) => {
 
 module.exports = {
   view,
-  create,
-  edit,
-  reset,
-  toggleStatus,
+//   create,
+//   edit,
+//   reset,
+//   toggleStatus,
 };
