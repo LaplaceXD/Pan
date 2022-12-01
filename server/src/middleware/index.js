@@ -1,10 +1,10 @@
-const allow = require("./allow");
+const permit = require("./permit");
 const auth = require("./auth");
 const error = require("./error");
 const validate = require("./validate");
 
 module.exports = {
-  allow,
+  permit,
   auth,
   error,
   validate,

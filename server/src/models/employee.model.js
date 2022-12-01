@@ -19,14 +19,17 @@ class Employee {
     this.is_active = employee.is_active || status.ACTIVE;
   }
 
-  async tokenize() {
+  async tokenize(jti) {
     try {
-      return await jwt.fromPayload({
-        id: this.employee_id,
-        first_name: this.first_name,
-        last_name: this.last_name,
-        role: this.role,
-      });
+      return await jwt.TokenPair.create(
+        {
+          id: this.employee_id,
+          first_name: this.first_name,
+          last_name: this.last_name,
+          role: this.role,
+        },
+        jti
+      );
     } catch (err) {
       console.log("[JWT ERROR]", err);
       throw new InternalServerError(err);
