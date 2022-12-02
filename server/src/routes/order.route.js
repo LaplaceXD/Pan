@@ -15,24 +15,8 @@ router.get(
 );
 router.post(
     "/",
-    [auth, permit({ allow: [roles(role.MANAGER)] })],
+    [auth, permit({ allow: [roles(role.MANAGER)] }), validate(Order.validate)],
     orderController.create
 );
-// router.put(
-//     "/:id",
-//     [auth, permit({ allow: [roles(role.MANAGER)] }), validate(Product.validate)],
-//     productController.edit
-// );
-// router.delete(
-//     "/:id",
-//     [auth, permit({ allow: [roles(role.MANAGER)] })],
-//     productController.remove
-// );
-// router.put(
-//     "/:id/status", 
-//     [auth, permit({ allow: [roles(role.MANAGER)] })],
-//     productController.toggleStatus
-// );
-
 
 module.exports = router;

@@ -53,7 +53,6 @@ class Order {
 
     try {
       const conn = await db.connect();
-      console.log([this.employee_id, this.date_completed])
       const [data] = await conn.execute(
         "INSERT INTO `Order` (employee_id, date_completed) VALUES (?, ?)",
         [this.employee_id, this.date_completed]
@@ -79,32 +78,18 @@ class Order {
     return retVal;
   }
 
-//   // Toggles availability of given product 
-//   async toggleStatus() {
-//     try {
-//       const newVal = this.is_available === '1' ? '0' : '1';
-      
-//       const conn = await db.connect();
-//       await conn.execute (
-//         `UPDATE Product 
-
-//         SET 
-//           is_available = ?
-
-//         WHERE
-//           product_id = ?;
-//         `, [newVal, this.product_id]);
-//       await conn.end();
-//     } catch (err) {
-//       console.log("[PRODUCT ERROR]", err.message);
-//       throw new InternalServerError();
-//     }
-//   }
-
   static async validate(product) {
     const schema = Joi.object()
       .keys({
-
+        employee_id: Joi.number().label("Employee ID").min(1).required(),
+        date_completed: Joi.date().label("Date Employed").max("now").iso().required(),
+        lines: Joi.array().items(
+            Joi.object({
+                product_id: Joi.number().min(0).required(),
+                quantity: Joi.number().min(0).required(),
+                notes: Joi.string().label("Notes").min(0).max(300).required(),
+            })
+        ).required(),
       })
       .options({ abortEarly: false, allowUnknown: true });
 
