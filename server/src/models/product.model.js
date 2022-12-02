@@ -1,8 +1,8 @@
 const Joi = require("joi");
 
-const { InternalServerError, BadRequest, NotFound } = require("../../helpers/errors");
+const { InternalServerError } = require("../../helpers/errors");
 
-const { db, jwt } = require("../providers");
+const { db } = require("../providers");
 const { availability } = require("../constants/employee");
 
 class Product {
@@ -65,7 +65,7 @@ class Product {
   // Updates given product values
   async edit(edited_details) {
     let retVal = null;
-    const params = {...this, ...edited_details};
+    const params = { ...this, ...edited_details };
 
     try {
       const conn = await db.connect();
@@ -106,9 +106,10 @@ class Product {
           
         WHERE
           product_id = :product_id;
-        `, this
+        `,
+        this
       );
-      
+
       await conn.end();
     } catch (err) {
       console.log("[PRODUCT ERROR]", err.message);
@@ -116,13 +117,13 @@ class Product {
     }
   }
 
-  // Toggles availability of given product 
+  // Toggles availability of given product
   async toggleStatus() {
     try {
-      const newVal = this.is_available === '1' ? '0' : '1';
-      
+      const newVal = this.is_available === "1" ? "0" : "1";
+
       const conn = await db.connect();
-      await conn.execute (
+      await conn.execute(
         `UPDATE Product 
 
         SET 
@@ -130,7 +131,9 @@ class Product {
 
         WHERE
           product_id = ?;
-        `, [newVal, this.product_id]);
+        `,
+        [newVal, this.product_id]
+      );
       await conn.end();
     } catch (err) {
       console.log("[PRODUCT ERROR]", err.message);
@@ -160,10 +163,7 @@ class Product {
       .keys({
         name: Joi.string().label("Name").min(2).max(300).required().trim(),
         description: Joi.string().label("Description").min(2).max(300).required().trim(),
-        unit_price: Joi.number()
-          .label("Unit Price")
-          .precision(2)
-          .required(),
+        unit_price: Joi.number().label("Unit Price").precision(2).required(),
         date_created: Joi.date().label("Date Created").max("now").iso().required(),
         creator_id: Joi.number().greater(0).label("Creator ID").required(),
         category_id: Joi.number().greater(0).label("Category ID"),

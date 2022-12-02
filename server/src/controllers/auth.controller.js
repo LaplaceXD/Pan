@@ -31,10 +31,10 @@ const login = async (req, res) => {
 
   const { error } = validateCredentials(req.body);
   if (error) throw new BadRequest(DEFAULT_INVALID_MSG);
-  
+
   const data = await Employee.findByEmail(req.body.email);
   if (!data || data.is_active === status.INACTIVE) throw new BadRequest(DEFAULT_INVALID_MSG);
-  
+
   const passMatch = await hash.compare(req.body.password, data.password);
   if (!passMatch) throw new BadRequest(DEFAULT_INVALID_MSG);
 

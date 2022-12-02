@@ -1,6 +1,6 @@
 const Joi = require("joi");
 
-const { InternalServerError, BadRequest } = require("../../helpers/errors");
+const { InternalServerError } = require("../../helpers/errors");
 
 const { db } = require("../providers");
 const { status } = require("../constants/supplier");
@@ -76,10 +76,9 @@ class Supplier {
         this
       );
       await conn.end();
-          
+
       this.supplier_id = data.insertId;
       retVal = this;
-
     } catch (err) {
       console.log("[SUPPLIER ERROR]", err.message);
       throw new InternalServerError();
@@ -91,7 +90,7 @@ class Supplier {
   // Saves the supplier into the database
   async edit(edited_details) {
     let retVal = null;
-    const params = {...this, ...edited_details};
+    const params = { ...this, ...edited_details };
 
     try {
       const conn = await db.connect();
@@ -116,7 +115,6 @@ class Supplier {
       );
       await conn.end();
       retVal = new Supplier(params);
-
     } catch (err) {
       console.log("[SUPPLIER ERROR]", err.message);
       throw new InternalServerError();
@@ -128,10 +126,10 @@ class Supplier {
   // Deactivates supplier with given supplier ID
   async toggleStatus() {
     try {
-      const newVal = this.is_active === '1' ? '0' : '1';
-      
+      const newVal = this.is_active === "1" ? "0" : "1";
+
       const conn = await db.connect();
-      await conn.execute (
+      await conn.execute(
         `UPDATE Supplier 
 
         SET 
@@ -139,11 +137,11 @@ class Supplier {
 
         WHERE
           supplier_id = ?;
-        `
-        , [newVal, this.supplier_id]);
+        `,
+        [newVal, this.supplier_id]
+      );
 
       await conn.end();
-      
     } catch (err) {
       console.log("[EMPLOYEE ERROR]", err.message);
       throw new InternalServerError();
@@ -158,7 +156,8 @@ class Supplier {
       const [data] = await conn.execute(
         `SELECT *
         FROM Supplier
-        WHERE supplier_id = :supplier_id`, {supplier_id}
+        WHERE supplier_id = :supplier_id`,
+        { supplier_id }
       );
       await conn.end();
       if (data.length !== 0) {
@@ -171,7 +170,6 @@ class Supplier {
 
     return retVal;
   }
-
 
   static validate(supplier) {
     const schema = Joi.object({
@@ -186,7 +184,7 @@ class Supplier {
         .length(11)
         .regex(/^\d{11}$/)
         .message("Contact number must contain digits only."),
-      email: Joi.string().label("Email").email().required()
+      email: Joi.string().label("Email").email().required(),
     });
     return schema.validate(supplier);
   }

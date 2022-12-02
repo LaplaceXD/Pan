@@ -1,6 +1,6 @@
 const Joi = require("joi");
 
-const { InternalServerError, BadRequest, NotFound } = require("../../helpers/errors");
+const { InternalServerError } = require("../../helpers/errors");
 
 const { db, jwt } = require("../providers");
 const { status, role } = require("../constants/employee");
@@ -14,7 +14,7 @@ class Employee {
     this.contact_no = employee.contact_no;
     this.email = employee.email;
     this.date_employed = employee.date_employed;
-    this.image_src = employee.image_src;
+    this.image_src = employee.image_src || "";
     this.role = employee.role || role.EMPLOYEE;
     this.is_active = employee.is_active || status.ACTIVE;
   }
@@ -36,42 +36,15 @@ class Employee {
     }
   }
 
-  // Displays all employee data
-  static async view() {
-    let retVal = null;
-
-    try {
-      const conn = await db.connect();
-      const [data] = await conn.query(
-        `SELECT  
-          first_name,
-          last_name,
-          email,
-          contact_no,
-          date_employed,
-          image_src
-
-        FROM 
-          Employee`
-      );
-      retVal = data;
-      await conn.end();
-    } catch (err) {
-      console.log("[EMPLOYEE ERROR]", err.message);
-    }
-
-    return retVal;
-  }
-
   // Saves the employee into the database
-  async create() {
+  async save() {
     let retVal = null;
 
     try {
       const conn = await db.connect();
       const [data] = await conn.execute(
-        `INSERT INTO Employee (first_name, last_name, password, contact_no, email, date_employed, image_src)
-        VALUES (:first_name, :last_name, :password, :contact_no, :email, :date_employed, :image_src)`,
+        `INSERT INTO Employee (first_name, last_name, password, contact_no, email, date_employed)
+        VALUES (:first_name, :last_name, :password, :contact_no, :email, :date_employed)`,
         this
       );
       await conn.end();
@@ -87,30 +60,28 @@ class Employee {
   }
 
   // Updates given employee values
-  async edit(edited_details) {
+  async update(details) {
     let retVal = null;
-    const params = {...this, ...edited_details};
+    const editedEmployee = { ...this, ...details };
 
     try {
       const conn = await db.connect();
       await conn.execute(
         `UPDATE Employee 
-
         SET 
           first_name = :first_name,
           last_name = :last_name,
           contact_no = :contact_no,
           email = :email,
-          date_employed = :date_employed,
-          image_src = :image_src
-
+          date_employed = :date_employed
         WHERE
-          employee_id = :employee_id;
+          employee_id = :employee_id
         `,
-        params
+        editedEmployee
       );
+
       await conn.end();
-      retVal = new Employee(params);
+      retVal = new Employee(editedEmployee);
     } catch (err) {
       console.log("[EMPLOYEE ERROR]", err.message);
       throw new InternalServerError();
@@ -118,55 +89,61 @@ class Employee {
 
     return retVal;
   }
-  
-  // Deletes password and saves new value
-  async reset() {
-    let retVal = null;
 
+  // Saves the value of the password to db
+  async savePassword() {
     try {
       const conn = await db.connect();
-      const data = await conn.execute(
+      await conn.execute(
         `UPDATE Employee 
-
         SET 
           password = :password
-
         WHERE
           employee_id = :employee_id;
         `,
         this
       );
+
       await conn.end();
-      this.employee_id = data.insertId;
-      retVal = this;
     } catch (err) {
       console.log("[EMPLOYEE ERROR]", err.message);
       throw new InternalServerError();
+    }
+  }
+
+  // Deactivates/Activates an account with given employee ID
+  async toggleStatus() {
+    try {
+      this.is_active = this.is_active === status.ACTIVE ? status.INACTIVE : status.ACTIVE;
+
+      const conn = await db.connect();
+      await conn.execute(
+        `UPDATE Employee SET is_active = :is_active WHERE employee_id = :employee_id`,
+        this
+      );
+
+      await conn.end();
+    } catch (err) {
+      console.log("[EMPLOYEE ERROR]", err.message);
+      throw new InternalServerError();
+    }
+  }
+
+  // Displays all employee data
+  static async findAll() {
+    let retVal = [];
+
+    try {
+      const conn = await db.connect();
+      const [data] = await conn.query(`SELECT * FROM Employee`);
+
+      if (data !== 0) retVal = data.map((d) => new Employee(d));
+      await conn.end();
+    } catch (err) {
+      console.log("[EMPLOYEE ERROR]", err.message);
     }
 
     return retVal;
-  }
-
-  // Deactivates account with given employee ID
-  async toggleStatus() {
-    try {
-      const newVal = this.is_active === '1' ? '0' : '1';
-      
-      const conn = await db.connect();
-      await conn.execute (
-        `UPDATE Employee 
-
-        SET 
-          is_active = ?
-
-        WHERE
-          employee_id = ?;
-        `, [newVal, this.employee_id]);
-      await conn.end();
-    } catch (err) {
-      console.log("[EMPLOYEE ERROR]", err.message);
-      throw new InternalServerError();
-    }
   }
 
   static async findByEmail(email) {
@@ -228,7 +205,7 @@ class Employee {
           .trim(),
         date_employed: Joi.date().label("Date Employed").max("now").iso().required(),
       })
-      .options({ abortEarly: false, allowUnknown: true });
+      .options({ abortEarly: false });
 
     return schema.validate(employee);
   }
