@@ -1,5 +1,6 @@
 import { useFormik } from "formik";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import * as Yup from "yup";
 
 import { Button, Field } from "@components/common";
@@ -25,8 +26,13 @@ function LoginForm({ ...props }) {
       const { error, access, refresh } = await loginEmployee(values);
 
       if (error) {
+        toast.error("Invalid credentials.");
+
         formik.setSubmitting(false);
+        return;
       }
+
+      toast.success("Logged in.");
 
       setAccessToken(access);
       setRefreshToken(refresh);
