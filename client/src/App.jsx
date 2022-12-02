@@ -1,34 +1,43 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import './App.css'
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-function App() {
-  const [count, setCount] = useState(0)
+import { ProtectedRoutes } from "@components/module";
+import Login from "@components/pages/Login";
+import { AuthProvider, useAuth } from "@hooks/Auth";
 
-  return (
-    <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </div>
-  )
+function LoggedIn() {
+  const [auth] = useAuth();
+  return <h1>{`LOGGED IN! ${auth.first_name} ${auth.last_name}`}</h1>;
 }
 
-export default App
+function App() {
+  return (
+    <AuthProvider>
+      <Router>
+        <Routes>
+          <Route path="/" element={<ProtectedRoutes />}>
+            <Route index element={<LoggedIn />} />
+          </Route>
+          <Route path="/login" element={<Login />} />
+        </Routes>
+      </Router>
+
+      <ToastContainer
+        position="top-center"
+        autoClose={2000}
+        limit={5}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+      />
+    </AuthProvider>
+  );
+}
+
+export default App;
