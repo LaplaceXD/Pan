@@ -16,3 +16,10 @@
   display: flex;
   flex-direction: column;
 }
+
+.error {
+  margin-top: 4px;
+  font-size: 0.9rem;
+  color: var(--error-color);
+  font-weight: var(--font-medium);
+}
