@@ -10,6 +10,7 @@ const authRoutes = require("./src/routes/auth.route");
 const employeeRoutes = require("./src/routes/employee.route");
 const supplierRoutes = require("./src/routes/supplier.route");
 const productRoutes = require("./src/routes/product.route");
+const orderRoutes = require("./src/routes/order.route");
 
 const { error } = require("./src/middleware");
 
@@ -37,6 +38,7 @@ app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/employees", employeeRoutes);
 app.use("/api/v1/suppliers", supplierRoutes);
 app.use("/api/v1/products", productRoutes);
+app.use("/api/v1/orders", orderRoutes);
 
 app.use("*", (_, res) => {
   res.status(404).send({ message: "Resource not found!" });
