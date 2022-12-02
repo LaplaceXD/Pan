@@ -8,7 +8,9 @@ const Supplier = require("../models/supplier.model");
 const supplierController = require("../controllers/supplier.controller");
 const router = express.Router();
 
-router.get("/", [auth, permit({ allow: [roles(role.MANAGER)] })], supplierController.view);
+router.get("/", [auth, permit({ allow: [roles(role.MANAGER)] })], supplierController.getAll);
+
+router.get("/:id", [auth, permit({ allow: [roles(role.MANAGER)] })], supplierController.getById);
 
 router.post(
   "/",
@@ -19,7 +21,7 @@ router.post(
 router.put(
   "/:id",
   [auth, permit({ allow: [roles(role.MANAGER)] }), validate(Supplier.validate)],
-  supplierController.edit
+  supplierController.update
 );
 
 router.put(

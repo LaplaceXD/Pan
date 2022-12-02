@@ -19,33 +19,6 @@ class Supplier {
     this.is_active = supplier.is_active || status.ACTIVE;
   }
 
-  // Displays all supplier data
-  static async view() {
-    let retVal = null;
-
-    try {
-      const conn = await db.connect();
-      const [data] = await conn.query(
-        `SELECT  
-          name,
-          city,
-          zip_code,
-          contact_no,
-          email,
-          is_active
-
-        FROM 
-          Supplier`
-      );
-      await conn.end();
-      retVal = data;
-    } catch (err) {
-      console.log("[SUPPLIER ERROR]", err.message);
-    }
-
-    return retVal;
-  }
-
   // Saves the supplier into the database
   async save() {
     let retVal = null;
@@ -87,17 +60,15 @@ class Supplier {
     return retVal;
   }
 
-  // Saves the supplier into the database
-  async edit(edited_details) {
+  // Updates the supplier into the database
+  async update(details) {
     let retVal = null;
-    const params = { ...this, ...edited_details };
+    const editedSupplier = { ...this, ...details };
 
     try {
       const conn = await db.connect();
-      const [] = await conn.execute(
-        `UPDATE 
-          Supplier 
-        
+      await conn.execute(
+        `UPDATE Supplier 
         SET
           name = :name,
           building = :building,
@@ -107,14 +78,14 @@ class Supplier {
           zip_code = :zip_code,
           contact_no = :contact_no,
           email = :email
-        
         WHERE
           supplier_id = :supplier_id
         `,
-        params
+        editedSupplier
       );
       await conn.end();
-      retVal = new Supplier(params);
+
+      retVal = new Supplier(editedSupplier);
     } catch (err) {
       console.log("[SUPPLIER ERROR]", err.message);
       throw new InternalServerError();
@@ -126,19 +97,12 @@ class Supplier {
   // Deactivates supplier with given supplier ID
   async toggleStatus() {
     try {
-      const newVal = this.is_active === "1" ? "0" : "1";
+      this.is_active = this.is_active === status.ACTIVE ? status.INACTIVE : status.ACTIVE;
 
       const conn = await db.connect();
       await conn.execute(
-        `UPDATE Supplier 
-
-        SET 
-          is_active = ?
-
-        WHERE
-          supplier_id = ?;
-        `,
-        [newVal, this.supplier_id]
+        `UPDATE Supplier SET is_active = :is_active WHERE supplier_id = :supplier_id`,
+        this
       );
 
       await conn.end();
@@ -146,6 +110,23 @@ class Supplier {
       console.log("[EMPLOYEE ERROR]", err.message);
       throw new InternalServerError();
     }
+  }
+
+  // Displays all supplier data
+  static async findAll() {
+    let retVal = null;
+
+    try {
+      const conn = await db.connect();
+      const [data] = await conn.query(`SELECT * FROM Supplier`);
+      await conn.end();
+
+      retVal = data.map((d) => new Supplier(d));
+    } catch (err) {
+      console.log("[SUPPLIER ERROR]", err.message);
+    }
+
+    return retVal;
   }
 
   static async findById(supplier_id) {
@@ -185,7 +166,8 @@ class Supplier {
         .regex(/^\d{11}$/)
         .message("Contact number must contain digits only."),
       email: Joi.string().label("Email").email().required(),
-    });
+    }).options({ abortEarly: false });
+
     return schema.validate(supplier);
   }
 }
