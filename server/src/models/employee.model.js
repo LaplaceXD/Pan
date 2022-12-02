@@ -72,7 +72,6 @@ class Employee {
       console.log("[EMPLOYEE DB ERROR]", err.message);
       throw new InternalServerError(err);
     }
-
     return retVal;
   }
 
