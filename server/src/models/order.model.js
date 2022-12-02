@@ -7,7 +7,7 @@ const { availability } = require("../constants/employee");
 
 class Order {
   constructor(order) {
-    this.order_id = order.product_id || 0;
+    this.order_id = order.product_id;
     this.employee_id = order.employee_id || 0;
     this.date_completed = order.date_completed;
     this.lines = order.lines || [];
@@ -48,16 +48,17 @@ class Order {
 
   // Saves the product into the database
   async create() {
+    
     let retVal = null;
 
     try {
       const conn = await db.connect();
+      console.log([this.employee_id, this.date_completed])
       const [data] = await conn.execute(
-        `INSERT INTO Order (order_id, employee_id, date_completed)
-        VALUES (:order_id, :employee_id, :date_completed)`,
-        this
+        "INSERT INTO `Order` (employee_id, date_completed) VALUES (?, ?)",
+        [this.employee_id, this.date_completed]
       );
-
+      
       this.lines.forEach( async (orderline) => {
         await conn.execute(
           `INSERT INTO order_line (order_id, product_id, quantity, notes)
@@ -65,7 +66,7 @@ class Order {
           [data.insertId, orderline.product_id, orderline.quantity, orderline.notes]
         )
       });
-
+      
       await conn.end();
 
       this.product_id = data.insertId;
@@ -100,23 +101,15 @@ class Order {
 //     }
 //   }
 
-//   static async validate(product) {
-//     const schema = Joi.object()
-//       .keys({
-//         name: Joi.string().label("Name").min(2).max(300).required().trim(),
-//         description: Joi.string().label("Description").min(2).max(300).required().trim(),
-//         unit_price: Joi.number()
-//           .label("Unit Price")
-//           .precision(2)
-//           .required(),
-//         date_created: Joi.date().label("Date Created").max("now").iso().required(),
-//         creator_id: Joi.number().greater(0).label("Creator ID").required(),
-//         category_id: Joi.number().greater(0).label("Category ID"),
-//       })
-//       .options({ abortEarly: false, allowUnknown: true });
+  static async validate(product) {
+    const schema = Joi.object()
+      .keys({
 
-//     return schema.validate(product);
-//   }
+      })
+      .options({ abortEarly: false, allowUnknown: true });
+
+    return schema.validate(product);
+  }
 }
 
 module.exports = Order;

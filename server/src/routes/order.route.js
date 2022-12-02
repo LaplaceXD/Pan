@@ -13,11 +13,11 @@ router.get(
     [auth, permit({ allow: [roles(role.MANAGER)] })],
     orderController.view
 );
-// router.post(
-//     "/",
-//     [auth, permit({ allow: [roles(role.MANAGER)] }), validate(Product.validate)],
-//     productController.create
-// );
+router.post(
+    "/",
+    [auth, permit({ allow: [roles(role.MANAGER)] })],
+    orderController.create
+);
 // router.put(
 //     "/:id",
 //     [auth, permit({ allow: [roles(role.MANAGER)] }), validate(Product.validate)],
