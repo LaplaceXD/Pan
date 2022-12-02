@@ -9,7 +9,7 @@ const view = async (_, res) => {
   }
 
 const create = async (req, res) => {
-  const product = new Product(req.body);
+  const order = new Order(req.body);
 
   const data = await product.create();
   if (!data) throw new InternalServerError();

@@ -10,6 +10,7 @@ class Order {
     this.order_id = order.product_id || 0;
     this.employee_id = order.employee_id || 0;
     this.date_completed = order.date_completed;
+    this.lines = order.lines || [];
   }
 
   // Displays all order data
@@ -45,28 +46,37 @@ class Order {
     return retVal;
   }
 
-//   // Saves the product into the database
-//   async create() {
-//     let retVal = null;
+  // Saves the product into the database
+  async create() {
+    let retVal = null;
 
-//     try {
-//       const conn = await db.connect();
-//       const [data] = await conn.execute(
-//         `INSERT INTO Product (creator_id, category_id, date_created, name, description, unit_price, image_src)
-//         VALUES (:creator_id, :category_id, :date_created, :name, :description, :unit_price, :image_src)`,
-//         this
-//       );
-//       await conn.end();
+    try {
+      const conn = await db.connect();
+      const [data] = await conn.execute(
+        `INSERT INTO Order (order_id, employee_id, date_completed)
+        VALUES (:order_id, :employee_id, :date_completed)`,
+        this
+      );
 
-//       this.product_id = data.insertId;
-//       retVal = this;
-//     } catch (err) {
-//       console.log("[PRODUCT ERROR]", err.message);
-//       throw new InternalServerError();
-//     }
+      this.lines.forEach( async (orderline) => {
+        await conn.execute(
+          `INSERT INTO order_line (order_id, product_id, quantity, notes)
+          VALUES (?, ?, ?, ?)`, 
+          [data.insertId, orderline.product_id, orderline.quantity, orderline.notes]
+        )
+      });
 
-//     return retVal;
-//   }
+      await conn.end();
+
+      this.product_id = data.insertId;
+      retVal = this;
+    } catch (err) {
+      console.log("[PRODUCT ERROR]", err.message);
+      throw new InternalServerError();
+    }
+
+    return retVal;
+  }
 
 //   // Toggles availability of given product 
 //   async toggleStatus() {
