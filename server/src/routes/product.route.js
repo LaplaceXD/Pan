@@ -8,7 +8,9 @@ const Product = require("../models/product.model");
 const productController = require("../controllers/product.controller");
 const router = express.Router();
 
-router.get("/", [auth, permit({ allow: [roles(role.MANAGER)] })], productController.view);
+router.get("/", [auth, permit({ allow: [roles(role.MANAGER)] })], productController.getAll);
+
+router.get("/:id", [auth, permit({ allow: [roles(role.MANAGER)] })], productController.getById);
 
 router.post(
   "/",
@@ -19,10 +21,8 @@ router.post(
 router.put(
   "/:id",
   [auth, permit({ allow: [roles(role.MANAGER)] }), validate(Product.validate)],
-  productController.edit
+  productController.update
 );
-
-router.delete("/:id", [auth, permit({ allow: [roles(role.MANAGER)] })], productController.remove);
 
 router.put("/:id/status", [auth, permit({ allow: [roles(role.MANAGER)] })], productController.toggleStatus);
 
