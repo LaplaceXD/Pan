@@ -3,60 +3,63 @@ import { useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 
 import { Button, Field } from "@components/common";
+import useAuth from "@hooks/Auth/useAuth";
 import { loginEmployee } from "@services/auth";
+import { getTokenPayload, setAccessToken, setRefreshToken } from "@utils/token";
 
 function LoginForm({ ...props }) {
   const navigate = useNavigate();
+  const [_, setAuth] = useAuth();
 
-  const { handleSubmit, touched, errors, handleBlur, handleChange, values, setSubmitting, isSubmitting } =
-    useFormik({
-      initialValues: {
-        email: "",
-        password: "",
-      },
-      validationSchema: Yup.object({
-        email: Yup.string().email("Invalid email.").required("Email is required."),
-        password: Yup.string().required("Password is required."),
-      }),
-      onSubmit: async (values) => {
-        setSubmitting(true);
-        const { error, access, refresh } = await loginEmployee(values);
+  const formik = useFormik({
+    initialValues: {
+      email: "",
+      password: "",
+    },
+    validationSchema: Yup.object({
+      email: Yup.string().email("Invalid email.").required("Email is required."),
+      password: Yup.string().required("Password is required."),
+    }),
+    onSubmit: async (values) => {
+      formik.setSubmitting(true);
+      const { error, access, refresh } = await loginEmployee(values);
 
-        if (error) {
-          console.log("ERROR!");
-          setSubmitting(false);
-        }
+      if (error) {
+        formik.setSubmitting(false);
+      }
 
-        localStorage.setItem("access", access);
-        localStorage.setItem("refresh", refresh);
-        navigate("/");
-      },
-    });
+      setAccessToken(access);
+      setRefreshToken(refresh);
+      setAuth(getTokenPayload(access));
+
+      navigate("/");
+    },
+  });
 
   return (
-    <form method="POST" onSubmit={handleSubmit} {...props}>
+    <form method="POST" onSubmit={formik.handleSubmit} {...props}>
       <Field
         label="Email:"
         type="text"
         id="email"
         name="email"
-        onChange={handleChange}
-        onBlur={handleBlur}
-        value={values.email}
-        error={touched.email && errors.email}
+        onChange={formik.handleChange}
+        onBlur={formik.handleBlur}
+        value={formik.values.email}
+        error={formik.touched.email && formik.errors.email}
       />
       <Field
         label="Password:"
         type="password"
         id="password"
         name="password"
-        onChange={handleChange}
-        onBlur={handleBlur}
-        value={values.password}
-        error={touched.password && errors.password}
+        onChange={formik.handleChange}
+        onBlur={formik.handleBlur}
+        value={formik.values.password}
+        error={formik.touched.password && formik.errors.password}
       />
 
-      <Button label="Login" type="submit" disabled={isSubmitting} />
+      <Button label="Login" type="submit" disabled={formik.isSubmitting} />
     </form>
   );
 }
