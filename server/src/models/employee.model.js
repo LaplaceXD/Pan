@@ -131,14 +131,14 @@ class Employee {
 
   // Displays all employee data
   static async findAll() {
-    let retVal = [];
+    let retVal = null;
 
     try {
       const conn = await db.connect();
       const [data] = await conn.query(`SELECT * FROM Employee`);
-
-      if (data !== 0) retVal = data.map((d) => new Employee(d));
       await conn.end();
+
+      retVal = data.map((d) => new Employee(d));
     } catch (err) {
       console.log("[EMPLOYEE ERROR]", err.message);
     }

@@ -12,12 +12,14 @@ const EMPLOYEE_404 = "Employee not found.";
 
 const getAll = async (_, res) => {
   const data = await Employee.findAll();
+  if (!data) throw new InternalServerError();
+
   res.status(200).send(data.map(({ password, ...d }) => d));
 };
 
 const getById = async (req, res) => {
   const data = await Employee.findById(req.params.id);
-  if (!data) throw new InternalServerError();
+  if (!data) throw new NotFound(EMPLOYEE_404);
 
   const { password, ...filteredData } = data;
   res.status(200).send(filteredData);
