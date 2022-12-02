@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+import { ProtectedRoutes } from "@components/module";
 import Login from "@components/pages/Login";
 import { AuthProvider, useAuth } from "@hooks/Auth";
 
@@ -15,10 +16,13 @@ function App() {
     <AuthProvider>
       <Router>
         <Routes>
-          <Route path="/" element={<LoggedIn />} />
+          <Route path="/" element={<ProtectedRoutes />}>
+            <Route index element={<LoggedIn />} />
+          </Route>
           <Route path="/login" element={<Login />} />
         </Routes>
       </Router>
+
       <ToastContainer
         position="top-center"
         autoClose={2000}

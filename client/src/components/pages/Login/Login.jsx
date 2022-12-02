@@ -1,5 +1,4 @@
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 
 import banner from "@assets/imgs/login_banner.jpg";
 import logo from "@assets/Logo_128x128.svg";
@@ -9,14 +8,11 @@ import { useAuth } from "@hooks/Auth";
 import styles from "./Login.module.css";
 
 function Login() {
-  const navigate = useNavigate();
   const [auth] = useAuth();
 
-  useEffect(() => {
-    if (auth) navigate("/");
-  }, []);
-
-  return (
+  return auth ? (
+    <Navigate to="/" />
+  ) : (
     <main className={styles.container}>
       <img src={banner} alt="Bread." />
 
