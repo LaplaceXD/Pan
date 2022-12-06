@@ -20,10 +20,10 @@ class Order {
     try {
       const conn = await db.connect();
       const [order] = await conn.query(
-        "SELECT * FROM `order`"
+        "SELECT order_id, employee_id, date_completed AS date_created FROM `order`"
       );
       const [orderline] = await conn.query(
-        "SELECT ol.order_id, CONCAT(ep.first_name, ' ',ep.last_name) AS creator_name, e.employee_id, p.date_created, p.name, p.description, p.unit_price, p.image_src, ol.quantity, ol.notes FROM `order_line` AS `ol`  INNER JOIN `order` AS `o`ON ol.order_id = o.order_id INNER JOIN `product` AS `p` ON ol.product_id = p.product_id INNER JOIN `employee` AS `e` ON e.employee_id = o.employee_id INNER JOIN `employee` AS `ep` ON ep.employee_id = p.creator_id;"
+        "SELECT ol.order_id, p.name, p.description, p.unit_price, p.image_src, ol.quantity, ol.notes FROM `order_line` AS `ol`  INNER JOIN `order` AS `o`ON ol.order_id = o.order_id INNER JOIN `product` AS `p` ON ol.product_id = p.product_id INNER JOIN `employee` AS `e` ON e.employee_id = o.employee_id INNER JOIN `employee` AS `ep` ON ep.employee_id = p.creator_id;"
       );
 
       order.forEach( (order) => {
