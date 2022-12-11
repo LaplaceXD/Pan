@@ -8,7 +8,7 @@ const Supplier = require("../models/supplier.model");
 const supplierController = require("../controllers/supplier.controller");
 const router = express.Router();
 
-router.get("/", [auth, permit({ allow: [roles(role.MANAGER)] })], supplierController.getAll);
+router.get("/", [auth, permit({ allow: [roles(role.MANAGER,role.EMPLOYEE)] })], supplierController.getAll);
 
 router.get("/emp", [auth, permit({ allow: [roles(role.EMPLOYEE)] })], supplierController.getAll); //Employee version
 
