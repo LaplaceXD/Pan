@@ -10,6 +10,8 @@ const router = express.Router();
 
 router.get("/", [auth, permit({ allow: [roles(role.MANAGER)] })], supplierController.getAll);
 
+router.get("/emp", [auth, permit({ allow: [roles(role.EMPLOYEE)] })], supplierController.getAll); //Employee version
+
 router.get("/:id", [auth, permit({ allow: [roles(role.MANAGER)] })], supplierController.getById);
 
 router.post(
