@@ -25,19 +25,7 @@ function App() {
         </Routes>
       </Router>
 
-      <ToastContainer
-        position="top-center"
-        autoClose={2000}
-        limit={5}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="colored"
-      />
+      <ToastContainer autoClose={2000} limit={5} theme="colored" />
     </AuthProvider>
   );
 }
