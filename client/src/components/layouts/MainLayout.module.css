@@ -1,44 +1,5 @@
-    .layout {
-    display: flex;
-    background-color: #1D2834;
-    min-height: 100vh;
-}
-
-header {
-    background-color: #2F4152;
-    align-items: center;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    padding: 20px 0;
-    width: 200px;
-}
-
-.logo img{
-    width: 150px;
-    padding: 20px 15px 20px;
-}
-
-.navLink {
-    margin: 10px;
-}
-
-.navLink a {
-    padding-top: 2.5em;
-    align-items: center;
-    text-decoration: none;
-    color: #ADB5BD;
-    font-size: 18px;
-    display: flex;
-    flex-direction: column;
-}
-
-.navIcon {
-    font-size: 48px;
-    padding: 5px;
-}
-
-.navLink *:hover {
-    color: #f2d492;
-    transition: all 125ms ease-in;
+.layout {
+  display: flex;
+  background-color: #1d2834;
+  min-height: 100vh;
 }

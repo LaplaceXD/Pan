@@ -1,0 +1,55 @@
+.logo {
+  width: 128px;
+}
+
+.container {
+  background-color: var(--accent-color);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1.5em 1em;
+}
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  height: 100%;
+  margin-top: 2.5em;
+}
+
+.nav-list {
+  list-style-type: none;
+  display: flex;
+  flex-direction: column;
+}
+
+.nav-link a {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  text-decoration: none;
+  font-size: 1rem;
+  color: inherit;
+}
+
+.nav-link {
+  color: var(--text-color);
+  transition: color 125ms ease-in;
+}
+
+.nav-link:hover,
+.isSelected {
+  color: var(--secondary-color);
+}
+
+.nav-link + .nav-link {
+  margin-top: 2.5em;
+}
+
+.nav-icon {
+  font-size: 48px;
+  padding: 5px;
+}
