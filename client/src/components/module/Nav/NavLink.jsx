@@ -2,7 +2,7 @@ import { clsx } from "clsx";
 import { cloneElement } from "react";
 import { Link, useLocation } from "react-router-dom";
 
-import styles from "./NavBar.module.css";
+import styles from "./Nav.module.css";
 
 function NavLink({ to, Icon, label }) {
   const { pathname } = useLocation();
