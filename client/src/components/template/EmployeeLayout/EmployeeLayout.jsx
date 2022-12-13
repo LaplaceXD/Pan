@@ -16,9 +16,7 @@ function EmployeeLayout() {
         <Nav.Link to="/product" label="Products" Icon={<BsBoxSeam />} />
         <Nav.Link to="/supplier" label="Suppliers" Icon={<FiTruck />} />
       </Nav.Bar>
-      <main>
-        <Outlet />
-      </main>
+      <Outlet />
     </div>
   );
 }
