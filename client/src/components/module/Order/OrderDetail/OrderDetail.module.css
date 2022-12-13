@@ -1,0 +1,54 @@
+.container {
+  background-color: var(--field-color);
+  border-radius: 8px;
+  padding: 1.35em;
+
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.right-container {
+  flex: 1;
+}
+
+.product-name {
+  color: var(--white);
+  font-size: 1.15rem;
+  margin-bottom: 1rem;
+}
+
+.product-total {
+  width: 25%;
+  color: var(--tertiary-color);
+  font-size: 1rem;
+}
+
+.counter {
+  display: flex;
+}
+
+.counter-qty {
+  color: var(--text-color);
+  margin: 0 0.8em;
+}
+
+.counter-btn {
+  --size: 22px;
+
+  background-color: var(--accent-color);
+  width: var(--size);
+  height: var(--size);
+  border-radius: 4px;
+  font-size: 1.1rem;
+
+  transition: filter 125ms ease, transform 125ms ease;
+}
+
+.counter-btn:hover {
+  filter: brightness(1.2);
+}
+
+.counter-btn:active {
+  transform: scale(1.2);
+}

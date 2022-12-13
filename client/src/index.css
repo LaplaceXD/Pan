@@ -3,6 +3,7 @@
 :root {
   --primary-color: hsl(211, 28%, 16%);
   --secondary-color: hsl(41, 79%, 76%);
+  --tertiary-color: hsl(174, 36%, 64%);
   --accent-color: hsl(210, 27%, 25%);
   --text-color: hsl(210, 11%, 71%);
   --error-color: hsl(24, 91%, 54%);
