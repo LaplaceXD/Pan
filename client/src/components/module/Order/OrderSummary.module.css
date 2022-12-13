@@ -1,0 +1,28 @@
+.container {
+  display: flex;
+  flex-direction: column;
+}
+
+.summary {
+  flex: 1;
+  margin-top: 1em;
+
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  list-style-type: none;
+}
+
+.title {
+  color: var(--text-color);
+  font-weight: var(--font-regular);
+  font-size: 1.55rem;
+}
+
+.total {
+  color: var(--white);
+  display: flex;
+  justify-content: space-between;
+  font-size: 1.5rem;
+}
