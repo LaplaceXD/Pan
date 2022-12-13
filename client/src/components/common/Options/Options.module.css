@@ -1,0 +1,30 @@
+.container {
+  list-style-type: none;
+  display: flex;
+  gap: 12px;
+  overflow-x: scroll;
+  width: 100%;
+}
+
+.container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.optionBtn {
+  background: var(--field-color);
+  color: var(--text-color);
+  padding: 0.75em 1.25em;
+  min-width: 92px;
+  border-radius: 4px;
+
+  font-size: 0.9rem;
+  font-weight: var(--font-medium);
+
+  transition: background 125ms ease-out, color 125ms ease-out;
+}
+
+.optionBtn:hover,
+.optionBtn.isSelected {
+  background: var(--secondary-color);
+  color: var(--primary-color);
+}
