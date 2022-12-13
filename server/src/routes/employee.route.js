@@ -2,15 +2,19 @@ const express = require("express");
 
 const { auth, permit, validate } = require("../middleware");
 const { role } = require("../constants/employee");
-const { roles } = require("../providers/permissions");
+const { roles, owner } = require("../providers/permissions");
 
+const sameRoleAndNotOwner = require("../../helpers/SameEmployee");
 const Employee = require("../models/employee.model");
 const employeeController = require("../controllers/employee.controller");
 const router = express.Router();
 
 router.get("/", [auth, permit({ allow: [roles(role.MANAGER)] })], employeeController.getAll);
 
-router.get("/:id", [auth, permit({ allow: [roles(role.MANAGER)] })], employeeController.getById);
+router.get(
+  "/:id", 
+  [auth, permit({ allow: [roles(role.MANAGER), owner], deny: [sameRoleAndNotOwner] })], 
+  employeeController.getById);
 
 router.post(
   "/",
@@ -20,14 +24,20 @@ router.post(
 
 router.put(
   "/:id",
-  [auth, permit({ allow: [roles(role.MANAGER)] }), validate(Employee.validate)],
+  [auth, permit({ allow: [roles(role.MANAGER), owner], deny: [sameRoleAndNotOwner] })],
   employeeController.update
+);
+
+router.put(
+  "/:id/password",
+  [auth, permit({ allow: [owner], deny: [sameRoleAndNotOwner] })],
+  employeeController.changePassword
 );
 
 router.post(
   "/:id/password",
   [auth, permit({ allow: [roles(role.MANAGER)] })],
-  employeeController.changePassword
+  employeeController.resetPassword
 );
 
 router.put(

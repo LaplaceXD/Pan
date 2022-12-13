@@ -1,6 +1,6 @@
 const crypto = require("crypto");
 
-const { InternalServerError, NotFound } = require("../../helpers/errors");
+const { InternalServerError, NotFound, HTTPError } = require("../../helpers/errors");
 const { hash } = require("../providers");
 const Employee = require("../models/employee.model");
 
@@ -54,6 +54,24 @@ const changePassword = async (req, res) => {
   const employee = await Employee.findById(req.params.id);
   if (!employee) throw new NotFound(EMPLOYEE_404);
 
+  const password = req.body.password;
+  if (password !== req.body.confirm) throw new HTTPError("404", "Password Mismatch");
+
+  employee.password = await hash.hashPassword(password);
+  await employee.savePassword();
+
+  res.status(200).send({
+    message: "Successfully changed password.",
+
+    // TODO: This should be emailed to the user
+    password,
+  });
+};
+
+const resetPassword = async (req, res) => {
+  const employee = await Employee.findById(req.params.id);
+  if (!employee) throw new NotFound(EMPLOYEE_404);
+
   const password = generatePassword();
   employee.password = await hash.hashPassword(password);
   await employee.savePassword();
@@ -83,5 +101,6 @@ module.exports = {
   create,
   update,
   changePassword,
+  resetPassword,
   toggleStatus,
 };
