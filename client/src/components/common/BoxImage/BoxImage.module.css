@@ -1,0 +1,5 @@
+.box {
+  overflow: hidden;
+  object-fit: contain;
+  object-position: center;
+}
