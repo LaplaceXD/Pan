@@ -5,7 +5,7 @@ import styles from "./Product.module.css";
 function ProductGrid({ products, RenderComponent, className }) {
   return (
     <div className={clsx(styles.grid, className)}>
-      {products.map((product) => (RenderComponent ? RenderComponent(product) : null))}
+      {products?.map((product) => (RenderComponent ? RenderComponent(product) : null)) ?? null}
     </div>
   );
 }
