@@ -2,9 +2,9 @@ import { clsx } from "clsx";
 
 import styles from "./Options.module.css";
 
-function Options({ options, onChange, value: selected }) {
+function Options({ options, onChange, value: selected, className }) {
   return (
-    <ul className={styles.container}>
+    <ul className={clsx(styles.container, className)}>
       {options.map(({ label, value }) => (
         <li>
           <button
