@@ -18,7 +18,7 @@ const getById = async (req, res) => {
 };
 
 const create = async (req, res) => {
-  const product = new Product(req.body);
+  const product = new Product({ ...req.body, creator_id: req.auth.id });
 
   const data = await product.save();
   if (!data) throw new InternalServerError();

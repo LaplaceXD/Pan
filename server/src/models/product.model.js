@@ -132,7 +132,6 @@ class Product {
         description: Joi.string().label("Description").min(2).max(300).required().trim(),
         unit_price: Joi.number().label("Unit Price").precision(2).required(),
         date_created: Joi.date().label("Date Created").max("now").iso().required(),
-        creator_id: Joi.number().min(0).label("Creator ID").required(),
         category_id: Joi.number().min(0).label("Category ID"),
       })
       .options({ abortEarly: false });
