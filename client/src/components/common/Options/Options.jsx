@@ -6,7 +6,7 @@ function Options({ options, onChange, value: selected, className }) {
   return (
     <ul className={clsx(styles.container, className)}>
       {options.map(({ label, value }) => (
-        <li>
+        <li key={value}>
           <button
             className={clsx(styles.optionBtn, value === selected && styles.isSelected)}
             onClick={() => onChange(value)}

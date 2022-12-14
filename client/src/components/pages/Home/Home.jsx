@@ -71,12 +71,12 @@ function Home() {
         <Product.Grid
           className={styles.productGrid}
           products={[
-            { img: empImg, name: "Chocolate Chips Muffin", price: 105 },
-            { img: empImg, name: "Chocolate Chips Muffin", price: 105 },
-            { img: empImg, name: "Chocolate Chips Muffin", price: 105 },
+            { id: 1, img: empImg, name: "Chocolate Chips Muffin", price: 105 },
+            { id: 2, img: empImg, name: "Chocolate Chips Muffin", price: 105 },
+            { id: 3, img: empImg, name: "Chocolate Chips Muffin", price: 105 },
           ]}
-          RenderComponent={({ img, name, price }) => (
-            <Product.Card img={img} name={name} price={price} onClick={() => console.log(name)} />
+          RenderComponent={({ id, img, name, price }) => (
+            <Product.Card key={id} img={img} name={name} price={price} onClick={() => console.log(name)} />
           )}
         />
       </div>
