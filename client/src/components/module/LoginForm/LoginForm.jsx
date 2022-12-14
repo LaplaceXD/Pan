@@ -6,7 +6,7 @@ import * as Yup from "yup";
 import { Button, Field } from "@components/common";
 import useAuth from "@hooks/Auth/useAuth";
 import { loginEmployee } from "@services/auth";
-import { getTokenPayload, setAccessToken, setRefreshToken } from "@utils/token";
+import token from "@utils/token";
 
 function LoginForm({ ...props }) {
   const navigate = useNavigate();
@@ -37,9 +37,8 @@ function LoginForm({ ...props }) {
 
       toast.success("Logged in.");
 
-      setAccessToken(access);
-      setRefreshToken(refresh);
-      setAuth(getTokenPayload(access));
+      token.pair.set({ access, refresh });
+      setAuth(token.access.payload());
 
       navigate("/");
     },

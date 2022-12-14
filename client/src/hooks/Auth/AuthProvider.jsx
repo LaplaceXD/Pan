@@ -1,25 +1,18 @@
 import { useState } from "react";
 
-import {
-  getAccessToken,
-  getTokenPayload,
-  isExpired,
-  removeAccessToken,
-  removeRefreshToken,
-} from "@utils/token";
+import token from "@utils/token";
 import AuthContext from "./AuthContext";
 
 function AuthProvider({ children }) {
   const [auth, setAuth] = useState(() => {
-    const accessToken = getAccessToken();
+    const accessToken = token.access.get();
 
     if (accessToken) {
-      if (!isExpired(accessToken)) {
-        return getTokenPayload(accessToken);
+      if (!token.refresh.isExpired) {
+        return token.access.payload();
       }
 
-      removeAccessToken();
-      removeRefreshToken();
+      token.pair.remove();
     }
 
     return null;

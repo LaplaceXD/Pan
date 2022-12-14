@@ -5,36 +5,49 @@ const tokenType = Object.freeze({
   REFRESH: "refresh",
 });
 
-export function getAccessToken() {
-  return localStorage.getItem(tokenType.ACCESS);
+class Token {
+  constructor(type) {
+    this.type = type;
+  }
+
+  get() {
+    return localStorage.getItem(this.type);
+  }
+
+  set(token) {
+    localStorage.setItem(this.type, token);
+  }
+
+  remove() {
+    localStorage.removeItem(this.type);
+  }
+
+  payload(options) {
+    const { iss, aud, iat, jti, exp, ...data } = jwtDecode(this.get(), options);
+    return data;
+  }
+
+  get isExpired() {
+    const { exp } = jwtDecode(this.get());
+    return exp * 1000 < Date.now();
+  }
 }
 
-export function getRefreshToken() {
-  return localStorage.getItem(tokenType.REFRESH);
-}
+const access = new Token(tokenType.ACCESS);
+const refresh = new Token(tokenType.REFRESH);
 
-export function setAccessToken(token) {
-  localStorage.setItem(tokenType.ACCESS, token);
-}
-
-export function setRefreshToken(token) {
-  localStorage.setItem(tokenType.REFRESH, token);
-}
-
-export function removeAccessToken() {
-  localStorage.removeItem(tokenType.ACCESS);
-}
-
-export function removeRefreshToken() {
-  localStorage.removeItem(tokenType.REFRESH);
-}
-
-export function getTokenPayload(token, options) {
-  const { iss, aud, iat, jti, exp, ...data } = jwtDecode(token, options);
-  return data;
-}
-
-export function isExpired(token) {
-  const { exp } = jwtDecode(token);
-  return exp * 1000 < Date.now();
-}
+export default {
+  refresh,
+  access,
+  pair: {
+    get: () => ({ access: access.get(), refresh: refresh.get() }),
+    set: ({ access: accessToken, refresh: refreshToken }) => {
+      access.set(accessToken);
+      refresh.set(refreshToken);
+    },
+    remove: () => {
+      access.remove();
+      refresh.remove();
+    },
+  },
+};
