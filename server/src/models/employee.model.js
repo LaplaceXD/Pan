@@ -209,6 +209,29 @@ class Employee {
 
     return schema.validate(employee);
   }
+
+  static async validatePassword(body) {
+    const schema = Joi.object()
+      .keys({
+        current_password: Joi.string().label("Current Password").required(),
+        new_password: Joi.string()
+          .label("New Password")
+          .min(8)
+          .max(16)
+          .regex(/\d/)
+          .message("{{#label}} must contain a digit.")
+          .regex(/[A-Z]/)
+          .message("{{#label}} must contain an uppercase letter.")
+          .regex(/[a-z]/)
+          .message("{{#label}} must contain a lowercase letter.")
+          .regex(/[!@#$%^&*]/)
+          .message("{{#label}} must contain a special character (!@#$%^&*).")
+          .required(),
+      })
+      .options({ abortEarly: false });
+
+    return schema.validate(body);
+  }
 }
 
 module.exports = Employee;

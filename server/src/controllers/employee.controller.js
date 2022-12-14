@@ -1,6 +1,6 @@
 const crypto = require("crypto");
 
-const { InternalServerError, NotFound, HTTPError } = require("../../helpers/errors");
+const { InternalServerError, NotFound, BadRequest } = require("../../helpers/errors");
 const { hash } = require("../providers");
 const Employee = require("../models/employee.model");
 
@@ -54,17 +54,14 @@ const changePassword = async (req, res) => {
   const employee = await Employee.findById(req.params.id);
   if (!employee) throw new NotFound(EMPLOYEE_404);
 
-  const password = req.body.password;
-  if (password !== req.body.confirm) throw new HTTPError("404", "Password Mismatch");
+  const isCurrentCorrect = await hash.compare(req.body.current_password, employee.password);
+  if (!isCurrentCorrect) throw new BadRequest({ current_password: "Current password does not match." });
 
-  employee.password = await hash.hashPassword(password);
+  employee.password = await hash.hashPassword(req.body.new_password);
   await employee.savePassword();
 
   res.status(200).send({
     message: "Successfully changed password.",
-
-    // TODO: This should be emailed to the user
-    password,
   });
 };
 

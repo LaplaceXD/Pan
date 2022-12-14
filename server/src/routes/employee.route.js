@@ -12,7 +12,7 @@ router.get("/", [auth, permit({ allow: [roles(role.MANAGER)] })], employeeContro
 
 router.get(
   "/:id",
-  [auth, permit({ allow: [roles(role.MANAGER), owner], deny: [sameRoleAndNotOwner] })],
+  [auth, permit({ allow: [roles(role.MANAGER), owner], deny: [sameRoleAndNotOwner(Employee)] })],
   employeeController.getById
 );
 
@@ -24,13 +24,13 @@ router.post(
 
 router.put(
   "/:id",
-  [auth, permit({ allow: [roles(role.MANAGER), owner], deny: [sameRoleAndNotOwner] })],
+  [auth, permit({ allow: [roles(role.MANAGER), owner], deny: [sameRoleAndNotOwner(Employee)] })],
   employeeController.update
 );
 
 router.put(
   "/:id/password",
-  [auth, permit({ allow: [owner], deny: [sameRoleAndNotOwner] })],
+  [auth, permit({ allow: [owner] }), validate(Employee.validatePassword)],
   employeeController.changePassword
 );
 
