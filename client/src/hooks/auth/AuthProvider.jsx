@@ -19,7 +19,10 @@ function AuthProvider({ children }) {
     return null;
   });
 
-  const logout = () => setAuth(null);
+  const logout = () => {
+    token.pair.remove();
+    setAuth(null);
+  };
 
   async function login({ email, password }) {
     const { error, data: tokens } = await loginEmployee({ email, password });
