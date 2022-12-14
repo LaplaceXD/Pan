@@ -5,49 +5,53 @@ async function parsedResponse(res) {
   return { status: res.status, error: data?.error ?? null, message: data?.message ?? null, data };
 }
 
-async function get(path, token = null) {
+async function get(path, { token = null, signal = null }) {
   let headers = {};
   if (token !== null) headers = { ...headers, Authorization: `Bearer ${token}` };
 
   const res = await fetch(`${SERVER_BASE_URL}${path}`, {
+    signal,
     headers,
   });
 
   return parsedResponse(res);
 }
 
-async function post(path, body, token = null) {
+async function post(path, body, { token = null, signal = null }) {
   let headers = { "Content-Type": "application/json" };
   if (token !== null) headers = { ...headers, Authorization: `Bearer ${token}` };
 
   const res = await fetch(`${SERVER_BASE_URL}${path}`, {
     method: "POST",
     headers,
+    signal,
     body: JSON.stringify(body),
   });
 
   return parsedResponse(res);
 }
 
-async function put(path, body, token = null) {
+async function put(path, body, { token = null, signal = null }) {
   let headers = { "Content-Type": "application/json" };
   if (token !== null) headers = { ...headers, Authorization: `Bearer ${token}` };
 
   const res = await fetch(`${SERVER_BASE_URL}${path}`, {
     method: "PUT",
     headers,
+    signal,
     body: JSON.stringify(body),
   });
 
   return parsedResponse(res);
 }
 
-async function del(path, token = null) {
+async function del(path, { token = null, signal = null }) {
   let headers = {};
   if (token !== null) headers = { ...headers, Authorization: `Bearer ${token}` };
 
   const res = await fetch(`${SERVER_BASE_URL}${path}`, {
     method: "DELETE",
+    signal,
     headers,
   });
 

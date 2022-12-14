@@ -17,65 +17,65 @@ async function revalidateSession({ access, refresh }) {
   return true;
 }
 
-async function get(path) {
+async function get(path, { signal = null }) {
   const { access, refresh } = token.pair.get();
   if (!access || !refresh) return DEFAULT_RESPONSE;
 
-  let response = await api.get(path, access);
+  let response = await api.get(path, { token: access, signal });
 
   if (response.status === UNAUTHORIZED) {
     const successfulRevalidation = revalidateSession({ access, refresh });
     if (!successfulRevalidation) return DEFAULT_RESPONSE;
 
-    response = await get(path);
+    response = await get(path, { signal });
   }
 
   return response;
 }
 
-async function post(path, body) {
+async function post(path, body, { signal = null }) {
   const { access, refresh } = token.pair.get();
   if (!access || !refresh) return DEFAULT_RESPONSE;
 
-  let response = await api.post(path, body, access);
+  let response = await api.post(path, body, { token: access, signal });
 
   if (response.status === UNAUTHORIZED) {
     const successfulRevalidation = revalidateSession({ access, refresh });
     if (!successfulRevalidation) return DEFAULT_RESPONSE;
 
-    response = await post(path, body);
+    response = await post(path, body, { signal });
   }
 
   return response;
 }
 
-async function put(path, body) {
+async function put(path, body, { signal = null }) {
   const { access, refresh } = token.pair.get();
   if (!access || !refresh) return DEFAULT_RESPONSE;
 
-  let response = await api.put(path, body, access);
+  let response = await api.put(path, body, { token: access, signal });
 
   if (response.status === UNAUTHORIZED) {
     const successfulRevalidation = revalidateSession({ access, refresh });
     if (!successfulRevalidation) return DEFAULT_RESPONSE;
 
-    response = await put(path, body);
+    response = await put(path, body, { signal });
   }
 
   return response;
 }
 
-async function del(path) {
+async function del(path, { signal = null }) {
   const { access, refresh } = token.pair.get();
   if (!access || !refresh) return DEFAULT_RESPONSE;
 
-  let response = await api.delete(path, access);
+  let response = await api.delete(path, { token: access, signal });
 
   if (response.status === UNAUTHORIZED) {
     const successfulRevalidation = revalidateSession({ access, refresh });
     if (!successfulRevalidation) return DEFAULT_RESPONSE;
 
-    response = await del(path);
+    response = await del(path, { signal });
   }
 
   return response;
