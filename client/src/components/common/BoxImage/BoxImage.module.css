@@ -1,5 +1,9 @@
 .box {
   overflow: hidden;
+}
+
+.box img {
   object-fit: contain;
   object-position: center;
+  width: 100%;
 }
