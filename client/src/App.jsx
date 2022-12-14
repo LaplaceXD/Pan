@@ -3,6 +3,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import { ProtectedRoutes } from "@components/module";
+import Home from "@components/pages/Home";
 import Login from "@components/pages/Login";
 import EmployeeLayout from "@components/template/EmployeeLayout";
 import { AuthProvider } from "@hooks/Auth";
@@ -14,7 +15,7 @@ function App() {
         <Routes>
           <Route path="/" element={<ProtectedRoutes />}>
             <Route element={<EmployeeLayout />}>
-              <Route index element={<h1>Home</h1>} />
+              <Route index element={<Home />} />
               <Route path="/order" element={<h1>Order</h1>} />
               <Route path="/product" element={<h1>Products</h1>} />
               <Route path="/supplier" element={<h1>Supplier</h1>} />
