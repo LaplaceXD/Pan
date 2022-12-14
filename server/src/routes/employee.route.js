@@ -2,9 +2,8 @@ const express = require("express");
 
 const { auth, permit, validate } = require("../middleware");
 const { role } = require("../constants/employee");
-const { roles, owner } = require("../providers/permissions");
+const { roles, owner, sameRoleAndNotOwner } = require("../providers/permissions");
 
-const sameRoleAndNotOwner = require("../../helpers/SameEmployee");
 const Employee = require("../models/employee.model");
 const employeeController = require("../controllers/employee.controller");
 const router = express.Router();
@@ -12,9 +11,10 @@ const router = express.Router();
 router.get("/", [auth, permit({ allow: [roles(role.MANAGER)] })], employeeController.getAll);
 
 router.get(
-  "/:id", 
-  [auth, permit({ allow: [roles(role.MANAGER), owner], deny: [sameRoleAndNotOwner] })], 
-  employeeController.getById);
+  "/:id",
+  [auth, permit({ allow: [roles(role.MANAGER), owner], deny: [sameRoleAndNotOwner] })],
+  employeeController.getById
+);
 
 router.post(
   "/",
