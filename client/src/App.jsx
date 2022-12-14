@@ -5,6 +5,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { ProtectedRoutes } from "@components/module";
 import Home from "@components/pages/Home";
 import Login from "@components/pages/Login";
+import Product from "@components/pages/Product";
 import EmployeeLayout from "@components/template/EmployeeLayout";
 import { AuthProvider } from "@hooks/auth";
 
@@ -17,7 +18,7 @@ function App() {
             <Route element={<EmployeeLayout />}>
               <Route index element={<Home />} />
               <Route path="/order" element={<h1>Order</h1>} />
-              <Route path="/product" element={<h1>Products</h1>} />
+              <Route path="/product" element={<Product />} />
               <Route path="/supplier" element={<h1>Supplier</h1>} />
             </Route>
           </Route>
