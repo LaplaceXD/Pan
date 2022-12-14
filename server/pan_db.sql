@@ -17,27 +17,14 @@ CREATE TABLE IF NOT EXISTS `Employee` (
     CONSTRAINT UC_Employee_Email UNIQUE (email)
 );
 
-CREATE TABLE IF NOT EXISTS `Promo` (
-    promo_id	    INT	            NOT NULL AUTO_INCREMENT,	
-    promo_code	    VARCHAR(100)	NOT NULL,
-    discount	    DECIMAL(5,4)	NOT NULL,	
-    date_start	    DATE,
-    date_end	    DATE,
-    available_count	INT	NOT NULL,
-    description	    TEXT,
-    CONSTRAINT PK_Promo PRIMARY KEY (promo_id)
-);
-
 CREATE TABLE IF NOT EXISTS `Order` (
     order_id	    INT	                            NOT NULL AUTO_INCREMENT,	
     employee_id	    INT	                            NOT NULL,	
-    promo_id        INT,
     date_placed	    DATETIME	                    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     date_completed	DATETIME,
     status	        ENUM('pending', 'completed')	NOT NULL DEFAULT 'pending',
     CONSTRAINT PK_Order PRIMARY KEY (order_id),
     CONSTRAINT FK_Order_Employee FOREIGN KEY (employee_id) REFERENCES Employee(employee_id),
-    CONSTRAINT FK_Order_Promo FOREIGN KEY (promo_id) REFERENCES Promo(promo_id)	
 );
 
 CREATE TABLE IF NOT EXISTS `Category`	(
