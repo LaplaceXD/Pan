@@ -13,7 +13,7 @@ class Order {
     }
 
   // Saves the order into the database
-  async create() {
+  async save() {
     
     let retVal = null;
 
@@ -42,24 +42,6 @@ class Order {
     }
 
     return retVal;
-  }
-
-  // Deactivates/Activates an account with given employee ID
-  async toggleStatus() {
-    try {
-      this.is_active = this.is_active === status.ACTIVE ? status.INACTIVE : status.ACTIVE;
-
-      const conn = await db.connect();
-      await conn.execute(
-        `UPDATE Employee SET is_active = :is_active WHERE employee_id = :employee_id`,
-        this
-      );
-
-      await conn.end();
-    } catch (err) {
-      console.log("[EMPLOYEE ERROR]", err.message);
-      throw new InternalServerError();
-    }
   }
 
   // Displays all order data

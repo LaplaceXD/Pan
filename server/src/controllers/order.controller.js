@@ -18,16 +18,11 @@ const getById = async (req, res) => {
 };
 
 const create = async (req, res) => {
-  const employee = new Employee(req.body);
+  const order = new Order(req.body);
 
-  const password = generatePassword();
-  employee.password = await hash.hashPassword(password);
-
-  const data = await employee.save();
+  const data = await order.save();
   if (!data) throw new InternalServerError();
 
-  // TODO: Email this instead of returning it
-  data.password = password;
   res.status(200).send(data);
 };
 
