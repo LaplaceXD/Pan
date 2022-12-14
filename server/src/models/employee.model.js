@@ -14,7 +14,7 @@ class Employee {
     this.contact_no = employee.contact_no;
     this.email = employee.email;
     this.date_employed = employee.date_employed;
-    this.image_src = employee.image_src;
+    this.image_src = employee.image_src || "";
     this.role = employee.role || role.EMPLOYEE;
     this.is_active = employee.is_active || status.ACTIVE;
   }
@@ -43,8 +43,8 @@ class Employee {
     try {
       const conn = await db.connect();
       const [data] = await conn.execute(
-        `INSERT INTO Employee (first_name, last_name, password, contact_no, email, date_employed, image_src)
-        VALUES (:first_name, :last_name, :password, :contact_no, :email, :date_employed, :image_src)`,
+        `INSERT INTO Employee (first_name, last_name, password, contact_no, email, date_employed)
+        VALUES (:first_name, :last_name, :password, :contact_no, :email, :date_employed)`,
         this
       );
       await conn.end();
@@ -52,8 +52,95 @@ class Employee {
       this.employee_id = data.insertId;
       retVal = this;
     } catch (err) {
-      console.log("[EMPLOYEE DB ERROR]", err.message);
-      throw new InternalServerError(err);
+      console.log("[EMPLOYEE ERROR]", err.message);
+      throw new InternalServerError();
+    }
+
+    return retVal;
+  }
+
+  // Updates given employee values
+  async update(details) {
+    let retVal = null;
+    const editedEmployee = { ...this, ...details };
+
+    try {
+      const conn = await db.connect();
+      await conn.execute(
+        `UPDATE Employee 
+        SET 
+          first_name = :first_name,
+          last_name = :last_name,
+          contact_no = :contact_no,
+          email = :email,
+          date_employed = :date_employed
+        WHERE
+          employee_id = :employee_id
+        `,
+        editedEmployee
+      );
+
+      await conn.end();
+      retVal = new Employee(editedEmployee);
+    } catch (err) {
+      console.log("[EMPLOYEE ERROR]", err.message);
+      throw new InternalServerError();
+    }
+
+    return retVal;
+  }
+
+  // Saves the value of the password to db
+  async savePassword() {
+    try {
+      const conn = await db.connect();
+      await conn.execute(
+        `UPDATE Employee 
+        SET 
+          password = :password
+        WHERE
+          employee_id = :employee_id;
+        `,
+        this
+      );
+
+      await conn.end();
+    } catch (err) {
+      console.log("[EMPLOYEE ERROR]", err.message);
+      throw new InternalServerError();
+    }
+  }
+
+  // Deactivates/Activates an account with given employee ID
+  async toggleStatus() {
+    try {
+      this.is_active = this.is_active === status.ACTIVE ? status.INACTIVE : status.ACTIVE;
+
+      const conn = await db.connect();
+      await conn.execute(
+        `UPDATE Employee SET is_active = :is_active WHERE employee_id = :employee_id`,
+        this
+      );
+
+      await conn.end();
+    } catch (err) {
+      console.log("[EMPLOYEE ERROR]", err.message);
+      throw new InternalServerError();
+    }
+  }
+
+  // Displays all employee data
+  static async findAll() {
+    let retVal = null;
+
+    try {
+      const conn = await db.connect();
+      const [data] = await conn.query(`SELECT * FROM Employee`);
+      await conn.end();
+
+      retVal = data.map((d) => new Employee(d));
+    } catch (err) {
+      console.log("[EMPLOYEE ERROR]", err.message);
     }
 
     return retVal;
@@ -118,9 +205,32 @@ class Employee {
           .trim(),
         date_employed: Joi.date().label("Date Employed").max("now").iso().required(),
       })
-      .options({ abortEarly: false, allowUnknown: true });
+      .options({ abortEarly: false });
 
     return schema.validate(employee);
+  }
+
+  static async validatePassword(body) {
+    const schema = Joi.object()
+      .keys({
+        current_password: Joi.string().label("Current Password").required(),
+        new_password: Joi.string()
+          .label("New Password")
+          .min(8)
+          .max(16)
+          .regex(/\d/)
+          .message("{{#label}} must contain a digit.")
+          .regex(/[A-Z]/)
+          .message("{{#label}} must contain an uppercase letter.")
+          .regex(/[a-z]/)
+          .message("{{#label}} must contain a lowercase letter.")
+          .regex(/[!@#$%^&*]/)
+          .message("{{#label}} must contain a special character (!@#$%^&*).")
+          .required(),
+      })
+      .options({ abortEarly: false });
+
+    return schema.validate(body);
   }
 }
 
