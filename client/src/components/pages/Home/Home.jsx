@@ -1,15 +1,15 @@
 import { useState } from "react";
 
-import { Button, Options, SearchBar } from "@components/common";
-import { Order, Product, UserBanner } from "@components/module";
-
 import empImg from "@assets/imgs/emp-img.jpg";
+import { Button, Grid, Options, SearchBar } from "@components/common";
+import { Order, Product, UserBanner } from "@components/module";
 import useQuery from "@hooks/query";
-import auth from "@utils/auth";
+import { getAllProducts } from "@services/product";
+
 import styles from "./Home.module.css";
 
 function Home() {
-  const { data: products } = useQuery((signal) => auth.get("/products", { signal }));
+  const { data: products } = useQuery(getAllProducts);
   const [cart, setCart] = useState([
     {
       id: 1,
@@ -71,9 +71,10 @@ function Home() {
           onChange={(value) => console.log(value)}
         />
 
-        <Product.Grid
+        <Grid
           className={styles.productGrid}
-          products={products}
+          items={products}
+          itemKey={(product) => product.product_id}
           RenderComponent={({ product_id, name, unit_price }) => (
             <Product.Card
               key={product_id}
@@ -91,19 +92,9 @@ function Home() {
 
         <Order.Summary
           className={styles.orderSummary}
-          title="Order Details"
-          orders={cart}
-          total={(total, { unit_price, quantity }) => total + unit_price * quantity}
-          RenderComponent={({ id, name, unit_price, quantity }) => (
-            <Order.Detail
-              name={name}
-              price={quantity * unit_price}
-              quantity={quantity}
-              key={id}
-              onIncrement={() => handleItemIncrement(id)}
-              onDecrement={() => handleItemDecrement(id)}
-            />
-          )}
+          cart={cart}
+          onItemIncrement={(item) => handleItemIncrement(item.id)}
+          onItemDecrement={(item) => handleItemDecrement(item.id)}
         />
 
         <div className={styles.checkoutBtns}>
