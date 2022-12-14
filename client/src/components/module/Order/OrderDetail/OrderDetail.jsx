@@ -1,6 +1,6 @@
 import styles from "./OrderDetail.module.css";
 
-function OrderDetail({ name, price, onIncrement, onDecrement, quantity = 0 }) {
+function OrderDetail({ name, price = 0, onIncrement, onDecrement, quantity = 0 }) {
   return (
     <li className={styles.container}>
       <div className={styles.rightContainer}>
@@ -15,7 +15,7 @@ function OrderDetail({ name, price, onIncrement, onDecrement, quantity = 0 }) {
           </button>
         </div>
       </div>
-      <p className={styles.productTotal}>Php {price}</p>
+      <p className={styles.productTotal}>Php {price.toFixed(2)}</p>
     </li>
   );
 }
