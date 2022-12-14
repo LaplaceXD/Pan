@@ -1,7 +1,7 @@
 const SERVER_BASE_URL = import.meta.env.VITE_SERVER_URL;
 
-async function parsedResponse(response) {
-  const data = await response.json();
+async function parsedResponse(res) {
+  const data = await res.json();
   return { status: res.status, error: data?.error ?? null, message: data?.message ?? null, data };
 }
 

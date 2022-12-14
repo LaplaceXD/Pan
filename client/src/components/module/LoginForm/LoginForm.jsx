@@ -23,7 +23,10 @@ function LoginForm({ ...props }) {
     }),
     onSubmit: async (values) => {
       formik.setSubmitting(true);
-      const { error, access, refresh } = await loginEmployee(values);
+      const {
+        error,
+        data: { access, refresh },
+      } = await loginEmployee(values);
 
       if (error) {
         toast.error("Invalid credentials.");
