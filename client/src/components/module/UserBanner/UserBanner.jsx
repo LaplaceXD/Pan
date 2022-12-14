@@ -5,10 +5,10 @@ import { useAuth } from "@hooks/Auth";
 import styles from "./UserBanner.module.css";
 
 function UserBanner() {
-  const [{ first_name, last_name, role }] = useAuth();
+  const { user } = useAuth();
 
-  const fullName = `${first_name} ${last_name}`;
-  const capitalizedRole = role.charAt(0).toUpperCase() + role.slice(1);
+  const fullName = `${user.first_name} ${user.last_name}`;
+  const capitalizedRole = user.role.charAt(0).toUpperCase() + user.role.slice(1);
 
   return (
     <div className={styles.container}>

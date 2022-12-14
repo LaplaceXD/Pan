@@ -8,9 +8,9 @@ import { useAuth } from "@hooks/Auth";
 import styles from "./Login.module.css";
 
 function Login() {
-  const [auth] = useAuth();
+  const { user } = useAuth();
 
-  return auth ? (
+  return user ? (
     <Navigate to="/" />
   ) : (
     <main className={styles.container}>

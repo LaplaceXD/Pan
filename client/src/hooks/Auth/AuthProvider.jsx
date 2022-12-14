@@ -1,5 +1,6 @@
 import { useState } from "react";
 
+import { loginEmployee } from "@services/auth";
 import token from "@utils/token";
 import AuthContext from "./AuthContext";
 
@@ -18,7 +19,18 @@ function AuthProvider({ children }) {
     return null;
   });
 
-  return <AuthContext.Provider value={[auth, setAuth]}>{children}</AuthContext.Provider>;
+  const logout = () => setAuth(null);
+
+  async function login({ email, password }) {
+    const { error, data: tokens } = await loginEmployee({ email, password });
+    if (error) return error;
+
+    token.pair.set({ access: tokens.access, refresh: tokens.refresh });
+    setAuth(token.access.payload());
+    return null;
+  }
+
+  return <AuthContext.Provider value={{ user: auth, login, logout }}>{children}</AuthContext.Provider>;
 }
 
 export default AuthProvider;

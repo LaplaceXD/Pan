@@ -5,12 +5,10 @@ import * as Yup from "yup";
 
 import { Button, Field } from "@components/common";
 import useAuth from "@hooks/Auth/useAuth";
-import { loginEmployee } from "@services/auth";
-import token from "@utils/token";
 
 function LoginForm({ ...props }) {
   const navigate = useNavigate();
-  const [_, setAuth] = useAuth();
+  const auth = useAuth();
 
   const formik = useFormik({
     initialValues: {
@@ -23,24 +21,15 @@ function LoginForm({ ...props }) {
     }),
     onSubmit: async (values) => {
       formik.setSubmitting(true);
-      const {
-        error,
-        data: { access, refresh },
-      } = await loginEmployee(values);
+      const error = await auth.login(values);
 
       if (error) {
-        toast.error("Invalid credentials.");
-
         formik.setSubmitting(false);
-        return;
+        toast.error("Invalid credentials.");
+      } else {
+        navigate("/");
+        toast.success("Logged in.");
       }
-
-      toast.success("Logged in.");
-
-      token.pair.set({ access, refresh });
-      setAuth(token.access.payload());
-
-      navigate("/");
     },
   });
 
