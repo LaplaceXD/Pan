@@ -21,8 +21,6 @@ CREATE TABLE IF NOT EXISTS `Order` (
     order_id	    INT	                            NOT NULL AUTO_INCREMENT,	
     employee_id	    INT	                            NOT NULL,	
     date_placed	    DATETIME	                    NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    date_completed	DATETIME,
-    status	        ENUM('pending', 'completed')	NOT NULL DEFAULT 'pending',
     CONSTRAINT PK_Order PRIMARY KEY (order_id),
     CONSTRAINT FK_Order_Employee FOREIGN KEY (employee_id) REFERENCES Employee(employee_id),
 );
