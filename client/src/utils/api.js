@@ -1,13 +1,14 @@
 const SERVER_BASE_URL = import.meta.env.VITE_SERVER_URL;
+const DEFAULT_OPTIONS = { token: null, signal: null };
 
 async function parsedResponse(res) {
   const data = await res.json();
   return { status: res.status, error: data?.error ?? null, message: data?.message ?? null, data };
 }
 
-async function get(path, { token = null, signal = null }) {
+async function get(path, { token = null, signal = null } = DEFAULT_OPTIONS) {
   let headers = {};
-  if (token !== null) headers = { ...headers, Authorization: `Bearer ${token}` };
+  if (token) headers = { ...headers, Authorization: `Bearer ${token}` };
 
   const res = await fetch(`${SERVER_BASE_URL}${path}`, {
     signal,
@@ -17,9 +18,9 @@ async function get(path, { token = null, signal = null }) {
   return parsedResponse(res);
 }
 
-async function post(path, body, { token = null, signal = null }) {
+async function post(path, body, { token = null, signal = null } = DEFAULT_OPTIONS) {
   let headers = { "Content-Type": "application/json" };
-  if (token !== null) headers = { ...headers, Authorization: `Bearer ${token}` };
+  if (token) headers = { ...headers, Authorization: `Bearer ${token}` };
 
   const res = await fetch(`${SERVER_BASE_URL}${path}`, {
     method: "POST",
@@ -31,9 +32,9 @@ async function post(path, body, { token = null, signal = null }) {
   return parsedResponse(res);
 }
 
-async function put(path, body, { token = null, signal = null }) {
+async function put(path, body, { token = null, signal = null } = DEFAULT_OPTIONS) {
   let headers = { "Content-Type": "application/json" };
-  if (token !== null) headers = { ...headers, Authorization: `Bearer ${token}` };
+  if (token) headers = { ...headers, Authorization: `Bearer ${token}` };
 
   const res = await fetch(`${SERVER_BASE_URL}${path}`, {
     method: "PUT",
@@ -45,9 +46,9 @@ async function put(path, body, { token = null, signal = null }) {
   return parsedResponse(res);
 }
 
-async function del(path, { token = null, signal = null }) {
+async function del(path, { token = null, signal = null } = DEFAULT_OPTIONS) {
   let headers = {};
-  if (token !== null) headers = { ...headers, Authorization: `Bearer ${token}` };
+  if (token) headers = { ...headers, Authorization: `Bearer ${token}` };
 
   const res = await fetch(`${SERVER_BASE_URL}${path}`, {
     method: "DELETE",
