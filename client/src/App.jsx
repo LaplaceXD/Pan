@@ -6,7 +6,7 @@ import { ProtectedRoutes } from "@components/module";
 import Home from "@components/pages/Home";
 import Login from "@components/pages/Login";
 import EmployeeLayout from "@components/template/EmployeeLayout";
-import { AuthProvider } from "@hooks/Auth";
+import { AuthProvider } from "@hooks/auth";
 
 function App() {
   return (

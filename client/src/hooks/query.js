@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { useAuth } from "@hooks/Auth";
+import { useAuth } from "@hooks/auth";
 import { useNavigate } from "react-router-dom";
 
 function useQuery(query, checkAuth = true) {

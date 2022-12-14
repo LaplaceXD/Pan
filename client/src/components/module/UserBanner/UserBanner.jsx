@@ -1,6 +1,6 @@
 import placeholderImg from "@assets/imgs/emp-img.jpg";
 import { BoxImage } from "@components/common";
-import { useAuth } from "@hooks/Auth";
+import { useAuth } from "@hooks/auth";
 
 import styles from "./UserBanner.module.css";
 
