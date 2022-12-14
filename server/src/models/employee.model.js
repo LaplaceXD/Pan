@@ -181,7 +181,9 @@ class Employee {
   }
 
   static async validate(employee) {
-    const match = await Employee.findByEmail(employee.email);
+
+    let match = await Employee.findByEmail(employee.email);
+    if (match?.contact_no === employee.contact_no) match = null;
 
     const schema = Joi.object()
       .keys({
