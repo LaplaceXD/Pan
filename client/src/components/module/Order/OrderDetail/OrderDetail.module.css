@@ -29,14 +29,15 @@
 }
 
 .counter-qty {
-  color: var(--text-color);
   margin: 0 0.8em;
+  color: var(--text-color);
 }
 
 .counter-btn {
   --size: 22px;
 
   background-color: var(--accent-color);
+  color: var(--text-color);
   width: var(--size);
   height: var(--size);
   border-radius: 4px;

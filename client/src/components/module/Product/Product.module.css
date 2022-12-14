@@ -29,17 +29,16 @@
 }
 
 .card-img {
-  --width: 256px;
-
   border-radius: 16px;
   overflow: hidden;
+  height: 192px;
 }
 
 .card-img img {
   object-fit: cover;
   object-position: center;
   aspect-ratio: 16 / 12;
-  width: var(--width);
+  width: 100%;
 }
 
 .card-name {
