@@ -12,7 +12,11 @@ async function refreshTokens({ access, refresh }, signal) {
 
 async function revalidateSession({ access, refresh }, signal) {
   const { status, data: tokens } = await refreshTokens({ access, refresh }, signal);
-  if (status !== SUCCESS) return false;
+
+  if (status !== SUCCESS) {
+    token.pair.remove();
+    return false;
+  }
 
   token.pair.set({ access: tokens.access, refresh: tokens.refresh });
   return true;
