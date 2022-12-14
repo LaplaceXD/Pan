@@ -1,13 +1,23 @@
 .logo {
-  width: 92px;
+  width: var(--logo-width);
+}
+
+.pseudo-container {
+  --logo-width: 92px;
+  --y-padding: 1.5em;
+
+  background-color: var(--accent-color);
+  width: calc(var(--logo-width) + var(--y-padding) * 2);
 }
 
 .container {
-  background-color: var(--accent-color);
+  position: fixed;
+  height: 100vh;
+
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 2.25em 1.5em 1.5em;
+  padding: 2.25em var(--y-padding) 1.5em;
 }
 
 .nav {
