@@ -1,12 +1,15 @@
 import { useState } from "react";
 
-import empImg from "@assets/imgs/emp-img.jpg";
 import { Button, Options, SearchBar } from "@components/common";
 import { Order, Product, UserBanner } from "@components/module";
 
+import empImg from "@assets/imgs/emp-img.jpg";
+import useQuery from "@hooks/query";
+import auth from "@utils/auth";
 import styles from "./Home.module.css";
 
 function Home() {
+  const { data: products } = useQuery((signal) => auth.get("/products", { signal }));
   const [cart, setCart] = useState([
     {
       id: 1,
@@ -70,13 +73,15 @@ function Home() {
 
         <Product.Grid
           className={styles.productGrid}
-          products={[
-            { id: 1, img: empImg, name: "Chocolate Chips Muffin", price: 105 },
-            { id: 2, img: empImg, name: "Chocolate Chips Muffin", price: 105 },
-            { id: 3, img: empImg, name: "Chocolate Chips Muffin", price: 105 },
-          ]}
-          RenderComponent={({ id, img, name, price }) => (
-            <Product.Card key={id} img={img} name={name} price={price} onClick={() => console.log(name)} />
+          products={products}
+          RenderComponent={({ product_id, name, unit_price }) => (
+            <Product.Card
+              key={product_id}
+              img={empImg}
+              name={name}
+              price={unit_price}
+              onClick={() => console.log(name)}
+            />
           )}
         />
       </div>
