@@ -11,11 +11,10 @@ const getAll = async (_, res) => {
 };
 
 const getById = async (req, res) => {
-  const data = await Employee.findById(req.params.id);
-  if (!data) throw new NotFound(EMPLOYEE_404);
+  const data = await Order.findById(req.params.id);
+  if (!data) throw new NotFound(ORDER_404);
 
-  const { password, ...filteredData } = data;
-  res.status(200).send(filteredData);
+  res.status(200).send(data);
 };
 
 const create = async (req, res) => {

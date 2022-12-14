@@ -95,6 +95,41 @@ class Order {
     return retVal;
   }
 
+  static async findById(id) {
+    let retVal = null;
+
+    try {
+        const conn = await db.connect();
+        const [order] = await conn.execute(
+          "SELECT order_id, employee_id, date_completed AS date_placed FROM `order` WHERE `order_id` = ?", [id]
+        );
+        console.log(order);
+        const [orderline] = await conn.execute(
+          "SELECT ol.order_id, p.name, p.description, p.unit_price, p.image_src, ol.quantity, ol.notes FROM `order_line` AS `ol`  INNER JOIN `order` AS `o`ON ol.order_id = o.order_id INNER JOIN `product` AS `p` ON ol.product_id = p.product_id INNER JOIN `employee` AS `e` ON e.employee_id = o.employee_id INNER JOIN `employee` AS `ep` ON ep.employee_id = p.creator_id;"
+        );
+  
+        order.forEach( (order) => {
+          order["lines"] = [];
+          orderline.forEach( (orderline) => {
+              if (orderline["order_id"] == order["order_id"]) {
+                  delete orderline["order_id"];
+                  order["lines"].push(orderline);
+              }
+          })
+              
+        });
+      
+        retVal = order;
+        if (order.length === 0) retVal = null;
+        await conn.end();
+    } catch (err) {
+      console.log("[ORDER DB ERROR]", err.message);
+      throw new InternalServerError(err);
+    }
+
+    return retVal;
+  }
+
   static async validate(order) {
     const schema = Joi.object()
       .keys({
