@@ -4,7 +4,7 @@ import { useAuth } from "@hooks/auth";
 
 import styles from "./UserBanner.module.css";
 
-function UserBanner() {
+function UserBanner({ imgSize = 72 }) {
   const { user } = useAuth();
 
   const fullName = `${user.first_name} ${user.last_name}`;
@@ -15,7 +15,7 @@ function UserBanner() {
       <BoxImage
         src={placeholderImg}
         alt={`${fullName}'s profile picture.`}
-        size={72}
+        size={imgSize}
         className={styles.img}
       />
       <div className={styles.details}>
