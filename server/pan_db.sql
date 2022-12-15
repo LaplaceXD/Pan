@@ -94,7 +94,6 @@ CREATE TABLE
     );
 
 -- SAMPLE DATA FOR CATEGORY TABLE -- 
-
 INSERT INTO
     `category` (
         `category_id`,
@@ -153,7 +152,6 @@ WHERE
     `category`.`name` = 'Others';
 
 -- SAMPLE DATA FOR EMPLOYEE TABLE -- 
-
 INSERT INTO
     `employee` (
         `employee_id`,
@@ -167,7 +165,7 @@ INSERT INTO
         `role`,
         `is_active`
     )
-    VALUES
+VALUES
     (
         1,
         'Jonh',
@@ -218,21 +216,163 @@ INSERT INTO
     );
 
 -- SAMPLE DATA FOR ORDER TABLE -- 
-
-INSERT INTO `order` (`order_id`, `employee_id`, `date_placed`) VALUES (1, '2', current_timestamp()), (2, '3', current_timestamp()), (3, '4', current_timestamp());
+INSERT INTO
+    `order` (`order_id`, `employee_id`, `date_placed`)
+VALUES
+    (1, '2', current_timestamp()),
+    (2, '3', current_timestamp()),
+    (3, '4', current_timestamp());
 
 -- SAMPLE DATA FOR PRODUCT TABLE --
-
-INSERT INTO `product` (`product_id`, `category_id`, `creator_id`, `date_created`, `name`, `description`, `unit_price`, `image_src`, `is_available`) VALUES (1, '1', '2', current_timestamp(), 'Pain au Chocolat', 'Almost like a crispy, buttery, airy, and simply irresistibly delicious French Croissant, but filled with chocolate!', '9.99', '../../images/product/painauchocolat.jpg', '1'), (2, '1', '2', current_timestamp(), 'French Toast', 'A dish of sliced bread soaked in beaten eggs and often milk or cream, then pan fried.', '7.99', '../../images/product/frenchtoast.jpg', '1'), (3, '3', '3', current_timestamp(), 'Raspberry Pie', 'A type of pie with a raspberry filling', '19.99', '../../images/product/raspberrypie.jpg', '1'), (4, '5', '4', current_timestamp(), 'Macademia Nut Cookie', 'White chocolate cookies with brown sugar, almonds, and macademia nuts.', '2.99', '../../images/product/macademiacookies.jpg', '1');
+INSERT INTO
+    `product` (
+        `product_id`,
+        `category_id`,
+        `creator_id`,
+        `date_created`,
+        `name`,
+        `description`,
+        `unit_price`,
+        `image_src`,
+        `is_available`
+    )
+VALUES
+    (
+        1,
+        '1',
+        '2',
+        current_timestamp(),
+        'Pain au Chocolat',
+        'Almost like a crispy, buttery, airy, and simply irresistibly delicious French Croissant, but filled with chocolate!',
+        '9.99',
+        '../../images/product/painauchocolat.jpg',
+        '1'
+    ),
+    (
+        2,
+        '1',
+        '2',
+        current_timestamp(),
+        'French Toast',
+        'A dish of sliced bread soaked in beaten eggs and often milk or cream, then pan fried.',
+        '7.99',
+        '../../images/product/frenchtoast.jpg',
+        '1'
+    ),
+    (
+        3,
+        '3',
+        '3',
+        current_timestamp(),
+        'Raspberry Pie',
+        'A type of pie with a raspberry filling',
+        '19.99',
+        '../../images/product/raspberrypie.jpg',
+        '1'
+    ),
+    (
+        4,
+        '5',
+        '4',
+        current_timestamp(),
+        'Macademia Nut Cookie',
+        'White chocolate cookies with brown sugar, almonds, and macademia nuts.',
+        '2.99',
+        '../../images/product/macademiacookies.jpg',
+        '1'
+    );
 
 -- SAMPLE DATA FOR ORDERLINE TABLE -- 
-
-INSERT INTO `order_line` (`order_id`, `product_id`, `quantity`, `notes`) VALUES ('1', '4', '4', 'Extra warm'), ('2', '1', '2', 'N/A'), ('2', '2', '2', 'Less butter'), ('3', '3', '1', 'Crispy crust');
+INSERT INTO
+    `order_line` (`order_id`, `product_id`, `quantity`, `notes`)
+VALUES
+    ('1', '4', '4', 'Extra warm'),
+    ('2', '1', '2', 'N/A'),
+    ('2', '2', '2', 'Less butter'),
+    ('3', '3', '1', 'Crispy crust');
 
 -- SAMPLE DATA FOR SUPPLIER TABLE --
-
-INSERT INTO `supplier` (`supplier_id`, `name`, `building`, `street_no`, `street_name`, `city`, `zip_code`, `contact_no`, `email`, `is_active`) VALUES (1, 'Wheat and Goods Co.', 'Quarry House', '42', 'Main Road', 'Manila City', '1000', '83726192874', 'wheatandgoodsco@gmail.com', '1'), (2, 'Bread Express', 'Daytona Apartment', '21', 'Half Street', 'Lapu-Lapu City', '6015', '18572940192', 'breadexpress@gmail.com', '1'), (3, 'House of Sweets', 'Bunzel', '69', 'Park Road', 'Quezon City', '1008', '02938746172', 'houseofsweets@gmail.com', '1');
+INSERT INTO
+    `supplier` (
+        `supplier_id`,
+        `name`,
+        `building`,
+        `street_no`,
+        `street_name`,
+        `city`,
+        `zip_code`,
+        `contact_no`,
+        `email`,
+        `is_active`
+    )
+VALUES
+    (
+        1,
+        'Wheat and Goods Co.',
+        'Quarry House',
+        '42',
+        'Main Road',
+        'Manila City',
+        '1000',
+        '83726192874',
+        'wheatandgoodsco@gmail.com',
+        '1'
+    ),
+    (
+        2,
+        'Bread Express',
+        'Daytona Apartment',
+        '21',
+        'Half Street',
+        'Lapu-Lapu City',
+        '6015',
+        '18572940192',
+        'breadexpress@gmail.com',
+        '1'
+    ),
+    (
+        3,
+        'House of Sweets',
+        'Bunzel',
+        '69',
+        'Park Road',
+        'Quezon City',
+        '1008',
+        '02938746172',
+        'houseofsweets@gmail.com',
+        '1'
+    );
 
 -- SAMPLE DATA FOR STOCK TABLE -- 
-
-INSERT INTO `stock` (`stock_id`, `product_id`, `supplier_id`, `date_supplied`, `quantity`, `unit`, `unit_price`, `notes`) VALUES (1, '2', '2', CURRENT_DATE(), '50', '', '49.99', 'N/A'), (2, '4', '3', CURRENT_DATE(), '30', '', '99.99', 'N/A');
+INSERT INTO
+    `stock` (
+        `stock_id`,
+        `product_id`,
+        `supplier_id`,
+        `date_supplied`,
+        `quantity`,
+        `unit`,
+        `unit_price`,
+        `notes`
+    )
+VALUES
+    (
+        1,
+        '2',
+        '2',
+        CURRENT_DATE(),
+        '50',
+        '',
+        '49.99',
+        'N/A'
+    ),
+    (
+        2,
+        '4',
+        '3',
+        CURRENT_DATE(),
+        '30',
+        '',
+        '99.99',
+        'N/A'
+    );
