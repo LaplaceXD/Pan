@@ -3,11 +3,12 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import { ProtectedRoutes } from "@components/module";
-import Home from "@components/pages/Home";
 import Login from "@components/pages/Login";
-import Product from "@components/pages/Product";
-import EmployeeLayout from "@components/template/EmployeeLayout";
+import NavLayout from "@components/template/NavLayout";
+
 import { AuthProvider } from "@hooks/auth";
+import employee from "@routes/employee";
+import { parseRoutes } from "@utils/routes";
 
 function App() {
   return (
@@ -15,11 +16,8 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={<ProtectedRoutes />}>
-            <Route element={<EmployeeLayout />}>
-              <Route index element={<Home />} />
-              <Route path="/order" element={<h1>Order</h1>} />
-              <Route path="/product" element={<Product />} />
-              <Route path="/supplier" element={<h1>Supplier</h1>} />
+            <Route element={<NavLayout links={employee.links} useOutlet />}>
+              {parseRoutes(employee.routes)}
             </Route>
           </Route>
           <Route path="/login" element={<Login />} />
