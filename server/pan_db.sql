@@ -2,86 +2,224 @@ CREATE DATABASE IF NOT EXISTS pan_db;
 
 USE pan_db;
 
-CREATE TABLE IF NOT EXISTS `Employee` (
-    employee_id	    INT	                        NOT NULL AUTO_INCREMENT,
-    first_name	    VARCHAR(300)	            NOT NULL,
-    last_name	    VARCHAR(300)	            NOT NULL,
-    password	    VARCHAR(280)	            NOT NULL,
-    contact_no	    VARCHAR(11)	                NOT NULL,
-    email	        VARCHAR(300)	            NOT NULL,
-    date_employed	DATE	                    NOT NULL,
-    image_src	    VARCHAR(128)	            NOT NULL,
-    role	        ENUM('manager', 'employee')	NOT NULL DEFAULT 'employee',	
-    is_active	    ENUM('0', '1')	                    NOT NULL DEFAULT '1',
-    CONSTRAINT PK_Employee PRIMARY KEY (employee_id),
-    CONSTRAINT UC_Employee_Email UNIQUE (email)
-);
+CREATE TABLE
+    IF NOT EXISTS `Employee` (
+        employee_id INT NOT NULL AUTO_INCREMENT,
+        first_name VARCHAR(300) NOT NULL,
+        last_name VARCHAR(300) NOT NULL,
+        password VARCHAR(280) NOT NULL,
+        contact_no VARCHAR(11) NOT NULL,
+        email VARCHAR(300) NOT NULL,
+        date_employed DATE NOT NULL,
+        image_src VARCHAR(128) NOT NULL,
+        role ENUM ('manager', 'employee') NOT NULL DEFAULT 'employee',
+        is_active ENUM ('0', '1') NOT NULL DEFAULT '1',
+        CONSTRAINT PK_Employee PRIMARY KEY (employee_id),
+        CONSTRAINT UC_Employee_Email UNIQUE (email)
+    );
 
-CREATE TABLE IF NOT EXISTS `Order` (
-    order_id	    INT	                            NOT NULL AUTO_INCREMENT,	
-    employee_id	    INT	                            NOT NULL,	
-    date_placed	    DATETIME	                    NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT PK_Order PRIMARY KEY (order_id),
-    CONSTRAINT FK_Order_Employee FOREIGN KEY (employee_id) REFERENCES Employee(employee_id),
-);
+CREATE TABLE
+    IF NOT EXISTS `Order` (
+        order_id INT NOT NULL AUTO_INCREMENT,
+        employee_id INT NOT NULL,
+        date_placed DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        CONSTRAINT PK_Order PRIMARY KEY (order_id),
+        CONSTRAINT FK_Order_Employee FOREIGN KEY (employee_id) REFERENCES Employee (employee_id)
+    );
 
-CREATE TABLE IF NOT EXISTS `Category`	(
-    category_id	    INT	            NOT NULL AUTO_INCREMENT,
-    name	        VARCHAR(100)	NOT NULL,	
-    image_src	    VARCHAR(128)	NOT NULL,	
-    is_available	ENUM('0', '1')	NOT NULL DEFAULT '1',
-    CONSTRAINT PK_Category PRIMARY KEY (category_id)	
-);
+CREATE TABLE
+    IF NOT EXISTS `Category` (
+        category_id INT NOT NULL AUTO_INCREMENT,
+        name VARCHAR(100) NOT NULL,
+        image_src VARCHAR(128) NOT NULL,
+        is_available ENUM ('0', '1') NOT NULL DEFAULT '1',
+        CONSTRAINT PK_Category PRIMARY KEY (category_id)
+    );
 
-CREATE TABLE IF NOT EXISTS `Product` (
-    product_id	    INT	            NOT NULL AUTO_INCREMENT,	
-    category_id	    INT	            NOT NULL,
-    creator_id	    INT	            NOT NULL,
-    date_created	DATETIME	    NOT NULL DEFAULT CURRENT_TIMESTAMP,	
-    name	        VARCHAR(100)	NOT NULL,
-    description	    TEXT,
-    unit_price	    DECIMAL(7, 2)	NOT NULL,	
-    image_src	    VARCHAR(128)	NOT NULL,
-    is_available	ENUM('0', '1')	NOT NULL DEFAULT '1',
-    CONSTRAINT PK_Product PRIMARY KEY (product_id),
-    CONSTRAINT FK_Product_Category FOREIGN KEY (category_id) REFERENCES Category(category_id),
-    CONSTRAINT FK_Product_Employee FOREIGN KEY (creator_id) REFERENCES Employee(employee_id)    
-);
+CREATE TABLE
+    IF NOT EXISTS `Product` (
+        product_id INT NOT NULL AUTO_INCREMENT,
+        category_id INT NOT NULL,
+        creator_id INT NOT NULL,
+        date_created DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        name VARCHAR(100) NOT NULL,
+        description TEXT,
+        unit_price DECIMAL(7, 2) NOT NULL,
+        image_src VARCHAR(128) NOT NULL,
+        is_available ENUM ('0', '1') NOT NULL DEFAULT '1',
+        CONSTRAINT PK_Product PRIMARY KEY (product_id),
+        CONSTRAINT FK_Product_Category FOREIGN KEY (category_id) REFERENCES Category (category_id),
+        CONSTRAINT FK_Product_Employee FOREIGN KEY (creator_id) REFERENCES Employee (employee_id)
+    );
 
-CREATE TABLE IF NOT EXISTS `Order_Line` (
-    order_id	    INT	    NOT NULL,	
-    product_id  	INT	    NOT NULL,
-    quantity	    INT	    NOT NULL,
-    notes	        TEXT,
-    CONSTRAINT PK_OrderLine PRIMARY KEY (order_id, product_id),
-    CONSTRAINT FK_OrderLine_Order FOREIGN KEY (order_id) REFERENCES `Order`(order_id),
-    CONSTRAINT FK_OrderLine_Product FOREIGN KEY (product_id) REFERENCES Product(product_id)	
-);
+CREATE TABLE
+    IF NOT EXISTS `Order_Line` (
+        order_id INT NOT NULL,
+        product_id INT NOT NULL,
+        quantity INT NOT NULL,
+        notes TEXT,
+        CONSTRAINT PK_OrderLine PRIMARY KEY (order_id, product_id),
+        CONSTRAINT FK_OrderLine_Order FOREIGN KEY (order_id) REFERENCES `Order` (order_id),
+        CONSTRAINT FK_OrderLine_Product FOREIGN KEY (product_id) REFERENCES Product (product_id)
+    );
 
-CREATE TABLE IF NOT EXISTS `Supplier` (
-    supplier_id	    INT	            NOT NULL AUTO_INCREMENT,	
-    name            VARCHAR(300)    NOT NULL,
-    building	    VARCHAR(150),
-    street_no	    VARCHAR(10),	
-    street_name	    VARCHAR(150),		
-    city	        VARCHAR(150)	NOT NULL,	
-    zip_code	    VARCHAR(10)	    NOT NULL,	
-    contact_no	    VARCHAR(11)	    NOT NULL,
-    email	        VARCHAR(300)	NOT NULL,	
-    is_active	    ENUM('0', '1')	NOT NULL DEFAULT '1',
-    CONSTRAINT PK_Supplier PRIMARY KEY (supplier_id)
-);
+CREATE TABLE
+    IF NOT EXISTS `Supplier` (
+        supplier_id INT NOT NULL AUTO_INCREMENT,
+        name VARCHAR(300) NOT NULL,
+        building VARCHAR(150),
+        street_no VARCHAR(10),
+        street_name VARCHAR(150),
+        city VARCHAR(150) NOT NULL,
+        zip_code VARCHAR(10) NOT NULL,
+        contact_no VARCHAR(11) NOT NULL,
+        email VARCHAR(300) NOT NULL,
+        is_active ENUM ('0', '1') NOT NULL DEFAULT '1',
+        CONSTRAINT PK_Supplier PRIMARY KEY (supplier_id)
+    );
 
-CREATE TABLE IF NOT EXISTS `Stock` (
-    stock_id	    INT	            NOT NULL AUTO_INCREMENT,
-    product_id	    INT	            NOT NULL,	
-    supplier_id	    INT	            NOT NULL,	
-    date_supplied	DATETIME	    NOT NULL,
-    quantity	    INT	            NOT NULL DEFAULT 0,	
-    unit	        VARCHAR(5)	    NOT NULL,	
-    unit_price	    DECIMAL(7, 2)	NOT NULL,	
-    notes	        TEXT,
-    CONSTRAINT PK_Stock PRIMARY KEY (stock_id),
-    CONSTRAINT FK_Stock_Product FOREIGN KEY (product_id) REFERENCES Product(product_id),
-    CONSTRAINT FK_Stock_Supplier FOREIGN KEY (supplier_id) REFERENCES Supplier(supplier_id)
-);
+CREATE TABLE
+    IF NOT EXISTS `Stock` (
+        stock_id INT NOT NULL AUTO_INCREMENT,
+        product_id INT NOT NULL,
+        supplier_id INT NOT NULL,
+        date_supplied DATETIME NOT NULL,
+        quantity INT NOT NULL DEFAULT 0,
+        unit VARCHAR(5) NOT NULL,
+        unit_price DECIMAL(7, 2) NOT NULL,
+        notes TEXT,
+        CONSTRAINT PK_Stock PRIMARY KEY (stock_id),
+        CONSTRAINT FK_Stock_Product FOREIGN KEY (product_id) REFERENCES Product (product_id),
+        CONSTRAINT FK_Stock_Supplier FOREIGN KEY (supplier_id) REFERENCES Supplier (supplier_id)
+    );
+
+-- SAMPLE DATA FOR CATEGORY TABLE -- 
+
+INSERT INTO
+    `category` (
+        `category_id`,
+        `name`,
+        `image_src`,
+        `is_available`
+    )
+VALUES
+    (
+        '1',
+        'Bread',
+        '../../images/category/bread.jpg',
+        '1'
+    ),
+    (
+        '2',
+        'Cakes',
+        '../../images/category/cakes.jpg',
+        '1'
+    ),
+    (
+        '3',
+        'Pies',
+        '../../images/category/pies.jpg',
+        '1'
+    ),
+    (
+        '4',
+        'Muffins',
+        '../../images/category/muffins.jpg',
+        '1'
+    ),
+    (
+        '5',
+        'Cookies',
+        '../../images/category/cookies.jpg',
+        '1'
+    ),
+    (
+        '6',
+        'Doughnuts',
+        '../../images/category/doughnuts.jpg',
+        '1'
+    ),
+    (
+        '0',
+        'Others',
+        '../../images/category/others.jpg',
+        '1'
+    );
+
+UPDATE `category`
+SET
+    `category_id` = '0'
+WHERE
+    `category`.`name` = 'Others';
+
+-- SAMPLE DATA FOR EMPLOYEE TABLE -- 
+
+INSERT INTO
+    `employee` (
+        `employee_id`,
+        `first_name`,
+        `last_name`,
+        `password`,
+        `contact_no`,
+        `email`,
+        `date_employed`,
+        `image_src`,
+        `role`,
+        `is_active`
+    )
+    VALUES
+    (
+        1,
+        'Jonh',
+        'Buot',
+        'superdupersecretpassword',
+        '12345678910',
+        'jonh.buot@gmail.com',
+        CURRENT_DATE(),
+        '../../images/employee/jonhbuot.jpg',
+        'manager',
+        '1'
+    ),
+    (
+        2,
+        'Nathan',
+        'Arriesgado',
+        'superdupersecretpassword',
+        '10987654321',
+        'nathan.arriesgado@gmail.com',
+        CURRENT_DATE(),
+        '../../images/employee/nathanarriesgado.jpg',
+        'employee',
+        '1'
+    ),
+    (
+        3,
+        'Erwin',
+        'Antepuesto',
+        'superdupersecretpassword',
+        '11223344556',
+        'erwin.antepuesto@gmail.com',
+        CURRENT_DATE(),
+        '../../images/employee/nathanarriesgado.jpg',
+        'employee',
+        '1'
+    ),
+    (
+        4,
+        'Sherly',
+        'Jao',
+        'superdupersecretpassword',
+        '15263748596',
+        'sherly.jao@gmail.com',
+        CURRENT_DATE(),
+        '../../images/employee/nathanarriesgado.jpg',
+        'employee',
+        '1'
+    );
+
+-- SAMPLE DATA FOR ORDER TABLE -- 
+
+INSERT INTO `order` (`order_id`, `employee_id`, `date_placed`) VALUES (1, '2', current_timestamp());
+INSERT INTO `order` (`order_id`, `employee_id`, `date_placed`) VALUES (2, '3', current_timestamp());
+INSERT INTO `order` (`order_id`, `employee_id`, `date_placed`) VALUES (3, '4', current_timestamp());
+
