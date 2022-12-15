@@ -31,7 +31,7 @@ const employeePages = [
   },
   {
     path: "/supplier",
-    label: "Products",
+    label: "Supplier",
     icon: <FiTruck />,
     element: <h1>Supplier</h1>,
     navLink: true,

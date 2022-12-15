@@ -33,6 +33,7 @@
   list-style-type: none;
   display: flex;
   flex-direction: column;
+  gap: 2.5em;
 }
 
 .nav-item a,
@@ -59,10 +60,6 @@
 .nav-item:hover,
 .isSelected {
   color: var(--secondary-color);
-}
-
-.nav-item + .nav-item {
-  margin-top: 2.5em;
 }
 
 .nav-icon {
