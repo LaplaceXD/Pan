@@ -2,7 +2,12 @@ const SERVER_BASE_URL = import.meta.env.VITE_SERVER_URL;
 const DEFAULT_OPTIONS = { token: null, signal: null };
 
 async function parsedResponse(res) {
-  const data = await res.json();
+  let data = null;
+
+  if (res.status !== 204) {
+    data = await res.json();
+  }
+
   return { status: res.status, error: data?.error ?? null, message: data?.message ?? null, data };
 }
 

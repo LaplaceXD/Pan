@@ -10,9 +10,9 @@ function useQuery(query, checkAuth = true) {
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
 
-  function redirectIfUnauthorized(status) {
+  async function redirectIfUnauthorized(status) {
     if (status === 401) {
-      auth.logout();
+      await auth.logout();
       toast.error("Session timeout.");
       navigate("/login");
     }
@@ -23,7 +23,7 @@ function useQuery(query, checkAuth = true) {
 
     (async function () {
       const { error, status, data } = await query(controller.signal);
-      checkAuth && redirectIfUnauthorized(status);
+      checkAuth && (await redirectIfUnauthorized(status));
 
       if (error) {
         setError(error);

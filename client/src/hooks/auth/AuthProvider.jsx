@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { loginEmployee } from "@services/auth";
+import { loginEmployee, logoutEmployee } from "@services/auth";
 import token from "@utils/token";
 import AuthContext from "./AuthContext";
 
@@ -19,10 +19,13 @@ function AuthProvider({ children }) {
     return null;
   });
 
-  const logout = () => {
+  async function logout() {
+    const { error } = await logoutEmployee(token.pair.get());
+    if (error) return error;
+
     token.pair.remove();
     setAuth(null);
-  };
+  }
 
   async function login({ email, password }) {
     const { error, data: tokens } = await loginEmployee({ email, password });
