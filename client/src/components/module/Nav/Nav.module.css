@@ -35,7 +35,8 @@
   flex-direction: column;
 }
 
-.nav-link a {
+.nav-item a,
+.nav-item button {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -45,30 +46,23 @@
   color: inherit;
 }
 
-.nav-link,
-.nav-button {
+.nav-item button {
+  background: transparent;
+  width: 100%;
+}
+
+.nav-item {
   color: var(--text-color);
   transition: color 125ms ease-in;
 }
 
-.nav-link:hover,
-.nav-button:hover,
+.nav-item:hover,
 .isSelected {
   color: var(--secondary-color);
 }
 
-.nav-link + .nav-link {
+.nav-item + .nav-item {
   margin-top: 2.5em;
-}
-
-.nav-button {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
-  background: transparent;
-  font-size: 1rem;
-  margin-top: 2em;
 }
 
 .nav-icon {

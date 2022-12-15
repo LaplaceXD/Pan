@@ -8,7 +8,7 @@ function NavLink({ to, Icon, label }) {
   const { pathname } = useLocation();
 
   return (
-    <li className={clsx(styles.navLink, pathname === to && styles.isSelected)}>
+    <li className={clsx(styles.navItem, pathname === to && styles.isSelected)}>
       <Link to={to}>
         {cloneElement(Icon, { className: styles.navIcon })}
         {label}
