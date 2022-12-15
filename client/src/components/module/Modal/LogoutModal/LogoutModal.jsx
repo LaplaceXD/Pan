@@ -13,15 +13,10 @@ function LogoutModal({ open, onClose }) {
 
   async function handleLogout() {
     setIsLoggingOut(true);
-    const error = await auth.logout();
+    await auth.logout();
 
-    if (error) {
-      toast.error(error);
-    } else {
-      toast.success("Logged out!");
-      navigate("/login");
-    }
-
+    toast.success("Logged out!");
+    navigate("/login");
     setIsLoggingOut(false);
   }
 
