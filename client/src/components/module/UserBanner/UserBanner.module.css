@@ -1,0 +1,24 @@
+.container {
+  display: flex;
+  align-items: center;
+}
+
+.img {
+  border-radius: 8px;
+}
+
+.details {
+  margin-left: 1.75em;
+}
+
+.role {
+  color: var(--text-color);
+  font-size: 0.85rem;
+}
+
+.name {
+  color: var(--white);
+  font-size: 1.2rem;
+  margin-top: 0.25em;
+  white-space: nowrap;
+}

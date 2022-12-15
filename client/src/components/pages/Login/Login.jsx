@@ -3,14 +3,14 @@ import { Navigate } from "react-router-dom";
 import banner from "@assets/imgs/login_banner.jpg";
 import logo from "@assets/Logo_128x128.svg";
 import LoginForm from "@components/module/LoginForm";
-import { useAuth } from "@hooks/Auth";
+import { useAuth } from "@hooks/auth";
 
 import styles from "./Login.module.css";
 
 function Login() {
-  const [auth] = useAuth();
+  const { user } = useAuth();
 
-  return auth ? (
+  return user ? (
     <Navigate to="/" />
   ) : (
     <main className={styles.container}>

@@ -1,12 +1,10 @@
-const endpoint = `${import.meta.env.VITE_SERVER_URL}/auth`;
+import api from "@utils/api";
+import auth from "@utils/auth";
 
 export async function loginEmployee({ email, password }) {
-  const response = await fetch(`${endpoint}/login`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email, password }),
-  });
+  return await api.post("/auth/login", { email, password });
+}
 
-  const data = await response.json();
-  return data;
+export async function logoutEmployee({ access, refresh }) {
+  return await auth.post("/auth/logout", { access, refresh });
 }

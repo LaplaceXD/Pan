@@ -1,13 +1,23 @@
 .logo {
-  width: 128px;
+  width: var(--logo-width);
+}
+
+.pseudo-container {
+  --logo-width: 92px;
+  --y-padding: 1.5em;
+
+  background-color: var(--accent-color);
+  width: calc(var(--logo-width) + var(--y-padding) * 2);
 }
 
 .container {
-  background-color: var(--accent-color);
+  position: fixed;
+  height: 100vh;
+
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 1.5em 1em;
+  padding: 2.25em var(--y-padding) 1.5em;
 }
 
 .nav {
@@ -16,7 +26,7 @@
   justify-content: space-between;
 
   height: 100%;
-  margin-top: 2.5em;
+  margin-top: 3em;
 }
 
 .nav-list {
@@ -62,6 +72,6 @@
 }
 
 .nav-icon {
-  font-size: 48px;
+  font-size: 40px;
   padding: 5px;
 }

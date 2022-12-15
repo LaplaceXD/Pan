@@ -1,0 +1,33 @@
+.container {
+  --icon-size: 18px;
+  --icon-margin: 0.8em;
+  --border-radius: 8px;
+  --padding: 0.8em;
+
+  position: relative;
+  background: var(--field-color);
+
+  color: var(--white);
+  display: flex;
+  align-items: center;
+  border-radius: var(--border-radius);
+}
+
+.icon {
+  position: absolute;
+  width: var(--icon-size);
+  height: var(--icon-size);
+  margin-left: var(--icon-margin);
+}
+
+.search-input {
+  background: transparent;
+  color: inherit;
+  font-size: 1rem;
+
+  padding: var(--padding);
+  padding-left: calc(var(--padding) + var(--icon-margin) + var(--icon-size));
+  width: 100%;
+  height: 100%;
+  border-radius: var(--border-radius);
+}
