@@ -1,20 +1,18 @@
-import React from 'react';
-import styles from "./Modal.module.css";
+import React from "react";
 import Modal from "./Modal.jsx";
 
-function LogoutModal({open, onClose}) {
+function LogoutModal({ open, onClose }) {
+  if (!open) return null;
 
-    if(!open) return null
-
-    return (
-        <Modal
-            title="Logout?"
-            subtitle="Are you sure you want to logout?"
-            leftBtn="Cancel"
-            rightBtn="Logout"
-            leftOnClick={onClose}
-        />
-    )
+  return (
+    <Modal
+      title="Logout?"
+      subtitle="Are you sure you want to logout?"
+      leftBtn="Cancel"
+      rightBtn="Logout"
+      leftOnClick={onClose}
+    />
+  );
 }
 
-export default LogoutModal
+export default LogoutModal;

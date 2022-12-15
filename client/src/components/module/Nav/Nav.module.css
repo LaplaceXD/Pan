@@ -35,12 +35,14 @@
   color: inherit;
 }
 
-.nav-link, .nav-button {
+.nav-link,
+.nav-button {
   color: var(--text-color);
   transition: color 125ms ease-in;
 }
 
-.nav-link:hover, .nav-button:hover,
+.nav-link:hover,
+.nav-button:hover,
 .isSelected {
   color: var(--secondary-color);
 }
