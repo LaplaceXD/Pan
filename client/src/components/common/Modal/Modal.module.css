@@ -1,0 +1,53 @@
+.dialog {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  background: var(--accent-color);
+  border-radius: 16px;
+  border: none;
+}
+
+.dialog[open] {
+  animation: slide-in 0.75s ease normal;
+}
+
+@keyframes slide-in {
+  from {
+    transform: translate(-50%, 200%);
+  }
+  to {
+    transform: translate(-50%, -50%);
+  }
+}
+
+.dialog::backdrop {
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.close-btn {
+  background: transparent;
+  position: absolute;
+  right: 0;
+  padding: 0.5em;
+  transition: transform 125ms ease-out;
+}
+
+.close-btn path {
+  stroke: var(--white);
+  transition: stroke 125ms ease-out;
+}
+
+.close-btn:hover path {
+  stroke: var(--secondary-color);
+}
+
+.close-btn:active {
+  transform: scale(1.1);
+}
+
+.close-icon {
+  width: 28px;
+  height: 28px;
+}

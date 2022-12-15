@@ -45,18 +45,30 @@
   color: inherit;
 }
 
-.nav-link {
+.nav-link,
+.nav-button {
   color: var(--text-color);
   transition: color 125ms ease-in;
 }
 
 .nav-link:hover,
+.nav-button:hover,
 .isSelected {
   color: var(--secondary-color);
 }
 
 .nav-link + .nav-link {
   margin-top: 2.5em;
+}
+
+.nav-button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  background: transparent;
+  font-size: 1rem;
+  margin-top: 2em;
 }
 
 .nav-icon {

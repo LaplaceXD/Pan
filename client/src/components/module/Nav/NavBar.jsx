@@ -1,10 +1,15 @@
+import { useState } from "react";
 import { FiLogOut, FiUser } from "react-icons/fi";
 
 import logo from "@assets/Logo_128x128.svg";
-import styles from "./Nav.module.css";
+import { Modal } from "@components/module";
 import NavLink from "./NavLink";
 
+import styles from "./Nav.module.css";
+
 function NavBar({ children }) {
+  const [openModal, setOpenModal] = useState(false);
+
   return (
     <aside className={styles.pseudoContainer}>
       <div className={styles.container}>
@@ -13,8 +18,11 @@ function NavBar({ children }) {
           <ul className={styles.navList}>{children}</ul>
           <ul className={styles.navList}>
             <NavLink to="/account" label="Account" Icon={<FiUser />} />
-            {/* Change this to button since you'll have to delete tokens */}
-            <NavLink to="/login" label="Logout" Icon={<FiLogOut />} />
+            <button className={styles.navButton} onClick={() => setOpenModal(true)}>
+              <FiLogOut className={styles.navIcon} />
+              Logout
+            </button>
+            <Modal.Logout open={openModal} onClose={() => setOpenModal(false)} />
           </ul>
         </nav>
       </div>
