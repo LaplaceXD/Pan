@@ -229,3 +229,9 @@ INSERT INTO `product` (`product_id`, `category_id`, `creator_id`, `date_created`
 
 INSERT INTO `order_line` (`order_id`, `product_id`, `quantity`, `notes`) VALUES ('1', '4', '4', 'Extra warm'), ('2', '1', '2', 'N/A'), ('2', '2', '2', 'Less butter'), ('3', '3', '1', 'Crispy crust');
 
+-- SAMPLE DATA FOR SUPPLIER TABLE --
+
+INSERT INTO `supplier` (`supplier_id`, `name`, `building`, `street_no`, `street_name`, `city`, `zip_code`, `contact_no`, `email`, `is_active`) VALUES (1, 'Wheat n\' Goods Co.', 'Quarry House', '42', 'Main Road', 'Manila City', '1000', '83726192874', 'wheatandgoodsco@gmail.com', '1'), (2, 'Bread Express', 'Daytona Apartment', '21', 'Half Street', 'Lapu-Lapu City', '6015', '18572940192', 'breadexpress@gmail.com', '1'), (3, 'House of Sweets', 'Bunzel', '69', 'Park Road', 'Quezon City', '1008', '02938746172', 'houseofsweets@gmail.com', '1');
+
+
+
