@@ -219,7 +219,8 @@ INSERT INTO
 
 -- SAMPLE DATA FOR ORDER TABLE -- 
 
-INSERT INTO `order` (`order_id`, `employee_id`, `date_placed`) VALUES (1, '2', current_timestamp());
-INSERT INTO `order` (`order_id`, `employee_id`, `date_placed`) VALUES (2, '3', current_timestamp());
-INSERT INTO `order` (`order_id`, `employee_id`, `date_placed`) VALUES (3, '4', current_timestamp());
+INSERT INTO `order` (`order_id`, `employee_id`, `date_placed`) VALUES (1, '2', current_timestamp()), (2, '3', current_timestamp()), (3, '4', current_timestamp());
 
+-- SAMPLE DATA FOR PRODUCT TABLE --
+
+INSERT INTO `product` (`product_id`, `category_id`, `creator_id`, `date_created`, `name`, `description`, `unit_price`, `image_src`, `is_available`) VALUES (1, '1', '2', current_timestamp(), 'Pain au Chocolat', 'Almost like a crispy, buttery, airy, and simply irresistibly delicious French Croissant, but filled with chocolate!', '9.99', '../../images/product/painauchocolat.jpg', '1'), (2, '1', '2', current_timestamp(), 'French Toast', 'A dish of sliced bread soaked in beaten eggs and often milk or cream, then pan fried.', '7.99', '../../images/product/frenchtoast.jpg', '1'), (3, '3', '3', current_timestamp(), 'Raspberry Pie', 'A type of pie with a raspberry filling', '19.99', '../../images/product/raspberrypie.jpg', '1'), (4, '5', '4', current_timestamp(), 'Macademia Nut Cookie', 'White chocolate cookies with brown sugar, almonds, and macademia nuts.', '2.99', '../../images/product/macademiacookies.jpg', '1');
