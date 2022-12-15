@@ -11,7 +11,7 @@ const validate = (...validators) => {
           ...error.details.reduce((obj, e) => ({ ...obj, [e.context.key]: e.message }), {}),
         };
       } else {
-        req.body = { ...req.body, ...value };
+        req.body = Array.isArray(req.body) ? value : { ...req.body, ...value };
         return errors;
       }
     }, {});
