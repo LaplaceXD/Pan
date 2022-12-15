@@ -1,9 +1,11 @@
-import logo from "@assets/Logo_128x128.svg";
-import React, { useState } from "react";
+import { useState } from "react";
 import { FiLogOut, FiUser } from "react-icons/fi";
-import LogoutModal from "../../Modals/LogoutModal.jsx";
-import styles from "./Nav.module.css";
+
+import logo from "@assets/Logo_128x128.svg";
+import { Modal } from "@components/module";
 import NavLink from "./NavLink";
+
+import styles from "./Nav.module.css";
 
 function NavBar({ children }) {
   const [openModal, setOpenModal] = useState(false);
@@ -19,7 +21,7 @@ function NavBar({ children }) {
             <FiLogOut className={styles.navIcon} />
             Logout
           </button>
-          <LogoutModal open={openModal} onClose={() => setOpenModal(false)} />
+          <Modal.Logout open={openModal} onClose={() => setOpenModal(false)} />
         </ul>
       </nav>
     </aside>
