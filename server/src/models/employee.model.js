@@ -180,8 +180,13 @@ class Employee {
     return retVal;
   }
 
-  static async validate(employee) {
-    const match = await Employee.findByEmail(employee.email);
+  static async validate(employee, params = {}) {
+    let match = await Employee.findByEmail(employee.email);
+
+    // If id exist in params then this validation is used when an account is being edited
+    // This line basically ensures that an employee's email is not flagged as used, even
+    // though the account technically owns it
+    if (params.hasOwnProperty("id") && parseInt(params.id) === match?.employee_id) match = null;
 
     const schema = Joi.object()
       .keys({
