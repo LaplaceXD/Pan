@@ -231,7 +231,8 @@ INSERT INTO `order_line` (`order_id`, `product_id`, `quantity`, `notes`) VALUES 
 
 -- SAMPLE DATA FOR SUPPLIER TABLE --
 
-INSERT INTO `supplier` (`supplier_id`, `name`, `building`, `street_no`, `street_name`, `city`, `zip_code`, `contact_no`, `email`, `is_active`) VALUES (1, 'Wheat n\' Goods Co.', 'Quarry House', '42', 'Main Road', 'Manila City', '1000', '83726192874', 'wheatandgoodsco@gmail.com', '1'), (2, 'Bread Express', 'Daytona Apartment', '21', 'Half Street', 'Lapu-Lapu City', '6015', '18572940192', 'breadexpress@gmail.com', '1'), (3, 'House of Sweets', 'Bunzel', '69', 'Park Road', 'Quezon City', '1008', '02938746172', 'houseofsweets@gmail.com', '1');
+INSERT INTO `supplier` (`supplier_id`, `name`, `building`, `street_no`, `street_name`, `city`, `zip_code`, `contact_no`, `email`, `is_active`) VALUES (1, 'Wheat and Goods Co.', 'Quarry House', '42', 'Main Road', 'Manila City', '1000', '83726192874', 'wheatandgoodsco@gmail.com', '1'), (2, 'Bread Express', 'Daytona Apartment', '21', 'Half Street', 'Lapu-Lapu City', '6015', '18572940192', 'breadexpress@gmail.com', '1'), (3, 'House of Sweets', 'Bunzel', '69', 'Park Road', 'Quezon City', '1008', '02938746172', 'houseofsweets@gmail.com', '1');
 
+-- SAMPLE DATA FOR STOCK TABLE -- 
 
-
+INSERT INTO `stock` (`stock_id`, `product_id`, `supplier_id`, `date_supplied`, `quantity`, `unit`, `unit_price`, `notes`) VALUES (1, '2', '2', CURRENT_DATE(), '50', '', '49.99', 'N/A'), (2, '4', '3', CURRENT_DATE(), '30', '', '99.99', 'N/A');
