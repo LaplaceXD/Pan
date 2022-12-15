@@ -24,7 +24,11 @@ router.post(
 
 router.put(
   "/:id",
-  [auth, permit({ allow: [roles(role.MANAGER), owner], deny: [sameRoleAndNotOwner(Employee)] }), validate(Employee.validate)],
+  [
+    auth,
+    permit({ allow: [roles(role.MANAGER), owner], deny: [sameRoleAndNotOwner(Employee)] }),
+    validate(Employee.validate),
+  ],
   employeeController.update
 );
 

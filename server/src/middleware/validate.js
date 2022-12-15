@@ -3,7 +3,7 @@ const { BadRequest } = require("../../helpers/errors");
 const validate = (...validators) => {
   return async (req, _, next) => {
     const errors = await validators.reduce(async (errors, validator) => {
-      const { error, value } = await validator(req.body);
+      const { error, value } = await validator(req.body, req.params);
 
       if (error) {
         return {
