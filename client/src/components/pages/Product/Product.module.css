@@ -16,6 +16,7 @@
   width: 100%;
   font-weight: var(--font-regular);
   color: var(--text-color);
+  align-self: center;
 }
 
 .search {
