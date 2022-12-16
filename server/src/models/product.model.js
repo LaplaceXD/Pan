@@ -9,6 +9,7 @@ class Product {
   constructor(product) {
     this.product_id = product.product_id || 0;
     this.category_id = product.category_id || 0;
+    this.category_name = product.category_name || "";
     this.creator_id = product.creator_id;
     this.date_created = product.date_created;
     this.name = product.name;
@@ -96,7 +97,7 @@ class Product {
 
     try {
       const conn = await db.connect();
-      const [data] = await conn.query(`SELECT * FROM Product`);
+      const [data] = await conn.query(`SELECT p.product_id, p.category_id, c.name AS category_name, p.creator_id, p.date_created, p.name, p.description, p.unit_price, p.image_src, p.is_available FROM product AS p INNER JOIN category AS c ON p.category_id = c.category_id;`);
       await conn.end();
 
       retVal = data.map((d) => new Product(d));
