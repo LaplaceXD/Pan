@@ -1,0 +1,42 @@
+.container {
+  background: var(--accent-color);
+
+  padding: 1.5em 1.25em;
+  border-radius: 16px;
+  transition: all 125ms ease-out;
+}
+
+.container:hover {
+  filter: brightness(1.1);
+  cursor: pointer;
+}
+
+.container:active {
+  transform: translateY(2px);
+}
+
+.img {
+  border-radius: 16px;
+  overflow: hidden;
+  height: 192px;
+}
+
+.img img {
+  object-fit: cover;
+  object-position: center;
+  aspect-ratio: 16 / 12;
+  width: 100%;
+}
+
+.name {
+  color: var(--white);
+  font-weight: var(--font-regular);
+  font-size: 1.2rem;
+  margin-top: 0.5em;
+}
+
+.price {
+  color: var(--tertiary-color);
+  font-size: 1rem;
+  margin-top: 0.5em;
+}

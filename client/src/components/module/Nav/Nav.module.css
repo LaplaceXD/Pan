@@ -1,0 +1,59 @@
+.logo {
+  width: 92px;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  padding: 2.25em 1.5em 1.5em;
+  background-color: var(--accent-color);
+}
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  height: 100%;
+  margin-top: 3em;
+}
+
+.nav-list {
+  list-style-type: none;
+  display: flex;
+  flex-direction: column;
+  gap: 2.5em;
+}
+
+.nav-item a,
+.nav-item button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  text-decoration: none;
+  font-size: 1rem;
+  color: inherit;
+}
+
+.nav-item button {
+  background: transparent;
+  width: 100%;
+}
+
+.nav-item {
+  color: var(--text-color);
+  transition: color 125ms ease-in;
+}
+
+.nav-item:hover,
+.isSelected {
+  color: var(--secondary-color);
+}
+
+.nav-icon {
+  font-size: 40px;
+  padding: 5px;
+}

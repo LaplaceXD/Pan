@@ -1,0 +1,38 @@
+.container {
+  padding: 1.5em 2em;
+}
+
+.product-header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.title {
+  color: var(--text-color);
+  font-weight: var(--font-regular);
+  font-size: 1.75rem;
+}
+
+.product-categories,
+.product-grid {
+  margin-top: 1em;
+}
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(256px, 1fr));
+  gap: 28px;
+}
+
+.order-summary {
+  flex: 1;
+  margin-top: 1.5em;
+}
+
+.checkout-btns {
+  margin-top: 2em;
+
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}

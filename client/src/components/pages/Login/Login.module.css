@@ -1,0 +1,41 @@
+.container {
+  display: flex;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  background: var(--accent-color);
+  border-radius: 16px;
+  overflow: hidden;
+  width: 1024px;
+}
+
+.content {
+  flex: 1;
+  padding: 3.5em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.subtitle {
+  font-size: 1.5rem;
+  margin-top: 1em;
+  color: var(--white);
+}
+
+.form {
+  margin-top: 2em;
+
+  display: flex;
+  flex-direction: column;
+  align-self: stretch;
+  gap: 12px;
+
+  padding: 0 5.5rem;
+}
+
+.form > button[type="submit"] {
+  margin-top: 3em;
+}

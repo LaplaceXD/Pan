@@ -1,0 +1,26 @@
+.content {
+  color: var(--white);
+  padding: 3.5em;
+  text-align: center;
+}
+
+.title {
+  font-size: 50px;
+  padding-bottom: 25px;
+}
+
+.subtitle {
+  font-size: 22px;
+  margin-bottom: 200px;
+  display: inline-flex;
+  width: 250px;
+}
+
+.footer {
+  display: flex;
+  gap: 20px;
+}
+
+.footer button {
+  padding: 0.8em 2.5em;
+}

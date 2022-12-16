@@ -1,0 +1,43 @@
+.container {
+  flex: 1;
+  overflow-y: scroll;
+  padding: 1.75em;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  gap: 32px;
+  width: 100%;
+}
+
+.title {
+  display: inline-block;
+  width: 100%;
+  font-weight: var(--font-regular);
+  color: var(--text-color);
+  align-self: center;
+}
+
+.search {
+  width: 35%;
+}
+
+.options {
+  margin-top: 1.5em;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.options > li {
+  width: 100%;
+}
+
+.options > li > button {
+  width: 100%;
+}
+
+.product-list {
+  gap: 24px;
+  margin-top: 1em;
+}

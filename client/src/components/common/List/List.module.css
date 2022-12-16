@@ -1,0 +1,8 @@
+.list {
+  display: flex;
+  list-style-type: none;
+}
+
+.col {
+  flex-direction: column;
+}
