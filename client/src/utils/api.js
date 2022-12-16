@@ -8,7 +8,12 @@ async function parsedResponse(res) {
     data = await res.json();
   }
 
-  return { status: res.status, error: data?.error ?? null, message: data?.message ?? null, data };
+  return {
+    status: res.status,
+    error: res.status >= 400,
+    message: data?.message ?? null,
+    data,
+  };
 }
 
 async function get(path, { token = null, signal = null } = DEFAULT_OPTIONS) {

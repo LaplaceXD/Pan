@@ -21,11 +21,11 @@ function useQuery(query, checkAuth = true) {
     const controller = new AbortController();
 
     (async function () {
-      const { error, status, data } = await query(controller.signal);
+      const { error, message, status, data } = await query(controller.signal);
       checkAuth && (await redirectIfUnauthorized(status));
 
       if (error) {
-        setError(error);
+        setError(message);
       } else {
         setData(data);
       }

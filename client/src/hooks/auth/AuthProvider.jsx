@@ -27,8 +27,8 @@ function AuthProvider({ children }) {
   }
 
   async function login({ email, password }) {
-    const { error, data: tokens } = await loginEmployee({ email, password });
-    if (error) return error;
+    const { error, message, data: tokens } = await loginEmployee({ email, password });
+    if (error) return message;
 
     token.pair.set({ access: tokens.access, refresh: tokens.refresh });
     setAuth(token.access.payload());
