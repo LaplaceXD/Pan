@@ -83,7 +83,7 @@ CREATE TABLE
         stock_id INT NOT NULL AUTO_INCREMENT,
         product_id INT NOT NULL,
         supplier_id INT NOT NULL,
-        date_supplied DATETIME NOT NULL,
+        date_supplied DATE NOT NULL,
         quantity INT NOT NULL DEFAULT 0,
         unit VARCHAR(5) NOT NULL,
         unit_price DECIMAL(7, 2) NOT NULL,
