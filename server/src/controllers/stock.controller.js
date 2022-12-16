@@ -27,8 +27,17 @@ const update = async (req, res) => {
   res.status(200).send(data);
 };
 
+const remove = async (req, res) => {
+  const stock = await Stock.findById(req.params.id);
+  if (!stock) throw new NotFound("Stock not found.");
+
+  await stock.delete();
+  res.status(200).send({ message: "Successfully deleted stock." });
+};
+
 module.exports = {
   getAll,
   create,
   update,
+  remove,
 };

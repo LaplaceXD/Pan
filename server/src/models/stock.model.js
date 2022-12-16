@@ -81,6 +81,17 @@ class Stock {
     return retVal;
   }
 
+  async delete() {
+    try {
+      const conn = await db.connect();
+      await conn.execute(`DELETE FROM stock WHERE stock_id = :stock_id`, this);
+      await conn.end();
+    } catch (err) {
+      console.log("[STOCK DELETE ERROR]", err.message);
+      throw new InternalServerError();
+    }
+  }
+
   static async findAll() {
     let retVal = null;
 

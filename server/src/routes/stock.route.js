@@ -24,4 +24,6 @@ router.put(
   stockController.update
 );
 
+router.delete("/:id", [auth, permit({ allow: [roles(role.MANAGER)] })], stockController.remove);
+
 module.exports = router;
