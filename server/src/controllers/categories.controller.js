@@ -1,9 +1,12 @@
-const { InternalServerError } = require("../../helpers/errors");
+const { InternalServerError, NotFound } = require("../../helpers/errors");
 const Category = require("../models/categories.model");
 
-const findAll = async (_, res) => {
+const CATEGORY_404 = "Category not found.";
+
+const getAll = async (_, res) => {
   const data = await Category.findAll();
   if (!data) throw new InternalServerError();
+
   res.status(200).send(data);
 };
 
@@ -16,46 +19,36 @@ const create = async (req, res) => {
   res.status(200).send(data);
 };
 
-const edit = async (req, res) => {
-  const product = await Category.findById(req.params.id);
-  if (!product) throw new NotFound();
+const update = async (req, res) => {
+  const category = await Category.findById(req.params.id);
+  if (!category) throw new NotFound(CATEGORY_404);
 
-  const data = await product.edit(req.body);
+  const data = await category.update(req.body);
   if (!data) throw new InternalServerError();
+
   res.status(200).send(data);
 };
 
 const remove = async (req, res) => {
-  console.log("uten");
-
   const category = await Category.findById(req.params.id);
-  if (!category) throw new NotFound();
-  await category.delete();
+  if (!category) throw new NotFound(CATEGORY_404);
 
-  res.status(200).send({
-    error: false,
-    status: 200,
-    message: "Successfully deleted category.",
-  });
+  await category.delete();
+  res.status(200).send({ message: "Successfully deleted category." });
 };
 
 const toggleStatus = async (req, res) => {
   const category = await Category.findById(req.params.id);
-  if (!category) throw new NotFound();
+  if (!category) throw new NotFound(CATEGORY_404);
 
   await category.toggleStatus();
-
-  res.status(200).send({
-    error: false,
-    status: 200,
-    message: "Successfully changed category status.",
-  });
+  res.status(200).send({ message: "Successfully changed category status." });
 };
 
 module.exports = {
+  getAll,
   create,
-  findAll,
-  edit,
+  update,
   remove,
   toggleStatus,
 };

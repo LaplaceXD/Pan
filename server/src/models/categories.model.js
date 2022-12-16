@@ -1,13 +1,15 @@
 const Joi = require("joi");
+
 const { InternalServerError } = require("../../helpers/errors");
+const { availability } = require("../constants/category");
 const { db } = require("../providers");
 
 class Category {
   constructor(category) {
-    this.category_id = category.category_id;
+    this.category_id = category.category_id || 0;
     this.name = category.name;
-    this.image_src = category.image_src;
-    this.is_available = category.is_available ? category.is_available : 1;
+    this.image_src = category.image_src || "";
+    this.is_available = category.is_available || availability.AVAILABLE;
   }
 
   async save() {
@@ -15,20 +17,7 @@ class Category {
 
     try {
       const conn = await db.connect();
-      const [data] = await conn.execute(
-        `INSERT INTO category (
-          category_id, 
-          name, 
-          image_src, 
-          is_available) 
-        VALUES (
-          NULL, 
-          :name, 
-          :image_src, 
-          :is_available
-        )`,
-        this
-      );
+      const [data] = await conn.execute(`INSERT INTO category (name) VALUES (:name)`, this);
 
       this.category_id = data.insertId;
       retVal = this;
@@ -36,20 +25,76 @@ class Category {
       console.log("[CATEGORY SAVE ERROR]", err.message);
       throw new InternalServerError(err);
     }
+
     return retVal;
   }
 
+  async update(details) {
+    let retVal = null;
+    const editedCategory = { ...this, ...details };
+
+    try {
+      const conn = await db.connect();
+      await conn.execute(
+        `UPDATE category
+        SET name = :name
+        WHERE category_id = :category_id`,
+        editedCategory
+      );
+
+      await conn.end();
+      retVal = new Category(editedCategory);
+    } catch (err) {
+      console.log("[CATEGORY EDIT ERROR]", err.message);
+      throw new InternalServerError(err);
+    }
+
+    return retVal;
+  }
+
+  async delete() {
+    try {
+      const conn = await db.connect();
+      await conn.execute(`DELETE FROM Category WHERE category_id = :category_id`, this);
+      await conn.end();
+    } catch (err) {
+      console.log("[CATEGORY DELETE ERROR]", err.message);
+      throw new InternalServerError();
+    }
+  }
+
+  async toggleStatus() {
+    try {
+      this.is_available =
+        this.is_available === availability.AVAILABLE ? availability.UNAVAILABLE : availability.UNAVAILABLE;
+
+      const conn = await db.connect();
+      await conn.execute(
+        `UPDATE Category SET is_available = :is_available WHERE category_id = :category_id`,
+        this
+      );
+
+      await conn.end();
+    } catch (err) {
+      console.log("[CATEGORY ERROR]", err.message);
+      throw new InternalServerError();
+    }
+  }
+
   static async findAll() {
-    let retVal = [];
+    let retVal = null;
+
     try {
       const conn = await db.connect();
       const [data] = await conn.execute(`SELECT * FROM category`);
       await conn.end();
-      if (data.length !== 0) retVal = data.map((d) => new Category(d));
+
+      retVal = data.map((d) => new Category(d));
     } catch (err) {
       console.log("[CATEGORY VIEW ERROR]", err.message);
       throw new InternalServerError(err);
     }
+
     return retVal;
   }
 
@@ -66,80 +111,13 @@ class Category {
       console.log("[CATEGORY FIND ERROR]", err.message);
       throw new InternalServerError(err);
     }
-    return retVal;
-  }
-
-  async edit(editedDetails) {
-    let retVal = null;
-    const params = { ...this, ...editedDetails };
-
-    try {
-      const conn = await db.connect();
-      await conn.execute(
-        `UPDATE category 
-        SET 
-          name = :name, 
-          image_src= :image_src 
-
-        WHERE 
-          category_id = :category_id;`,
-        params
-      );
-      await conn.end();
-      retVal = new Category(params);
-    } catch (err) {
-      console.log("[CATEGORY EDIT ERROR]", err.message);
-      throw new InternalServerError(err);
-    }
 
     return retVal;
-  }
-
-  async delete() {
-    try {
-      const conn = await db.connect();
-      await conn.execute(
-        `DELETE FROM
-          Category
-          
-        WHERE
-          category_id = :category_id;
-        `,
-        this
-      );
-
-      await conn.end();
-    } catch (err) {
-      console.log("[CATEGORY DELETE ERROR]", err.message);
-      throw new InternalServerError();
-    }
-  }
-
-  async toggleStatus() {
-    try {
-      const newVal = this.is_available === "1" ? "0" : "1";
-
-      const conn = await db.connect();
-      await conn.execute(
-        `UPDATE Category 
-        SET 
-          is_available = ?
-        WHERE
-          category_id = ?;
-        `,
-        [newVal, this.category_id]
-      );
-      await conn.end();
-    } catch (err) {
-      console.log("[CATEGORY ERROR]", err.message);
-      throw new InternalServerError();
-    }
   }
 
   static validate(category) {
     const schema = Joi.object({
       name: Joi.string().label("Name").min(2).max(100).required(),
-      image_src: Joi.string().label("Image Source"),
     }).options({ abortEarly: false });
 
     return schema.validate(category);

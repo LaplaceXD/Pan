@@ -11,7 +11,7 @@ CREATE TABLE
         contact_no VARCHAR(11) NOT NULL,
         email VARCHAR(300) NOT NULL,
         date_employed DATE NOT NULL,
-        image_src VARCHAR(128) NOT NULL,
+        image_src VARCHAR(128) NOT NULL DEFAULT '',
         role ENUM ('manager', 'employee') NOT NULL DEFAULT 'employee',
         is_active ENUM ('0', '1') NOT NULL DEFAULT '1',
         CONSTRAINT PK_Employee PRIMARY KEY (employee_id),
@@ -31,7 +31,7 @@ CREATE TABLE
     IF NOT EXISTS `Category` (
         category_id INT NOT NULL AUTO_INCREMENT,
         name VARCHAR(100) NOT NULL,
-        image_src VARCHAR(128) NOT NULL,
+        image_src VARCHAR(128) NOT NULL DEFAULT '',
         is_available ENUM ('0', '1') NOT NULL DEFAULT '1',
         CONSTRAINT PK_Category PRIMARY KEY (category_id)
     );
@@ -39,16 +39,16 @@ CREATE TABLE
 CREATE TABLE
     IF NOT EXISTS `Product` (
         product_id INT NOT NULL AUTO_INCREMENT,
-        category_id INT NOT NULL,
+        category_id INT DEFAULT NULL,
         creator_id INT NOT NULL,
         date_created DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
         name VARCHAR(100) NOT NULL,
         description TEXT,
         unit_price DECIMAL(7, 2) NOT NULL,
-        image_src VARCHAR(128) NOT NULL,
+        image_src VARCHAR(128) NOT NULL DEFAULT '',
         is_available ENUM ('0', '1') NOT NULL DEFAULT '1',
         CONSTRAINT PK_Product PRIMARY KEY (product_id),
-        CONSTRAINT FK_Product_Category FOREIGN KEY (category_id) REFERENCES Category (category_id),
+        CONSTRAINT FK_Product_Category FOREIGN KEY (category_id) REFERENCES Category (category_id) ON DELETE SET NULL,
         CONSTRAINT FK_Product_Employee FOREIGN KEY (creator_id) REFERENCES Employee (employee_id)
     );
 
@@ -137,19 +137,7 @@ VALUES
         'Doughnuts',
         '../../images/category/doughnuts.jpg',
         '1'
-    ),
-    (
-        '0',
-        'Others',
-        '../../images/category/others.jpg',
-        '1'
     );
-
-UPDATE `category`
-SET
-    `category_id` = '0'
-WHERE
-    `category`.`name` = 'Others';
 
 -- SAMPLE DATA FOR EMPLOYEE TABLE -- 
 INSERT INTO
