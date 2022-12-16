@@ -1,5 +1,5 @@
 import { ProtectedRoutes } from "@components/module";
-import NavLayout from "@components/template/NavLayout";
+import { NavLayout } from "@components/template";
 
 import employee from "./employee";
 
