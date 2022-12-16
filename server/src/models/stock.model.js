@@ -1,20 +1,20 @@
 const Joi = require("joi");
 const { InternalServerError } = require("../../helpers/errors");
-const { db, jwt } = require("../providers");
-const { status, role } = require("../constants/employee");
+const { db } = require("../providers");
 
-class Stock{
-  constructor(stock){
-      this.stock_id       =   stock.stock_id || 0;
-      this.product_id     =   stock.product_id;
-      this.supplier_id    =   stock.supplier_id;
-      this.date_supplied  =   stock.date_supplied;
-      this.quantity       =   stock.quantity;
-      this.unit           =   stock.unit;
-      this.unit_price     =   stock.unit_price;
-      this.notes          =   stock.notes;
+class Stock {
+  constructor(stock) {
+    this.stock_id = stock.stock_id || 0;
+    this.product_id = stock.product_id;
+    this.supplier_id = stock.supplier_id;
+    this.date_supplied = stock.date_supplied;
+    this.quantity = stock.quantity;
+    this.unit = stock.unit;
+    this.unit_price = stock.unit_price;
+    this.notes = stock.notes;
   }
-  async save(){
+
+  async save() {
     let retVal = null;
 
     try {
@@ -49,13 +49,13 @@ class Stock{
     return retVal;
   }
 
-  static async findAll(){
+  static async findAll() {
     let retVal = [];
     try {
       const conn = await db.connect();
       const [data] = await conn.execute(`SELECT * FROM stock`);
       await conn.end();
-      if(data.length !== 0 )retVal = data.map(d=>new Stock(d));
+      if (data.length !== 0) retVal = data.map((d) => new Stock(d));
     } catch (err) {
       console.log("[STOCK VIEW ERROR]", err.message);
       throw new InternalServerError(err);
@@ -63,14 +63,14 @@ class Stock{
     return retVal;
   }
 
-  async edit(editedDetails){
+  async edit(editedDetails) {
     let retVal = null;
-    const params = {...this, ...editedDetails};
+    const params = { ...this, ...editedDetails };
 
     try {
       const conn = await db.connect();
       await conn.execute(
-      `UPDATE stock 
+        `UPDATE stock 
         SET 
           product_id     =   :product_id,
           supplier_id    =   :supplier_id,
@@ -81,8 +81,8 @@ class Stock{
           notes          =   :notes
         WHERE 
           stock_id = :stock_id;`,
-          params
-        );
+        params
+      );
       await conn.end();
       retVal = new Stock(params);
     } catch (err) {
@@ -90,21 +90,6 @@ class Stock{
       throw new InternalServerError(err);
     }
     return retVal;
-  }
-
-  static validate(stock){
-    const schema = Joi.object({
-      product_id: Joi.number().greater(0).label("Product ID").required(),
-      supplier_id: Joi.number().greater(0).label("Supplier ID").required(),
-      date_supplied: Joi.date().label("Date Supplied").max("now").iso().required(),
-      quantity: Joi.number().greater(-1).label("Quantity").required(),
-      unit: Joi.string().label("Name").min(2).max(5).required().trim(),
-      unit_price: Joi.number().label("Unit Price").precision(2).required(),
-      notes: Joi.string().label("Notes").min(2).max(400).required(),
-    })
-    .options({ abortEarly: false, allowUnknown: true });
-
-    return schema.validate(stock);
   }
 
   static async findById(id) {
@@ -123,6 +108,20 @@ class Stock{
     }
 
     return retVal;
+  }
+
+  static validate(stock) {
+    const schema = Joi.object({
+      product_id: Joi.number().greater(0).label("Product ID").required(),
+      supplier_id: Joi.number().greater(0).label("Supplier ID").required(),
+      date_supplied: Joi.date().label("Date Supplied").max("now").iso().required(),
+      quantity: Joi.number().greater(-1).label("Quantity").required(),
+      unit: Joi.string().label("Name").min(2).max(5).required().trim(),
+      unit_price: Joi.number().label("Unit Price").precision(2).required(),
+      notes: Joi.string().label("Notes").min(2).max(400).required(),
+    }).options({ abortEarly: false });
+
+    return schema.validate(stock);
   }
 }
 module.exports = Stock;

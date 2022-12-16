@@ -1,4 +1,3 @@
-//
 const express = require("express");
 
 const { auth, permit, validate } = require("../middleware");
@@ -14,23 +13,20 @@ router.post(
   [auth, permit({ allow: [roles(role.MANAGER)] }), validate(Category.validate)],
   categoryController.create
 );
-router.get(
-  "/",
-  [auth, permit({ allow: [roles(role.MANAGER)] })],
-  categoryController.findAll
-);
+
+router.get("/", [auth, permit({ allow: [roles(role.MANAGER)] })], categoryController.findAll);
+
 router.put(
   "/:id",
-  [auth, permit({ allow: [roles(role.MANAGER)] })], validate(Category.validate),
+  [auth, permit({ allow: [roles(role.MANAGER)] })],
+  validate(Category.validate),
   categoryController.edit
 );
-router.delete(
-  "/:id",
-  [auth, permit({ allow: [roles(role.MANAGER)] })],
-  categoryController.remove
-);
+
+router.delete("/:id", [auth, permit({ allow: [roles(role.MANAGER)] })], categoryController.remove);
+
 router.put(
-  "/:id/status", 
+  "/:id/status",
   [auth, permit({ allow: [roles(role.MANAGER)] })],
   categoryController.toggleStatus
 );

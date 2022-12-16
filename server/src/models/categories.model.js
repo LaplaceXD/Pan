@@ -1,22 +1,16 @@
 const Joi = require("joi");
 const { InternalServerError } = require("../../helpers/errors");
-const { db, jwt } = require("../providers");
+const { db } = require("../providers");
 
 class Category {
   constructor(category) {
     this.category_id = category.category_id;
-    this.name =         category.name;
-    this.image_src =    category.image_src;
-    this.is_available = category.is_available? category.is_available:1;
-  }
-  tokenize(){
-    return jwt.sign({
-      name: this.name,
-      image_src: this.image_src,
-    })
+    this.name = category.name;
+    this.image_src = category.image_src;
+    this.is_available = category.is_available ? category.is_available : 1;
   }
 
-  async save(){
+  async save() {
     let retVal = null;
 
     try {
@@ -45,13 +39,13 @@ class Category {
     return retVal;
   }
 
-  static async findAll(){
+  static async findAll() {
     let retVal = [];
     try {
       const conn = await db.connect();
       const [data] = await conn.execute(`SELECT * FROM category`);
       await conn.end();
-      if(data.length !== 0 )retVal = data.map(d=>new Category(d));
+      if (data.length !== 0) retVal = data.map((d) => new Category(d));
     } catch (err) {
       console.log("[CATEGORY VIEW ERROR]", err.message);
       throw new InternalServerError(err);
@@ -59,7 +53,7 @@ class Category {
     return retVal;
   }
 
-  static async findById(id){
+  static async findById(id) {
     let retVal = null;
 
     try {
@@ -75,29 +69,29 @@ class Category {
     return retVal;
   }
 
-  async edit(editedDetails){
+  async edit(editedDetails) {
     let retVal = null;
-    const params = {...this, ...editedDetails};
+    const params = { ...this, ...editedDetails };
 
     try {
       const conn = await db.connect();
       await conn.execute(
-      `UPDATE category 
+        `UPDATE category 
         SET 
           name = :name, 
           image_src= :image_src 
 
         WHERE 
           category_id = :category_id;`,
-          params
-        );
+        params
+      );
       await conn.end();
       retVal = new Category(params);
     } catch (err) {
       console.log("[CATEGORY EDIT ERROR]", err.message);
       throw new InternalServerError(err);
     }
-    
+
     return retVal;
   }
 
@@ -110,9 +104,10 @@ class Category {
           
         WHERE
           category_id = :category_id;
-        `, this
+        `,
+        this
       );
-      
+
       await conn.end();
     } catch (err) {
       console.log("[CATEGORY DELETE ERROR]", err.message);
@@ -122,16 +117,18 @@ class Category {
 
   async toggleStatus() {
     try {
-      const newVal = this.is_available === '1' ? '0' : '1';
-      
+      const newVal = this.is_available === "1" ? "0" : "1";
+
       const conn = await db.connect();
-      await conn.execute (
+      await conn.execute(
         `UPDATE Category 
         SET 
           is_available = ?
         WHERE
           category_id = ?;
-        `, [newVal, this.category_id]);
+        `,
+        [newVal, this.category_id]
+      );
       await conn.end();
     } catch (err) {
       console.log("[CATEGORY ERROR]", err.message);
@@ -139,14 +136,14 @@ class Category {
     }
   }
 
-  static validate(category){
+  static validate(category) {
     const schema = Joi.object({
       name: Joi.string().label("Name").min(2).max(100).required(),
-      image_src: Joi.string().label("Image Source")
-    })
-    return schema.validate;
-  }
+      image_src: Joi.string().label("Image Source"),
+    }).options({ abortEarly: false });
 
+    return schema.validate(category);
+  }
 }
 
 module.exports = Category;
