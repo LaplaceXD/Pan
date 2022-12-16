@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { redirect } from "react-router-dom";
 import { toast } from "react-toastify";
 
 import { useAuth } from "@hooks/auth";
 
 function useQuery(query, checkAuth = true) {
   const auth = useAuth();
-  const navigate = useNavigate();
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
 
@@ -14,7 +13,7 @@ function useQuery(query, checkAuth = true) {
     if (status === 401) {
       await auth.logout();
       toast.error("Session timeout.");
-      navigate("/login");
+      redirect("/login");
     }
   }
 

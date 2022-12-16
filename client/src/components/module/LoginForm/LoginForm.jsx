@@ -1,5 +1,5 @@
 import { useFormik } from "formik";
-import { useNavigate } from "react-router-dom";
+import { redirect } from "react-router-dom";
 import { toast } from "react-toastify";
 import * as Yup from "yup";
 
@@ -7,7 +7,6 @@ import { Button, Field } from "@components/common";
 import useAuth from "@hooks/auth/useAuth";
 
 function LoginForm({ ...props }) {
-  const navigate = useNavigate();
   const auth = useAuth();
 
   const formik = useFormik({
@@ -27,7 +26,7 @@ function LoginForm({ ...props }) {
         formik.setSubmitting(false);
         toast.error("Invalid credentials.");
       } else {
-        navigate("/");
+        redirect("/");
         toast.success("Logged in.");
       }
     },

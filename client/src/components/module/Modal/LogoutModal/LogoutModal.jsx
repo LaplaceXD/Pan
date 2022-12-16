@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { redirect } from "react-router-dom";
 import { toast } from "react-toastify";
 
 import { Button, Modal } from "@components/common";
@@ -8,7 +8,6 @@ import styles from "./LogoutModal.module.css";
 
 function LogoutModal({ open, onClose }) {
   const [isLoggingOut, setIsLoggingOut] = useState(false);
-  const navigate = useNavigate();
   const auth = useAuth();
 
   async function handleLogout() {
@@ -16,8 +15,7 @@ function LogoutModal({ open, onClose }) {
     await auth.logout();
 
     toast.success("Logged out!");
-    navigate("/login");
-    setIsLoggingOut(false);
+    redirect("/login");
   }
 
   return (

@@ -1,5 +1,3 @@
-import { Route } from "react-router-dom";
-
 function appendPath(path, pages) {
   return pages.map((page) => ({ ...pages, path: path + page.path }));
 }
@@ -10,14 +8,6 @@ function flattenPages(pages) {
 
     return children ? buffer.concat(...flattenPages(appendPath(page.path, children))) : buffer;
   }, []);
-}
-
-export function parseRoutes(routes) {
-  return routes.map(({ children, ...props }) => (
-    <Route key={props.path} {...props}>
-      {children ? parseRoutes(appendPath(props.path, children)) : null}
-    </Route>
-  ));
 }
 
 export function getLinkProps(pages) {
