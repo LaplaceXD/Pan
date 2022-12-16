@@ -2,7 +2,8 @@ import { useState } from "react";
 
 import empImg from "@assets/imgs/emp-img.jpg";
 import { Button, Grid, Options, SearchBar } from "@components/common";
-import { Order, Product, UserBanner } from "@components/module";
+import { Order, Product } from "@components/module";
+import { PreviewLayout } from "@components/template";
 import useQuery from "@hooks/query";
 import { getAllProducts } from "@services/product";
 
@@ -49,60 +50,58 @@ function Home() {
     );
   }
 
-  return (
-    <main className={styles.home}>
-      <div className={styles.productContainer}>
-        <header className={styles.productHeader}>
-          <h2 className={styles.title}>Select Category</h2>
-          <SearchBar />
-        </header>
+  const CheckoutPreview = (
+    <>
+      <Order.Summary
+        className={styles.orderSummary}
+        cart={cart}
+        onItemIncrement={(item) => handleItemIncrement(item.id)}
+        onItemDecrement={(item) => handleItemDecrement(item.id)}
+      />
 
-        <Options
-          className={styles.productCategories}
-          options={[
-            { label: "All", value: 1 },
-            { label: "Bread", value: 2 },
-            { label: "Cake", value: 3 },
-            { label: "Donuts", value: 4 },
-            { label: "Cookies", value: 5 },
-            { label: "Drinks", value: 6 },
-          ]}
-          value={1}
-          onChange={(value) => console.log(value)}
-        />
-
-        <Grid
-          className={styles.productGrid}
-          items={products}
-          itemKey={(product) => product.product_id}
-          RenderComponent={({ product_id, name, unit_price }) => (
-            <Product.Card
-              key={product_id}
-              img={empImg}
-              name={name}
-              price={unit_price}
-              onClick={() => console.log(name)}
-            />
-          )}
-        />
+      <div className={styles.checkoutBtns}>
+        <Button label="Clear Cart" onClick={() => setCart(null)} secondary />
+        <Button label="Confirm Order" />
       </div>
+    </>
+  );
 
-      <aside className={styles.checkoutContainer}>
-        <UserBanner />
+  return (
+    <PreviewLayout PreviewComponent={CheckoutPreview} className={styles.container}>
+      <header className={styles.productHeader}>
+        <h2 className={styles.title}>Select Category</h2>
+        <SearchBar />
+      </header>
 
-        <Order.Summary
-          className={styles.orderSummary}
-          cart={cart}
-          onItemIncrement={(item) => handleItemIncrement(item.id)}
-          onItemDecrement={(item) => handleItemDecrement(item.id)}
-        />
+      <Options
+        className={styles.productCategories}
+        options={[
+          { label: "All", value: 1 },
+          { label: "Bread", value: 2 },
+          { label: "Cake", value: 3 },
+          { label: "Donuts", value: 4 },
+          { label: "Cookies", value: 5 },
+          { label: "Drinks", value: 6 },
+        ]}
+        value={1}
+        onChange={(value) => console.log(value)}
+      />
 
-        <div className={styles.checkoutBtns}>
-          <Button label="Cancel" secondary />
-          <Button label="Confirm Order" />
-        </div>
-      </aside>
-    </main>
+      <Grid
+        className={styles.productGrid}
+        items={products && [...products, ...products, ...products]}
+        itemKey={(product) => product.product_id}
+        RenderComponent={({ product_id, name, unit_price }) => (
+          <Product.Card
+            key={product_id}
+            img={empImg}
+            name={name}
+            price={unit_price}
+            onClick={() => console.log(name)}
+          />
+        )}
+      />
+    </PreviewLayout>
   );
 }
 

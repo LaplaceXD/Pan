@@ -12,24 +12,25 @@ import NavLink from "./NavLink";
 function NavBar({ links }) {
   const [openModal, setOpenModal] = useState(false);
 
+  const handleModalClose = () => setOpenModal(false);
+  const handleModalOpen = () => setOpenModal(true);
+
   return (
-    <aside className={styles.pseudoContainer}>
-      <div className={styles.container}>
-        <img src={logo} className={styles.logo} alt="Pan logo." />
-        <nav className={styles.nav}>
-          <List
-            className={styles.navList}
-            items={links}
-            itemKey={({ to }) => to}
-            RenderComponent={(prop) => <NavLink {...prop} />}
-          />
-          <ul className={styles.navList}>
-            <NavLink to="/account" label="Account" Icon={<FiUser />} />
-            <NavButton onClick={() => setOpenModal(true)} label="Logout" Icon={<FiLogOut />} />
-            <Modal.Logout open={openModal} onClose={() => setOpenModal(false)} />
-          </ul>
-        </nav>
-      </div>
+    <aside className={styles.container}>
+      <img src={logo} className={styles.logo} alt="Pan logo." />
+      <nav className={styles.nav}>
+        <List
+          className={styles.navList}
+          items={links}
+          itemKey={({ to }) => to}
+          RenderComponent={(prop) => <NavLink {...prop} />}
+        />
+        <ul className={styles.navList}>
+          <NavLink to="/account" label="Account" Icon={<FiUser />} />
+          <NavButton onClick={handleModalOpen} label="Logout" Icon={<FiLogOut />} />
+          <Modal.Logout open={openModal} onClose={handleModalClose} />
+        </ul>
+      </nav>
     </aside>
   );
 }

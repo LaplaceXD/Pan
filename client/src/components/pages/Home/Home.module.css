@@ -1,15 +1,5 @@
-.home {
-  flex: 1;
-  display: flex;
-}
-
-.product-container {
-  flex: 1;
-  width: 100%;
-  height: 100%;
-
+.container {
   padding: 1.5em 2em;
-  overflow-y: scroll;
 }
 
 .product-header {
@@ -32,18 +22,6 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(256px, 1fr));
   gap: 28px;
-}
-
-.checkout-container {
-  position: relative;
-  width: 25%;
-  right: 0;
-
-  display: flex;
-  flex-direction: column;
-  padding: 1.5em;
-
-  background-color: var(--accent-color);
 }
 
 .order-summary {
