@@ -107,38 +107,32 @@ VALUES
         'Bread',
         '../../images/category/bread.jpg',
         '1'
-    ),
-    (
+    ), (
         '2',
         'Cakes',
         '../../images/category/cakes.jpg',
         '1'
-    ),
-    (
+    ), (
         '3',
         'Pies',
         '../../images/category/pies.jpg',
         '1'
-    ),
-    (
+    ), (
         '4',
         'Muffins',
         '../../images/category/muffins.jpg',
         '1'
-    ),
-    (
+    ), (
         '5',
         'Cookies',
         '../../images/category/cookies.jpg',
         '1'
-    ),
-    (
+    ), (
         '6',
         'Doughnuts',
         '../../images/category/doughnuts.jpg',
         '1'
-    ),
-    (
+    ), (
         '0',
         'Others',
         '../../images/category/others.jpg',
@@ -177,8 +171,7 @@ VALUES
         '../../images/employee/jonhbuot.jpg',
         'manager',
         '1'
-    ),
-    (
+    ), (
         2,
         'Nathan',
         'Arriesgado',
@@ -189,8 +182,7 @@ VALUES
         '../../images/employee/nathanarriesgado.jpg',
         'employee',
         '1'
-    ),
-    (
+    ), (
         3,
         'Erwin',
         'Antepuesto',
@@ -201,8 +193,7 @@ VALUES
         '../../images/employee/nathanarriesgado.jpg',
         'employee',
         '1'
-    ),
-    (
+    ), (
         4,
         'Sherly',
         'Jao',
@@ -247,8 +238,7 @@ VALUES
         '9.99',
         '../../images/product/painauchocolat.jpg',
         '1'
-    ),
-    (
+    ), (
         2,
         '1',
         '2',
@@ -258,8 +248,7 @@ VALUES
         '7.99',
         '../../images/product/frenchtoast.jpg',
         '1'
-    ),
-    (
+    ), (
         3,
         '3',
         '3',
@@ -269,8 +258,7 @@ VALUES
         '19.99',
         '../../images/product/raspberrypie.jpg',
         '1'
-    ),
-    (
+    ), (
         4,
         '5',
         '4',
@@ -317,8 +305,7 @@ VALUES
         '83726192874',
         'wheatandgoodsco@gmail.com',
         '1'
-    ),
-    (
+    ), (
         2,
         'Bread Express',
         'Daytona Apartment',
@@ -329,8 +316,7 @@ VALUES
         '18572940192',
         'breadexpress@gmail.com',
         '1'
-    ),
-    (
+    ), (
         3,
         'House of Sweets',
         'Bunzel',
@@ -365,8 +351,7 @@ VALUES
         '',
         '49.99',
         'N/A'
-    ),
-    (
+    ), (
         2,
         '4',
         '3',
