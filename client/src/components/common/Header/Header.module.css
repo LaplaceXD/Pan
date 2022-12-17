@@ -1,0 +1,13 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  gap: 32px;
+  width: 100%;
+}
+
+.title {
+  display: inline-block;
+  font-weight: var(--font-regular);
+  color: var(--text-color);
+  align-self: center;
+}
