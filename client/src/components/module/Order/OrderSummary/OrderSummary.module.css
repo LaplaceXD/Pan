@@ -1,4 +1,14 @@
-.summary {
+.container {
   flex: 1;
+  height: max-content;
+}
+
+.details {
   gap: 12px;
+  overflow-y: scroll;
+  max-height: 50vh;
+}
+
+.details::-webkit-scrollbar-track {
+  background: transparent;
 }
