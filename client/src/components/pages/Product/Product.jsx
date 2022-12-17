@@ -1,6 +1,6 @@
 import empImg from "@assets/imgs/emp-img.jpg";
-import { Header, List, Options, SearchBar } from "@components/common";
-import { Product as Prod, UserBanner } from "@components/module";
+import { Header, List, SearchBar } from "@components/common";
+import { Category, Product as Prod, UserBanner } from "@components/module";
 import useFilter from "@hooks/filter";
 import useQuery from "@hooks/query";
 import { getAllProducts } from "@services/product";
@@ -18,7 +18,7 @@ const searchFilter = ({ name, description }, search) => {
 
 function Product() {
   const { data: products } = useQuery("products", getAllProducts);
-  const { data, filter } = useFilter(products, {
+  const { data: filteredProducts, filter } = useFilter(products, {
     search: { value: "", filter: searchFilter },
     category: { value: 0, filter: categoryFilter },
   });
@@ -34,16 +34,8 @@ function Product() {
         <UserBanner imgSize={56} />
       </Header>
 
-      <Options
+      <Category.Options
         className={styles.options}
-        options={[
-          { label: "All", value: 0 },
-          { label: "Bread", value: 1 },
-          { label: "Cake", value: 2 },
-          { label: "Donuts", value: 3 },
-          { label: "Cookies", value: 4 },
-          { label: "Drinks", value: 5 },
-        ]}
         value={filter.category}
         onChange={filter.handleCategory}
       />
@@ -51,7 +43,7 @@ function Product() {
       <List
         column
         className={styles.productList}
-        items={data}
+        items={filteredProducts}
         itemKey={(product) => product.product_id}
         RenderComponent={({ name, description, unit_price }) => (
           <Prod.Item
