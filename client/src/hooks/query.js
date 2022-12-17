@@ -9,11 +9,17 @@ function useQuery(key, query, { checkAuth = true, ...options } = { checkAuth: tr
   const queryDetails = useReactQuery(
     key,
     async ({ ...params }) => {
-      const { error, message, status, data } = await query({ ...params });
-      checkAuth && (await redirectIfUnauthorized(status));
+      const response = await query({ ...params });
 
-      if (error) throw new Error(message);
-      return data;
+      if (response) {
+        const { error, message, status, data } = response;
+        checkAuth && (await redirectIfUnauthorized(status));
+
+        if (error) throw new Error(message);
+        return data;
+      }
+
+      return null;
     },
     options
   );
