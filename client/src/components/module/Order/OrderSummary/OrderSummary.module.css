@@ -12,3 +12,8 @@
 .details::-webkit-scrollbar-track {
   background: transparent;
 }
+
+.count {
+  color: var(--white);
+  margin-top: 0.5em;
+}

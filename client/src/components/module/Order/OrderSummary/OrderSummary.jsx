@@ -9,6 +9,7 @@ function OrderSummary({
   details,
   itemKey,
   className,
+  showCount = false,
   withCounter = false,
   onItemIncrement,
   onItemDecrement,
@@ -31,7 +32,7 @@ function OrderSummary({
           />
         )}
       />
-      <p>COUNTER</p>
+      {showCount && details ? <p className={styles.count}>Item Count: {details.length}</p> : null}
     </div>
   );
 }
