@@ -4,11 +4,8 @@
   padding: 1.75em;
 }
 
-.header {
-  display: flex;
-  justify-content: space-between;
-  gap: 32px;
-  width: 100%;
+.header h1 {
+  flex: 1;
 }
 
 .title {
@@ -20,7 +17,7 @@
 }
 
 .search {
-  width: 35%;
+  width: 25%;
 }
 
 .options {
