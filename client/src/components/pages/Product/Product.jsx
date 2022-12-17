@@ -1,5 +1,5 @@
 import empImg from "@assets/imgs/emp-img.jpg";
-import { List, Options, SearchBar } from "@components/common";
+import { Header, List, Options, SearchBar } from "@components/common";
 import { Product as Prod, UserBanner } from "@components/module";
 import useFilter from "@hooks/filter";
 import useQuery from "@hooks/query";
@@ -17,7 +17,7 @@ const searchFilter = ({ name, description }, search) => {
 };
 
 function Product() {
-  const { data: products } = useQuery(getAllProducts);
+  const { data: products } = useQuery("products", getAllProducts);
   const { data, filter, setFilter } = useFilter(products, {
     search: { value: "", filter: searchFilter },
     category: { value: 0, filter: categoryFilter },
@@ -25,15 +25,14 @@ function Product() {
 
   return (
     <main className={styles.container}>
-      <header className={styles.header}>
-        <h1 className={styles.title}>Products Available</h1>
+      <Header title="Products Available" className={styles.header}>
         <SearchBar
           className={styles.search}
           value={filter.search}
           onSearch={(e) => setFilter({ search: e.currentTarget.value })}
         />
         <UserBanner imgSize={56} />
-      </header>
+      </Header>
 
       <Options
         className={styles.options}

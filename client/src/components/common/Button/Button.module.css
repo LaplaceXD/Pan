@@ -17,6 +17,7 @@
 .btn:disabled {
   --btn-bg: var(--primary-color);
   color: var(--gray);
+  cursor: unset;
 }
 
 .btn:disabled:hover {

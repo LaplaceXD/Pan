@@ -3,6 +3,7 @@ import { BsBoxSeam } from "react-icons/bs";
 import { FiHome, FiTruck } from "react-icons/fi";
 
 import Home from "@components/pages/Home";
+import Order from "@components/pages/Order";
 import Product from "@components/pages/Product";
 import { getLinkProps, getRouteProps } from "@utils/routes";
 
@@ -19,7 +20,7 @@ const employeePages = [
     path: "/order",
     label: "Orders",
     icon: <BiNotepad />,
-    element: <h1>Order</h1>,
+    element: <Order />,
     navLink: true,
   },
   {

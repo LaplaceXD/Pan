@@ -10,7 +10,7 @@ import { getAllProducts } from "@services/product";
 import styles from "./Home.module.css";
 
 function Home() {
-  const { data: products } = useQuery(getAllProducts);
+  const { data: products } = useQuery("products", getAllProducts);
   const [cart, setCart] = useState([
     {
       id: 1,
@@ -52,12 +52,18 @@ function Home() {
 
   const CheckoutPreview = (
     <>
-      <Order.Summary
-        className={styles.orderSummary}
-        cart={cart}
-        onItemIncrement={(item) => handleItemIncrement(item.id)}
-        onItemDecrement={(item) => handleItemDecrement(item.id)}
-      />
+      <Order.Details
+        total={cart.reduce((total, { unit_price, quantity }) => total + unit_price * quantity, 0)}
+        className={styles.checkoutPreview}
+      >
+        <Order.Lines
+          lines={cart}
+          className={styles.checkoutSummary}
+          onItemIncrement={(item) => handleItemIncrement(item.id)}
+          onItemDecrement={(item) => handleItemDecrement(item.id)}
+          withCounter
+        />
+      </Order.Details>
 
       <div className={styles.checkoutBtns}>
         <Button label="Clear Cart" onClick={() => setCart(null)} secondary />

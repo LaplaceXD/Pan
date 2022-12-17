@@ -1,0 +1,21 @@
+.container {
+  padding: 1.75em;
+}
+
+.historyList {
+  margin-top: 32px;
+}
+
+.order-preview {
+  flex: 1;
+  margin-top: 1.5em;
+}
+
+.order-header {
+  margin-top: 1.5em;
+}
+
+.order-summary,
+.order-delete {
+  margin-top: 1em;
+}
