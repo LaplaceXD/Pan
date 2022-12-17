@@ -6,6 +6,7 @@ import Home from "@components/pages/Home";
 import Order from "@components/pages/Order";
 import Product from "@components/pages/Product";
 import { getLinkProps, getRouteProps } from "@utils/routes";
+import Supplier from "@components/pages/Supplier";
 
 const employeePages = [
   {
@@ -34,7 +35,7 @@ const employeePages = [
     path: "/supplier",
     label: "Supplier",
     icon: <FiTruck />,
-    element: <h1>Supplier</h1>,
+    element: <Supplier />,
     navLink: true,
   },
 ];
