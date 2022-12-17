@@ -1,0 +1,7 @@
+.content {
+  padding: 2.5em;
+  width: 17.5vw;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
