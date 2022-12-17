@@ -1,14 +1,22 @@
-import { useEffect, useState } from "react";
+import { useQuery as useReactQuery } from "react-query";
 import { redirect } from "react-router-dom";
 import { toast } from "react-toastify";
 
 import { useAuth } from "@hooks/auth";
 
-function useQuery(query, checkAuth = true) {
+function useQuery(key, query, { checkAuth = true, ...options } = { checkAuth: true }) {
   const auth = useAuth();
-  const [isLoading, setIsLoading] = useState(true);
-  const [data, setData] = useState(null);
-  const [error, setError] = useState(null);
+  const queryDetails = useReactQuery(
+    key,
+    async ({ ...params }) => {
+      const { error, message, status, data } = await query({ ...params });
+      checkAuth && (await redirectIfUnauthorized(status));
+
+      if (error) throw new Error(message);
+      return data;
+    },
+    options
+  );
 
   async function redirectIfUnauthorized(status) {
     if (status === 401) {
@@ -18,30 +26,7 @@ function useQuery(query, checkAuth = true) {
     }
   }
 
-  useEffect(() => {
-    const controller = new AbortController();
-
-    (async function () {
-      const response = await query(controller.signal);
-
-      if (response) {
-        const { error, message, status, data } = response;
-        checkAuth && (await redirectIfUnauthorized(status));
-
-        if (error) {
-          setError(message);
-        } else {
-          setData(data);
-        }
-      }
-
-      setIsLoading(false);
-    })();
-
-    return () => controller.abort();
-  }, [query, setError, setData, setIsLoading]);
-
-  return { data, error, isLoading, isError: !!error };
+  return queryDetails;
 }
 
 export default useQuery;

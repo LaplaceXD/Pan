@@ -17,7 +17,7 @@ const searchFilter = ({ name, description }, search) => {
 };
 
 function Product() {
-  const { data: products } = useQuery(getAllProducts);
+  const { data: products } = useQuery("products", getAllProducts);
   const { data, filter, setFilter } = useFilter(products, {
     search: { value: "", filter: searchFilter },
     category: { value: 0, filter: categoryFilter },

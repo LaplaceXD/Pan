@@ -10,7 +10,7 @@ import { getAllProducts } from "@services/product";
 import styles from "./Home.module.css";
 
 function Home() {
-  const { data: products } = useQuery(getAllProducts);
+  const { data: products } = useQuery("products", getAllProducts);
   const [cart, setCart] = useState([
     {
       id: 1,
