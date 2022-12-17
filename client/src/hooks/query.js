@@ -39,7 +39,7 @@ function useQuery(query, checkAuth = true) {
     })();
 
     return () => controller.abort();
-  }, []);
+  }, [query, setError, setData, setIsLoading]);
 
   return { data, error, isLoading, isError: !!error };
 }
