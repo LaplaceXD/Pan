@@ -6,9 +6,9 @@ import styles from "./OrderSummary.module.css";
 
 const DEFAULT_TOTAL = 0;
 
-function OrderSummary({ title = "Order Details", cart, onItemIncrement, onItemDecrement, className }) {
+function OrderSummary({ title = "Order Details", details, onItemIncrement, onItemDecrement, className }) {
   const total =
-    cart?.reduce((total, { unit_price, quantity }) => total + unit_price * quantity, DEFAULT_TOTAL) ??
+    details?.reduce((total, { unit_price, quantity }) => total + unit_price * quantity, DEFAULT_TOTAL) ??
     DEFAULT_TOTAL;
 
   return (
@@ -18,7 +18,7 @@ function OrderSummary({ title = "Order Details", cart, onItemIncrement, onItemDe
       <List
         column
         className={styles.summary}
-        items={cart}
+        items={details}
         itemKey={(detail) => detail.id}
         total={(total, { unit_price, quantity }) => total + unit_price * quantity}
         RenderComponent={(detail) => (

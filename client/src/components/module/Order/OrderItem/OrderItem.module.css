@@ -10,7 +10,7 @@
 
   background: var(--bg-color);
   color: var(--header-color);
-  transition: filter 125ms ease, background 125ms ease, color 125ms ease;
+  transition: filter 250ms ease, background 250ms ease, color 250ms ease;
 }
 
 .item:hover {

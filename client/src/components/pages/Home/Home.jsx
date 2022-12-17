@@ -54,7 +54,7 @@ function Home() {
     <>
       <Order.Summary
         className={styles.orderSummary}
-        cart={cart}
+        details={cart}
         onItemIncrement={(item) => handleItemIncrement(item.id)}
         onItemDecrement={(item) => handleItemDecrement(item.id)}
       />
