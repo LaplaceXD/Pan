@@ -6,10 +6,10 @@ import filter from "@hooks/filter.js";
 import styles from "./Supplier.module.css";
 import SupplierItem from "@components/module/Supplier/index.js";
 import useQuery from "@hooks/query.js";
-import {getAllSupplier} from "@services/supplier.js";
+import {getAllSuppliers} from "@services/supplier.js";
 
 function Supplier() {
-    const { data: suppliers } = useQuery("suppliers", getAllSupplier);
+    const { data: suppliers } = useQuery("suppliers", getAllSuppliers);
     console.log(suppliers)
     return (
         <main className={styles.container}>
