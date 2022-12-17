@@ -6,6 +6,7 @@ import { useAuth } from "@hooks/auth";
 
 function useQuery(query, checkAuth = true) {
   const auth = useAuth();
+  const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
 
@@ -21,20 +22,26 @@ function useQuery(query, checkAuth = true) {
     const controller = new AbortController();
 
     (async function () {
-      const { error, message, status, data } = await query(controller.signal);
-      checkAuth && (await redirectIfUnauthorized(status));
+      const response = await query(controller.signal);
 
-      if (error) {
-        setError(message);
-      } else {
-        setData(data);
+      if (response) {
+        const { error, message, status, data } = response;
+        checkAuth && (await redirectIfUnauthorized(status));
+
+        if (error) {
+          setError(message);
+        } else {
+          setData(data);
+        }
       }
+
+      setIsLoading(false);
     })();
 
     return () => controller.abort();
   }, []);
 
-  return { data, error, isLoading: !data, isError: !!error };
+  return { data, error, isLoading, isError: !!error };
 }
 
 export default useQuery;
