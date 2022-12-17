@@ -9,7 +9,7 @@ import { getLinkProps, getRouteProps } from "@utils/routes";
 
 const employeePages = [
   {
-    path: "",
+    path: "/",
     label: "Home",
     icon: <FiHome />,
     element: <Home />,
@@ -17,21 +17,21 @@ const employeePages = [
     navLink: true,
   },
   {
-    path: "/order",
+    path: "/orders",
     label: "Orders",
     icon: <BiNotepad />,
     element: <Order />,
     navLink: true,
   },
   {
-    path: "/product",
+    path: "/products",
     label: "Products",
     icon: <BsBoxSeam />,
     element: <Product />,
     navLink: true,
   },
   {
-    path: "/supplier",
+    path: "/suppliers",
     label: "Supplier",
     icon: <FiTruck />,
     element: <h1>Supplier</h1>,
