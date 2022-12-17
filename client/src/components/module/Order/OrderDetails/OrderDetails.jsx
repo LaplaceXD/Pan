@@ -1,7 +1,7 @@
 import format from "@utils/format";
 import { clsx } from "clsx";
 
-import styles from "./OrderPreview.module.css";
+import styles from "./OrderDetails.module.css";
 
 function OrderPreview({ className, title = "Order Details", total, children }) {
   return (

@@ -1,7 +1,7 @@
 import { clsx } from "clsx";
 
 import format from "@utils/format";
-import styles from "./OrderItem.module.css";
+import styles from "./OrderHistoryItem.module.css";
 
 function OrderItem({ id, orderDate, employeeName, total, onClick, isSelected = false }) {
   return (

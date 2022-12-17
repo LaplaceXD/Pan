@@ -1,11 +1,11 @@
-import Detail from "./OrderDetail";
-import Item from "./OrderItem";
-import Preview from "./OrderPreview";
-import Summary from "./OrderSummary";
+import Details from "./OrderDetails";
+import HistoryItem from "./OrderHistoryItem";
+import Line from "./OrderLine";
+import Lines from "./OrderLines";
 
 export default {
-  Summary,
-  Item,
-  Preview,
-  Detail,
+  Line,
+  HistoryItem,
+  Details,
+  Lines,
 };

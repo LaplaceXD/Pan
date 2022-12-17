@@ -1,7 +1,7 @@
 import format from "@utils/format";
-import styles from "./OrderDetail.module.css";
+import styles from "./OrderLine.module.css";
 
-function OrderDetail({ name, price = 0, onIncrement, onDecrement, quantity = 0, withCounter = true }) {
+function OrderLine({ name, price = 0, onIncrement, onDecrement, quantity = 0, withCounter = true }) {
   const Counter = (
     <>
       <button onClick={onDecrement} className={styles.counterBtn}>
@@ -26,4 +26,4 @@ function OrderDetail({ name, price = 0, onIncrement, onDecrement, quantity = 0, 
   );
 }
 
-export default OrderDetail;
+export default OrderLine;

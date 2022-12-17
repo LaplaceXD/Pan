@@ -3,13 +3,13 @@
   height: max-content;
 }
 
-.details {
+.lines {
   gap: 12px;
   overflow-y: scroll;
   max-height: 50vh;
 }
 
-.details::-webkit-scrollbar-track {
+.lines::-webkit-scrollbar-track {
   background: transparent;
 }
 

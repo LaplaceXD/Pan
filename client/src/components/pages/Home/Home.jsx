@@ -52,19 +52,18 @@ function Home() {
 
   const CheckoutPreview = (
     <>
-      <Order.Preview
+      <Order.Details
         total={cart.reduce((total, { unit_price, quantity }) => total + unit_price * quantity, 0)}
         className={styles.checkoutPreview}
       >
-        <Order.Summary
-          details={cart}
+        <Order.Lines
+          lines={cart}
           className={styles.checkoutSummary}
-          itemKey={(detail) => detail.product_id}
           onItemIncrement={(item) => handleItemIncrement(item.id)}
           onItemDecrement={(item) => handleItemDecrement(item.id)}
           withCounter
         />
-      </Order.Preview>
+      </Order.Details>
 
       <div className={styles.checkoutBtns}>
         <Button label="Clear Cart" onClick={() => setCart(null)} secondary />
