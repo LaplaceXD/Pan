@@ -1,0 +1,49 @@
+.item {
+  --bg-color: var(--field-color);
+  --header-color: var(--text-color);
+  --value-color: var(--white);
+
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  padding: 1.5em;
+  border-radius: 16px;
+
+  background: var(--bg-color);
+  color: var(--header-color);
+  transition: filter 125ms ease, background 125ms ease, color 125ms ease;
+}
+
+.item:hover {
+  cursor: pointer;
+  filter: brightness(1.15);
+}
+
+.item:active,
+.item.isSelected {
+  filter: none;
+  --bg-color: var(--secondary-color);
+  --header-color: var(--primary-color);
+  --value-color: var(--primary-color);
+}
+
+.item.isSelected {
+  cursor: unset;
+}
+
+.item p {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 4px;
+  font-weight: var(--font-medium);
+}
+
+/* Spans the employee two columns */
+.item p:nth-last-child(2) {
+  grid-column: span 2;
+}
+
+.item span {
+  font-size: 1.3rem;
+  color: var(--value-color);
+  font-weight: var(--font-regular);
+}
