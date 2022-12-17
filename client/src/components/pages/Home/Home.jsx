@@ -5,9 +5,7 @@ import empImg from "@assets/imgs/emp-img.jpg";
 import { Button, Grid, Header, SearchBar } from "@components/common";
 import { Category, Modal, Order, Product } from "@components/module";
 import { PreviewLayout } from "@components/template";
-import useFilter from "@hooks/filter";
-import useMutation from "@hooks/mutation";
-import useQuery from "@hooks/query";
+import { useFilter, useMutation, useQuery } from "@hooks";
 import { createOrder } from "@services/orders";
 import { getAllProducts } from "@services/product";
 

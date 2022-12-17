@@ -1,4 +1,4 @@
-import { useAuth } from "@hooks/auth";
+import { useAuth } from "@hooks";
 import { useMutation as useReactMutation } from "react-query";
 
 function useMutation(mutationFn, { checkAuth = true, ...options } = { checkAuth: true }) {

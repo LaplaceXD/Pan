@@ -2,7 +2,7 @@ import { useQuery as useReactQuery } from "react-query";
 import { redirect } from "react-router-dom";
 import { toast } from "react-toastify";
 
-import { useAuth } from "@hooks/auth";
+import { useAuth } from "@hooks";
 
 function useQuery(key, query, { checkAuth = true, ...options } = { checkAuth: true }) {
   const auth = useAuth();

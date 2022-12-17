@@ -1,8 +1,7 @@
 import empImg from "@assets/imgs/emp-img.jpg";
 import { Header, List, SearchBar } from "@components/common";
 import { Category, Product as Prod, UserBanner } from "@components/module";
-import useFilter from "@hooks/filter";
-import useQuery from "@hooks/query";
+import { useFilter, useQuery } from "@hooks";
 import { getAllProducts } from "@services/product";
 
 import styles from "./Product.module.css";
