@@ -25,7 +25,7 @@ const FILTERS = {
 
 function Order() {
   const { data: orders } = useQuery("orders", getAllOrders);
-  const { filter, setFilter, data: filteredOrders } = useFilter(orders, FILTERS);
+  const { filter, data: filteredOrders } = useFilter(orders, FILTERS);
 
   const [orderId, setOrderId] = useState(null);
   const { data: order } = useQuery(["order", orderId], ({ signal }) =>
@@ -56,7 +56,7 @@ function Order() {
         <SearchBar
           className={styles.search}
           value={filter.search}
-          onSearch={(e) => setFilter({ search: e.currentTarget.value })}
+          onSearch={(e) => filter.handleSearch(e.currentTarget.value)}
         />
       </Header>
 

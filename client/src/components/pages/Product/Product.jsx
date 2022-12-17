@@ -18,7 +18,7 @@ const searchFilter = ({ name, description }, search) => {
 
 function Product() {
   const { data: products } = useQuery("products", getAllProducts);
-  const { data, filter, setFilter } = useFilter(products, {
+  const { data, filter } = useFilter(products, {
     search: { value: "", filter: searchFilter },
     category: { value: 0, filter: categoryFilter },
   });
@@ -29,7 +29,7 @@ function Product() {
         <SearchBar
           className={styles.search}
           value={filter.search}
-          onSearch={(e) => setFilter({ search: e.currentTarget.value })}
+          onSearch={(e) => filter.handleSearch(e.currentTarget.value)}
         />
         <UserBanner imgSize={56} />
       </Header>
@@ -45,7 +45,7 @@ function Product() {
           { label: "Drinks", value: 5 },
         ]}
         value={filter.category}
-        onChange={(value) => setFilter({ category: value })}
+        onChange={filter.handleCategory}
       />
 
       <List
