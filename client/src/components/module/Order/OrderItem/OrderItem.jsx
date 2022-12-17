@@ -7,7 +7,7 @@ function OrderItem({ id, orderDate, employeeName, total, onClick, isSelected = f
   return (
     <div className={clsx(styles.item, isSelected && styles.isSelected)} onClick={onClick}>
       <p>
-        Order ID <span>{"ID-" + String(id).padStart(4, "0")}</span>
+        Order ID <span>{format.id(id)}</span>
       </p>
       <p>
         Order Date<span>{format.date(orderDate)}</span>

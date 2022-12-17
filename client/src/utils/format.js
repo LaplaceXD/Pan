@@ -15,8 +15,13 @@ function datetime(iso) {
   return new Date(iso).toLocaleString();
 }
 
+function id(id, prefix = "ID", pad = 4) {
+  return `${prefix}-${String(id).padStart(pad, "0")}`;
+}
+
 export default {
   currency,
   date,
   datetime,
+  id,
 };
