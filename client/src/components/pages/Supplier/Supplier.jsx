@@ -10,7 +10,6 @@ import {getAllSuppliers} from "@services/supplier.js";
 
 function Supplier() {
     const { data: suppliers } = useQuery("suppliers", getAllSuppliers);
-    console.log(suppliers)
     return (
         <main className={styles.container}>
             <Header title="Supplier List" className={styles.header}>
