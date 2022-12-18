@@ -18,7 +18,7 @@ function CartItemModal({ open, onClose, onSubmit, min, max }) {
   });
 
   return (
-    <Modal open={open} onClose={onClose} withCloseBtn>
+    <Modal open={open} onClose={onClose} fadeIn withCloseBtn>
       <form method="POST" className={styles.content} onSubmit={formik.handleSubmit}>
         <Field
           type="number"
