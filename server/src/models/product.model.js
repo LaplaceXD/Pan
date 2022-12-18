@@ -116,7 +116,7 @@ class Product {
 
     try {
       const conn = await db.connect();
-      const [data] = await conn.execute("SELECT * FROM product WHERE product_id = :id", { id });
+      const [data] = await conn.execute("SELECT p.product_id, p.category_id, c.name AS category_name, p.creator_id, p.date_created, p.name, p.description, p.unit_price, p.image_src, p.is_available FROM product AS p INNER JOIN category AS c ON p.category_id = c.category_id WHERE product_id = :id", { id });
       await conn.end();
 
       if (data.length !== 0) retVal = new Product(data[0]);
