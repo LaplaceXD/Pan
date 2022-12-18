@@ -14,7 +14,7 @@ function  SupplierItem({ id, name, number, str_no, str_name, bldg, city, zip_cod
                 </div>
                 <div className={styles.addressContainer}>
                     <p className={styles.label}>Address:</p>
-                    <h2 className={styles.supplierAddress}>{str_no} {str_name}, {bldg}, {city} {zip_code}</h2>
+                    <h2 className={styles.supplierAddress}>{str_no} {str_name} {bldg} {city} {zip_code}</h2>
                 </div>
             </div>
         </li>
