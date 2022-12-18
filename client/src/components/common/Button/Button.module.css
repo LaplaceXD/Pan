@@ -1,10 +1,11 @@
 .btn {
   --btn-bg: var(--secondary-color);
+  --btn-font-color: var(--primary-color);
 
   width: 100%;
 
   background: var(--btn-bg);
-  color: var(--primary-color);
+  color: var(--btn-font-color);
 
   padding: 12px 16px;
   font-size: 1.1rem;
@@ -40,4 +41,9 @@
 
 .btn.secondary {
   --btn-bg: var(--text-color);
+}
+
+.btn.error {
+  --btn-bg: var(--error-color);
+  --btn-font-color: var(--primary-color);
 }
