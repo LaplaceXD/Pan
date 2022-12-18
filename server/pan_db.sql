@@ -132,15 +132,7 @@ VALUES
         'Doughnuts',
         '../../images/category/doughnuts.jpg',
         '1'
-    ), (
-        '0',
-        'Others',
-        '../../images/category/others.jpg',
-        '1'
     );
-
--- MANUALLY UPDATING CATEGORY_ID OF OTHERS SINCE PHPMYADMIN SETS IT TO 7 REGARDLESS --
-UPDATE category SET category_id = 0 WHERE category_id = 7;
 
 -- SAMPLE DATA FOR EMPLOYEE TABLE -- 
 INSERT INTO

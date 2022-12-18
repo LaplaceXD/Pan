@@ -179,7 +179,7 @@ class Employee {
     return retVal;
   }
 
-  static async validate(employee, params = {}) {
+  static async validate(employee, params = {}, auth = {}) {
     let match = await Employee.findByEmail(employee.email);
 
     // If id exist in params then this validation is used when an account is being edited
@@ -187,8 +187,7 @@ class Employee {
     // though the account technically owns it
     if (params.hasOwnProperty("id") && parseInt(params.id) === match?.employee_id) match = null;
 
-    const schema = Joi.object()
-      .keys({
+    let schema = {
         first_name: Joi.string().label("First Name").min(2).max(300).required().trim(),
         last_name: Joi.string().label("Last Name").min(2).max(300).required().trim(),
         email: Joi.string()
@@ -207,9 +206,10 @@ class Employee {
           .message("{{#label}} must contain digits only.")
           .required()
           .trim(),
-        date_employed: Joi.date().label("Date Employed").max("now").iso().required(),
-      })
-      .options({ abortEarly: false });
+      }
+
+    if (auth.role === role.MANAGER) schema = {date_employed: Joi.date().label("Date Employed").max("now").iso().required(), ...schema};
+    schema = Joi.object().keys(schema).options({ abortEarly: false });
 
     return schema.validate(employee);
   }

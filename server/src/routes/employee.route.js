@@ -35,7 +35,7 @@ router.put(
 router.put(
   "/:id/password",
   [auth, permit({ allow: [owner] }), validate(Employee.validatePassword)],
-  employeeController.changePassword
+  employeeController.changePassword 
 );
 
 router.post(
