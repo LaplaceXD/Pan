@@ -26,6 +26,7 @@ function useCart(products) {
     isEmpty: cart.length === 0,
     get: (id) => cart.find((item) => item.id === id),
     add: (payload) => dispatch({ type: actions.ADD_ITEM, payload }),
+    edit: (payload) => dispatch({ type: actions.EDIT_ITEM, payload }),
     remove: (id) => dispatch({ type: actions.REMOVE_ITEM, payload: { id } }),
     clear: () => dispatch({ type: actions.CLEAR_CART }),
     increment: (id) => dispatch({ type: actions.INCREMENT_ITEM, payload: { id } }),
