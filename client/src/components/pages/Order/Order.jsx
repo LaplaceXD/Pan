@@ -37,7 +37,7 @@ function Order() {
     <>
       <OrderModule.Details total={order?.total} className={styles.orderPreview}>
         <OrderModule.Header order={order} className={styles.orderHeader} />
-        <OrderModule.Lines lines={order?.details} className={styles.orderSummary} showCount />
+        <OrderModule.Lines lines={order?.details} className={styles.orderSummary} disabledLines showCount />
       </OrderModule.Details>
 
       <Button
