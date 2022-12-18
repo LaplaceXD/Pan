@@ -1,0 +1,69 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 50%;
+    left: calc(50% + 4.75em);
+    transform: translate(-50%, -50%);
+
+    background: var(--accent-color);
+    border-radius: 16px;
+    overflow: hidden;
+    width: 850px;
+}
+
+.header {
+    text-align: right;
+    padding: 1em;
+    font-size: 1em;
+    color: #83C5BE;
+}
+
+.content {
+    display: inline-flex;
+    margin: 2em 0 4em;
+}
+
+.img {
+    border-radius: 8px;
+    margin: 0 3em 0 6em;
+    align-self: center;
+}
+
+.name {
+    margin-bottom: 0.25rem;
+    color: var(--secondary-color);
+    font-weight: var(--font-regular);
+    font-size: 2.5rem;
+}
+
+.idNum, .email, .contact {
+    margin-bottom: 0.75em;
+}
+
+.label {
+    display: inline-flex;
+    gap: 36px;
+    align-items: center;
+    color: var(--text-color);
+    font-size: 0.9rem;
+    margin-bottom: 0.25rem;
+}
+
+.data {
+    color: var(--white);
+    font-weight: var(--font-regular);
+    font-size: 1.25rem;
+}
+
+.footer {
+    margin-top: 1em;
+}
+
+.accountBtn {
+    background-color: #ADB5BD;
+    margin-left: 1.5em;
+    padding: 1em;
+    width: 150px;
+    border-radius: 7px;
+}
