@@ -1,8 +1,7 @@
 import empImg from "@assets/imgs/emp-img.jpg";
-import { List, Options, SearchBar } from "@components/common";
-import { Product as Prod, UserBanner } from "@components/module";
-import useFilter from "@hooks/filter";
-import useQuery from "@hooks/query";
+import { Header, List, SearchBar } from "@components/common";
+import { Category, Product as Prod, UserBanner } from "@components/module";
+import { useFilter, useQuery } from "@hooks";
 import { getAllProducts } from "@services/product";
 
 import styles from "./Product.module.css";
@@ -17,42 +16,33 @@ const searchFilter = ({ name, description }, search) => {
 };
 
 function Product() {
-  const { data: products } = useQuery(getAllProducts);
-  const { data, filter, setFilter } = useFilter(products, {
+  const { data: products } = useQuery("products", getAllProducts);
+  const { data: filteredProducts, filter } = useFilter(products, {
     search: { value: "", filter: searchFilter },
     category: { value: 0, filter: categoryFilter },
   });
 
   return (
     <main className={styles.container}>
-      <header className={styles.header}>
-        <h1 className={styles.title}>Products Available</h1>
+      <Header title="Products Available" className={styles.header}>
         <SearchBar
           className={styles.search}
           value={filter.search}
-          onSearch={(e) => setFilter({ search: e.currentTarget.value })}
+          onSearch={(e) => filter.handleSearch(e.currentTarget.value)}
         />
         <UserBanner imgSize={56} />
-      </header>
+      </Header>
 
-      <Options
+      <Category.Options
         className={styles.options}
-        options={[
-          { label: "All", value: 0 },
-          { label: "Bread", value: 1 },
-          { label: "Cake", value: 2 },
-          { label: "Donuts", value: 3 },
-          { label: "Cookies", value: 4 },
-          { label: "Drinks", value: 5 },
-        ]}
         value={filter.category}
-        onChange={(value) => setFilter({ category: value })}
+        onChange={filter.handleCategory}
       />
 
       <List
         column
         className={styles.productList}
-        items={data}
+        items={filteredProducts}
         itemKey={(product) => product.product_id}
         RenderComponent={({ name, description, unit_price }) => (
           <Prod.Item

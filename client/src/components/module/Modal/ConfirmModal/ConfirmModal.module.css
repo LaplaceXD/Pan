@@ -1,6 +1,6 @@
 .content {
   color: var(--white);
-  padding: 3.5em;
+  padding: 4.5em;
   text-align: center;
 }
 
@@ -9,7 +9,7 @@
   padding-bottom: 25px;
 }
 
-.subtitle {
+.description {
   font-size: 22px;
   margin-bottom: 200px;
   display: inline-flex;

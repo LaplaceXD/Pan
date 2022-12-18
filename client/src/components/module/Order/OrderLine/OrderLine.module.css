@@ -26,10 +26,10 @@
 
 .counter {
   display: flex;
+  gap: 16px;
 }
 
 .counter-qty {
-  margin: 0 0.8em;
   color: var(--text-color);
 }
 

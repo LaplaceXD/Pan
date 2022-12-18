@@ -1,95 +1,134 @@
 import { useState } from "react";
+import { toast } from "react-toastify";
 
 import empImg from "@assets/imgs/emp-img.jpg";
-import { Button, Grid, Options, SearchBar } from "@components/common";
-import { Order, Product } from "@components/module";
+import { Button, Grid, Header, SearchBar } from "@components/common";
+import { Category, Modal, Order, Product } from "@components/module";
 import { PreviewLayout } from "@components/template";
-import useQuery from "@hooks/query";
+import { useFilter, useMutation, useQuery } from "@hooks";
+import { createOrder } from "@services/orders";
 import { getAllProducts } from "@services/product";
 
 import styles from "./Home.module.css";
 
+const categoryFilter = ({ category_id }, category) => category_id === category;
+const searchFilter = ({ name }, search) => {
+  const searchLower = search.toLowerCase();
+  const nameMatch = name.toLowerCase().includes(searchLower);
+
+  return nameMatch;
+};
+
 function Home() {
-  const { data: products } = useQuery(getAllProducts);
-  const [cart, setCart] = useState([
-    {
-      id: 1,
-      name: "Belgian Chocolate Chip Cookie",
-      unit_price: 50,
-      quantity: 0,
+  const [openModal, setOpenModal] = useState(false);
+  const [productId, setProductId] = useState(null);
+  const [cart, setCart] = useState([]);
+
+  const createOrderMutation = useMutation(createOrder);
+  const { data: products } = useQuery("products", getAllProducts);
+  const { filter, data: filteredProducts } = useFilter(products, {
+    search: {
+      value: "",
+      filter: searchFilter,
     },
-    {
-      id: 2,
-      name: "Crack Pandesal",
-      unit_price: 50,
-      quantity: 0,
+    category: {
+      value: 0,
+      filter: categoryFilter,
     },
-    {
-      id: 3,
-      name: "Giant Loaf",
-      unit_price: 50,
-      quantity: 0,
-    },
-  ]);
+  });
+
+  function handleProductClick(id) {
+    setOpenModal(true);
+    setProductId(id);
+  }
+
+  function handleCloseModal() {
+    setOpenModal(false);
+  }
 
   function handleItemIncrement(id) {
-    setCart((cart) =>
-      cart.map((item) => {
-        if (id !== item.id) return item;
-        return { ...item, quantity: item.quantity++ };
-      })
-    );
+    const incrementedItem = cart.map((item) => {
+      if (id !== item.product_id) return item;
+      return { ...item, quantity: item.quantity + 1 };
+    });
+
+    setCart(incrementedItem);
   }
 
   function handleItemDecrement(id) {
-    setCart((cart) =>
-      cart.map((item) => {
-        if (id !== item.id) return item;
-        return { ...item, quantity: item.quantity-- };
-      })
-    );
+    const decrementedItem = cart.map((item) => {
+      if (id !== item.product_id) return item;
+      return { ...item, quantity: item.quantity - 1 };
+    });
+
+    setCart(decrementedItem.filter(({ quantity }) => quantity !== 0));
   }
+
+  function handleCartClear() {
+    setCart([]);
+  }
+
+  function handleCartItemAdd(values, setSubmitting) {
+    setSubmitting(true);
+
+    if (!cart.find(({ product_id }) => product_id === productId)) {
+      setCart([...cart, { ...values, product_id: productId }]);
+    }
+
+    setProductId(null);
+    setOpenModal(false);
+
+    setSubmitting(false);
+  }
+
+  async function handleCartSubmit() {
+    await createOrderMutation.execute(cart);
+    setCart([]);
+    toast.success("Order placed.");
+  }
+
+  const mappedCart = cart.map(({ quantity, product_id }) => ({
+    quantity,
+    ...products.find(({ product_id: id }) => id === product_id),
+  }));
 
   const CheckoutPreview = (
     <>
-      <Order.Summary
-        className={styles.orderSummary}
-        cart={cart}
-        onItemIncrement={(item) => handleItemIncrement(item.id)}
-        onItemDecrement={(item) => handleItemDecrement(item.id)}
-      />
+      <Order.Details
+        total={mappedCart.reduce((total, { unit_price, quantity }) => total + unit_price * quantity, 0)}
+        className={styles.checkoutPreview}
+      >
+        <Order.Lines
+          lines={mappedCart}
+          className={styles.checkoutSummary}
+          onItemIncrement={({ product_id }) => handleItemIncrement(product_id)}
+          onItemDecrement={({ product_id }) => handleItemDecrement(product_id)}
+          withCounter
+        />
+      </Order.Details>
 
       <div className={styles.checkoutBtns}>
-        <Button label="Clear Cart" onClick={() => setCart(null)} secondary />
-        <Button label="Confirm Order" />
+        <Button label="Clear Cart" onClick={handleCartClear} secondary />
+        <Button label="Confirm Order" onClick={handleCartSubmit} disabled={createOrderMutation.isLoading} />
       </div>
     </>
   );
 
   return (
     <PreviewLayout PreviewComponent={CheckoutPreview} className={styles.container}>
-      <header className={styles.productHeader}>
-        <h2 className={styles.title}>Select Category</h2>
-        <SearchBar />
-      </header>
+      <Header title="Select Category" className={styles.productHeader}>
+        <SearchBar value={filter.search} onSearch={(e) => filter.handleSearch(e.currentTarget.value)} />
+      </Header>
 
-      <Options
+      <Category.Options
         className={styles.productCategories}
-        options={[
-          { label: "All", value: 1 },
-          { label: "Bread", value: 2 },
-          { label: "Cake", value: 3 },
-          { label: "Donuts", value: 4 },
-          { label: "Cookies", value: 5 },
-          { label: "Drinks", value: 6 },
-        ]}
-        value={1}
-        onChange={(value) => console.log(value)}
+        value={filter.category}
+        onChange={filter.handleCategory}
       />
 
       <Grid
         className={styles.productGrid}
-        items={products && [...products, ...products, ...products]}
+        items={filteredProducts}
         itemKey={(product) => product.product_id}
         RenderComponent={({ product_id, name, unit_price }) => (
           <Product.Card
@@ -97,9 +136,17 @@ function Home() {
             img={empImg}
             name={name}
             price={unit_price}
-            onClick={() => console.log(name)}
+            onClick={() => handleProductClick(product_id)}
           />
         )}
+      />
+
+      <Modal.CartItem
+        open={openModal}
+        onClose={handleCloseModal}
+        min={1}
+        max={100}
+        onSubmit={handleCartItemAdd}
       />
     </PreviewLayout>
   );

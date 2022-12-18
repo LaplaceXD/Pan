@@ -2,9 +2,8 @@ import { useState } from "react";
 import { redirect } from "react-router-dom";
 import { toast } from "react-toastify";
 
-import { Button, Modal } from "@components/common";
-import { useAuth } from "@hooks/auth";
-import styles from "./LogoutModal.module.css";
+import { useAuth } from "@hooks";
+import ConfirmModal from "../ConfirmModal";
 
 function LogoutModal({ open, onClose }) {
   const [isLoggingOut, setIsLoggingOut] = useState(false);
@@ -19,16 +18,15 @@ function LogoutModal({ open, onClose }) {
   }
 
   return (
-    <Modal open={open} onClose={onClose}>
-      <div className={styles.content}>
-        <div className={styles.title}>Logout?</div>
-        <div className={styles.subtitle}>Are you sure you want to logout?</div>
-        <div className={styles.footer}>
-          <Button label="Cancel" onClick={onClose} secondary />
-          <Button label="Logout" onClick={handleLogout} disabled={isLoggingOut} />
-        </div>
-      </div>
-    </Modal>
+    <ConfirmModal
+      title="Logout?"
+      description="Are you sure you want to logout?"
+      open={open}
+      onClose={onClose}
+      confirmLabel="Logout"
+      onConfirm={handleLogout}
+      confirmDisabled={isLoggingOut}
+    />
   );
 }
 

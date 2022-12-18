@@ -8,6 +8,8 @@ const http = require("http");
 
 const authRoutes = require("./src/routes/auth.route");
 const orderRoutes = require("./src/routes/order.route");
+const categoryRoutes = require("./src/routes/categories.route");
+const stockRoutes = require("./src/routes/stock.route");
 const employeeRoutes = require("./src/routes/employee.route");
 const supplierRoutes = require("./src/routes/supplier.route");
 const productRoutes = require("./src/routes/product.route");
@@ -39,6 +41,8 @@ app.use("/api/v1/employees", employeeRoutes);
 app.use("/api/v1/suppliers", supplierRoutes);
 app.use("/api/v1/products", productRoutes);
 app.use("/api/v1/orders", orderRoutes);
+app.use("/api/v1/categories", categoryRoutes);
+app.use("/api/v1/stock", stockRoutes);
 
 app.use("*", (_, res) => {
   res.status(404).send({ message: "Resource not found!" });

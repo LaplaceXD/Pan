@@ -1,0 +1,19 @@
+.container {
+  flex: 1;
+  height: max-content;
+}
+
+.lines {
+  gap: 12px;
+  overflow-y: scroll;
+  max-height: 50vh;
+}
+
+.lines::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.count {
+  color: var(--white);
+  margin-top: 0.5em;
+}

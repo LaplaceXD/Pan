@@ -1,0 +1,16 @@
+.header {
+  display: grid;
+  gap: 4px;
+  grid-template-columns: repeat(2, 1fr);
+  color: var(--white);
+}
+
+/* Makes employee occupy the entire top row */
+.header p:first-child {
+  grid-column: span 2;
+}
+
+/* Makes date align itself to the left */
+.header p:last-child {
+  justify-self: flex-end;
+}

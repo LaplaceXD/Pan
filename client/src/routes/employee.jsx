@@ -3,12 +3,13 @@ import { BsBoxSeam } from "react-icons/bs";
 import { FiHome, FiTruck } from "react-icons/fi";
 
 import Home from "@components/pages/Home";
+import Order from "@components/pages/Order";
 import Product from "@components/pages/Product";
 import { getLinkProps, getRouteProps } from "@utils/routes";
 
 const employeePages = [
   {
-    path: "",
+    path: "/",
     label: "Home",
     icon: <FiHome />,
     element: <Home />,
@@ -16,21 +17,21 @@ const employeePages = [
     navLink: true,
   },
   {
-    path: "/order",
+    path: "/orders",
     label: "Orders",
     icon: <BiNotepad />,
-    element: <h1>Order</h1>,
+    element: <Order />,
     navLink: true,
   },
   {
-    path: "/product",
+    path: "/products",
     label: "Products",
     icon: <BsBoxSeam />,
     element: <Product />,
     navLink: true,
   },
   {
-    path: "/supplier",
+    path: "/suppliers",
     label: "Supplier",
     icon: <FiTruck />,
     element: <h1>Supplier</h1>,

@@ -1,4 +1,5 @@
 import { BoxImage } from "@components/common";
+import format from "@utils/format";
 import styles from "./ProductItem.module.css";
 
 function ProductItem({ img, name, category, description, availableStock = 0, unitPrice = 0 }) {
@@ -17,7 +18,7 @@ function ProductItem({ img, name, category, description, availableStock = 0, uni
           Qty in stock: <span>{availableStock}</span>
         </p>
         <p className={styles.sideDetail}>
-          Unit Price: <span>Php {unitPrice.toFixed(2)}</span>
+          Unit Price: <span>{format.currency(unitPrice)}</span>
         </p>
       </div>
     </li>

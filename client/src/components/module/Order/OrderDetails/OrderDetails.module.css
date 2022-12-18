@@ -3,12 +3,6 @@
   flex-direction: column;
 }
 
-.summary {
-  flex: 1;
-  margin-top: 1em;
-  gap: 12px;
-}
-
 .title {
   color: var(--text-color);
   font-weight: var(--font-regular);
