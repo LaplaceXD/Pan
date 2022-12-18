@@ -1,5 +1,5 @@
 # Pan
-![Last Update](https://img.shields.io/github/last-commit/LaplaceXD/Cosette?color=blue&label=Last%20Update) ![Activity](https://img.shields.io/badge/Activity-InProgress-green)
+![Last Update](https://img.shields.io/github/last-commit/LaplaceXD/Pan?color=blue&label=Last%20Update) ![Activity](https://img.shields.io/badge/Activity-InProgress-green)
 
 Pan is an inventory management system made for Pan. This system was made with the use of [MySQL](https://www.mysql.com/), [React](https://beta.reactjs.org/), [Express](https://expressjs.com/), and [Node.js](https://nodejs.org/en/).
 
