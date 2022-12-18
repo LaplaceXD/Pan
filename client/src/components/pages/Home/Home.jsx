@@ -13,9 +13,7 @@ import styles from "./Home.module.css";
 
 const category = {
   value: 0,
-  filter: ({ category_id }, category) => {
-    return category_id === category;
-  },
+  filter: ({ category_id }, category) => category_id === category,
 };
 
 const search = {

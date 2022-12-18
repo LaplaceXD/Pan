@@ -9,16 +9,14 @@ import format from "@utils/format";
 
 import styles from "./Order.module.css";
 
-const FILTERS = {
-  search: {
-    value: "",
-    filter({ employee_name, order_id }, search) {
-      const searchLower = search.toLowerCase();
-      const nameMatch = employee_name.toLowerCase().includes(searchLower);
-      const idMatch = format.id(order_id).toLowerCase().includes(searchLower);
+const search = {
+  value: "",
+  filter: ({ employee_name, order_id }, search) => {
+    const searchLower = search.toLowerCase();
+    const nameMatch = employee_name.toLowerCase().includes(searchLower);
+    const idMatch = format.id(order_id).toLowerCase().includes(searchLower);
 
-      return nameMatch || idMatch;
-    },
+    return nameMatch || idMatch;
   },
 };
 
@@ -26,7 +24,7 @@ function Order() {
   const deleteModal = useModal();
 
   const { data: orders } = useQuery("orders", getAllOrders);
-  const { filter, data: filteredOrders } = useFilter(orders, FILTERS);
+  const { filter, data: filteredOrders } = useFilter(orders, { search });
 
   const [orderId, setOrderId] = useState(null);
   const { data: order } = useQuery(["order", orderId], ({ signal }) =>
