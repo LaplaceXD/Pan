@@ -8,7 +8,7 @@ const directory = "/m";
 
 const managerPages = [
   {
-    path: "/",
+    path: "",
     label: "Home",
     icon: <FiHome />,
     element: <h1>Home</h1>,

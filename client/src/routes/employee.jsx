@@ -11,7 +11,7 @@ const directory = "/e";
 
 const employeePages = [
   {
-    path: "/",
+    path: "",
     label: "Home",
     icon: <FiHome />,
     element: <Home />,
