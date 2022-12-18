@@ -1,4 +1,4 @@
-import styles from "./SupplierItem.module.css";
+import styles from "./SupplierItem/SupplierItem.module.css";
 
 function  SupplierItem({ id, name, number, str_no, str_name, bldg, city, zip_code }) {
     return (
