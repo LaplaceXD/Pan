@@ -10,7 +10,7 @@
 }
 
 .container:hover {
-  border: 1px solid var(--tertiary-color);
+  box-shadow: inset 0 0 0 2px var(--tertiary-color);
   cursor: pointer;
 }
 

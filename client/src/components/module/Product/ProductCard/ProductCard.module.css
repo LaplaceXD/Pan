@@ -3,7 +3,7 @@
 
   padding: 1.5em 1.25em;
   border-radius: 16px;
-  transition: all 125ms ease-out;
+  transition: filter 125ms ease-out, transform 125ms ease-out;
 
   position: relative;
 }
@@ -14,7 +14,7 @@
 }
 
 .container:active {
-  transform: translateY(2px);
+  transform: translateY(4px);
 }
 
 .container.isDisabled {
@@ -22,7 +22,6 @@
 
   border: 2px solid var(--color);
   color: var(--color);
-  transition: border 250ms ease;
 }
 
 .container.isDisabled:hover {

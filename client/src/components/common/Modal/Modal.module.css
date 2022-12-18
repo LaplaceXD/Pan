@@ -14,7 +14,7 @@
 }
 
 .dialog[open].fade-in {
-  animation: fade-in 0.25s ease normal;
+  animation: fade-in 0.45s ease-out normal;
 }
 
 @keyframes slide-in {
