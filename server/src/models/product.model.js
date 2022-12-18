@@ -5,6 +5,8 @@ const { InternalServerError } = require("../../helpers/errors");
 const { db } = require("../providers");
 const { availability } = require("../constants/product");
 
+const Category = require("../models/categories.model")
+
 class Product {
   constructor(product) {
     this.product_id = product.product_id || 0;
@@ -127,13 +129,16 @@ class Product {
   }
 
   static async validate(product) {
+    let match = await Category.findById(product.category_id);
+    match = (!match) ? product.category_id : null;
+
     const schema = Joi.object()
       .keys({
         name: Joi.string().label("Name").min(2).max(300).required().trim(),
         description: Joi.string().label("Description").min(2).max(300).required().trim(),
         unit_price: Joi.number().label("Unit Price").precision(2).required(),
         date_created: Joi.date().label("Date Created").max("now").iso().required(),
-        category_id: Joi.number().min(0).label("Category ID"),
+        category_id: Joi.number().min(0).label("Category ID").not(match),
       })
       .options({ abortEarly: false });
 

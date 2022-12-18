@@ -139,6 +139,9 @@ VALUES
         '1'
     );
 
+-- MANUALLY UPDATING CATEGORY_ID OF OTHERS SINCE PHPMYADMIN SETS IT TO 7 REGARDLESS --
+UPDATE category SET category_id = 0 WHERE category_id = 7;
+
 -- SAMPLE DATA FOR EMPLOYEE TABLE -- 
 INSERT INTO
     `employee` (
@@ -260,7 +263,7 @@ VALUES
         'Macademia Nut Cookie',
         'White chocolate cookies with brown sugar, almonds, and macademia nuts.',
         '2.99',
-        '../../images/product/macademiacookies.jpg',
+        '../../images/product/macademiacookie.jpg',
         '1'
     );
 
