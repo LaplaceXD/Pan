@@ -1,7 +1,8 @@
-.content {
-  padding: 2.5em;
-  width: 17.5vw;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
+.editing form {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.editing div:first-child {
+  grid-column: span 2;
 }
