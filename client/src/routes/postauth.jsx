@@ -14,12 +14,22 @@ const postauth = [
         index: true,
       },
       {
-        element: <NavLayout links={employee.links} useOutlet />,
-        children: employee.routes,
+        element: <Routes.Restricted for="employee" />,
+        children: [
+          {
+            element: <NavLayout links={employee.links} useOutlet />,
+            children: employee.routes,
+          },
+        ],
       },
       {
-        element: <NavLayout links={manager.links} useOutlet />,
-        children: manager.routes,
+        element: <Routes.Restricted for="manager" />,
+        children: [
+          {
+            element: <NavLayout links={manager.links} useOutlet />,
+            children: manager.routes,
+          },
+        ],
       },
     ],
   },
