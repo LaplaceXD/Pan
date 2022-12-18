@@ -10,7 +10,7 @@ const roles = Object.freeze({
   MANAGER: "manager",
 });
 
-const pages = [
+const restrictedPages = [
   {
     name: roles.EMPLOYEE,
     ...employee,
@@ -35,15 +35,16 @@ const postauth = [
         element: <Routes.Redirect map={getDirectoryMap(pages, "/account")} />,
         exact: true,
       },
-      ...pages.map((page) => ({
-        element: <Routes.Restricted for={page.name} useOutlet />,
+      ...restrictedPages.map(({ name: role, links, routes, directory }) => ({
+        element: <Routes.Restricted for={role} useOutlet />,
         children: [
+          /* Actual page with the navlayout and its routes */
           {
-            element: <NavLayout links={page.links} useOutlet />,
+            element: <NavLayout links={links} useOutlet />,
             children: [
-              ...page.routes,
+              ...routes,
               {
-                path: page.directory + "/account",
+                path: directory + "/account",
                 element: <h1>Account</h1>,
               },
             ],
