@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Button, Header, SearchBar } from "@components/common";
 import { Modal, Order as OrderModule } from "@components/module";
 import { PreviewLayout } from "@components/template";
-import { useFilter, useQuery } from "@hooks";
+import { useFilter, useModal, useQuery } from "@hooks";
 import { getAllOrders, getOrderById } from "@services/order";
 import format from "@utils/format";
 
@@ -23,6 +23,8 @@ const FILTERS = {
 };
 
 function Order() {
+  const deleteModal = useModal();
+
   const { data: orders } = useQuery("orders", getAllOrders);
   const { filter, data: filteredOrders } = useFilter(orders, FILTERS);
 
@@ -31,19 +33,17 @@ function Order() {
     orderId ? getOrderById(orderId, { signal }) : null
   );
 
-  const [openModal, setOpenModal] = useState(false);
-
   const OrderPreview = (
     <>
       <OrderModule.Details total={order?.total} className={styles.orderPreview}>
         <OrderModule.Header order={order} className={styles.orderHeader} />
-        <OrderModule.Lines lines={order?.details} className={styles.orderSummary} showCount />
+        <OrderModule.Lines lines={order?.details} className={styles.orderSummary} disabledLines showCount />
       </OrderModule.Details>
 
       <Button
         label="Delete Order Record"
         className={styles.orderDelete}
-        onClick={() => setOpenModal(true)}
+        onClick={deleteModal.open}
         disabled={orderId === null}
       />
     </>
@@ -69,12 +69,12 @@ function Order() {
       <Modal.Confirm
         title="Delete?"
         description="Are you sure you want to delete this record?"
-        open={openModal}
-        onClose={() => setOpenModal(false)}
+        open={deleteModal.isOpen}
+        onClose={deleteModal.close}
         confirmLabel="Delete"
         onConfirm={() => {
           alert(orderId);
-          setOpenModal(false);
+          deleteModal.close();
         }}
       />
     </PreviewLayout>

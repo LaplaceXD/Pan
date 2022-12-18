@@ -6,6 +6,25 @@
   display: flex;
   align-items: center;
   gap: 8px;
+  transition: all 125ms ease-out;
+}
+
+.container:hover {
+  box-shadow: inset 0 0 0 2px var(--tertiary-color);
+  cursor: pointer;
+}
+
+.container:active {
+  filter: brightness(1.3);
+}
+
+.container.isDisabled:hover {
+  border: unset;
+  cursor: unset;
+}
+
+.container.isDisabled:active {
+  filter: unset;
 }
 
 .right-container {
