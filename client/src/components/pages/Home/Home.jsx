@@ -111,6 +111,9 @@ function Home() {
             name={name}
             price={unit_price}
             onClick={() => handleProductClick(product_id)}
+            disabled={!!cart.get(product_id)}
+            disabledContent="In Cart"
+            disabledColorPrimary
           />
         )}
       />
