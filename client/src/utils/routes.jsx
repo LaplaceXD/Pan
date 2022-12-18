@@ -10,6 +10,10 @@ export function flattenPages(pages) {
   }, []);
 }
 
+export function getDirectoryMap(pages, path = "") {
+  return pages.reduce((map, { name, directory }) => ({ ...map, [name]: directory + path }), {});
+}
+
 export function getLinkProps(pages) {
   const flattenedPages = flattenPages(pages);
   const navLinks = flattenedPages.filter(({ navLink }) => navLink);

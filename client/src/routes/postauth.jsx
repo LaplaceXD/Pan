@@ -1,5 +1,6 @@
 import { Routes } from "@components/module";
 import { NavLayout } from "@components/template";
+import { getDirectoryMap } from "@utils/routes";
 
 import employee from "./employee";
 import manager from "./manager";
@@ -9,40 +10,46 @@ const roles = Object.freeze({
   MANAGER: "manager",
 });
 
+const pages = [
+  {
+    name: roles.EMPLOYEE,
+    ...employee,
+  },
+  {
+    name: roles.MANAGER,
+    ...manager,
+  },
+];
+
 const postauth = [
   {
     path: "/",
     element: <Routes.Protected />,
     children: [
       {
-        element: (
-          <Routes.Redirect
-            map={{
-              [roles.EMPLOYEE]: employee.directory,
-              [roles.MANAGER]: manager.directory,
-            }}
-          />
-        ),
+        element: <Routes.Redirect map={getDirectoryMap(pages)} />,
         index: true,
       },
       {
-        element: <Routes.Restricted for={roles.EMPLOYEE} />,
+        path: "/account",
+        element: <Routes.Redirect map={getDirectoryMap(pages, "/account")} />,
+        exact: true,
+      },
+      ...pages.map((page) => ({
+        element: <Routes.Restricted for={page.name} useOutlet />,
         children: [
           {
-            element: <NavLayout links={employee.links} useOutlet />,
-            children: employee.routes,
+            element: <NavLayout links={page.links} useOutlet />,
+            children: [
+              ...page.routes,
+              {
+                path: page.directory + "/account",
+                element: <h1>Account</h1>,
+              },
+            ],
           },
         ],
-      },
-      {
-        element: <Routes.Restricted for={roles.MANAGER} />,
-        children: [
-          {
-            element: <NavLayout links={manager.links} useOutlet />,
-            children: manager.routes,
-          },
-        ],
-      },
+      })),
     ],
   },
 ];
