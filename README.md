@@ -27,7 +27,7 @@ REDIS_USERNAME    = <<your redis user name>>
 REDIS_PASSWORD    = <<your redis password>>
 REDIS_PORT        = <<your redis port>>
 
-# client/.env
+# client/.env should contain the following variables
 
 VITE_SERVER_URL   = http://localhost:3000
 ```
