@@ -8,6 +8,7 @@
   --text-color: hsl(210, 11%, 71%);
   --error-color: hsl(24, 91%, 54%);
   --field-color: hsl(211, 28%, 21%);
+  --overlay-color: hsla(220, 29%, 8%, 0.75);
 
   --white: hsl(0, 0%, 100%);
   --gray: hsl(209, 18%, 43%);
