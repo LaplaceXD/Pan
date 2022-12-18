@@ -1,1 +1,5 @@
-export { default as default } from "./SupplierItem";
+import Item from "./SupplierItem";
+
+export default {
+  Item,
+};
