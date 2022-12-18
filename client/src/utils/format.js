@@ -19,9 +19,31 @@ function id(id, prefix = "ID", pad = 4) {
   return `${prefix}-${String(id).padStart(pad, "0")}`;
 }
 
+function capitalize(item) {
+  return String(item).charAt(0).toUpperCase() + String(item).slice(1).toLowerCase();
+}
+
+function decimal(num, places = 2) {
+  const value = (Math.round(num * 100) / 100).toFixed(places);
+  return value;
+}
+
+function address({ street_no, street_name, building, city, zip_code }) {
+  const b = building ? building + ", " : "";
+
+  // Only show street number when there is a street name
+  const sno = street_no ? street_no + " " : "";
+  const sname = street_name ? sno + street_name + ", " : "";
+
+  return `${b}${sname}${city} ${zip_code}`;
+}
+
 export default {
   currency,
   date,
   datetime,
   id,
+  capitalize,
+  decimal,
+  address,
 };

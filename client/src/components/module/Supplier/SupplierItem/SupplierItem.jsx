@@ -1,23 +1,21 @@
 import format from "@utils/format";
 import styles from "./SupplierItem.module.css";
 
-function SupplierItem({ id, name, contactNumber, streetNumber, streetName, building, city, zipCode }) {
+function SupplierItem({ id, name, contactNumber, address }) {
   return (
     <li className={styles.container}>
       <div>
         <p className={styles.label}>{format.id(id, "SupplierID")}</p>
-        <h2 className={styles.supplierName}>{name}</h2>
+        <p className={styles.supplierName}>{name}</p>
       </div>
       <div className={styles.details}>
         <div className={styles.contactContainer}>
           <p className={styles.label}>Contact:</p>
-          <h2 className={styles.supplierContact}>{contactNumber}</h2>
+          <p className={styles.supplierContact}>{contactNumber}</p>
         </div>
         <div className={styles.addressContainer}>
           <p className={styles.label}>Address:</p>
-          <h2 className={styles.supplierAddress}>
-            {streetNumber} {streetName} {building} {city} {zipCode}
-          </h2>
+          <p className={styles.supplierAddress}>{address}</p>
         </div>
       </div>
     </li>
