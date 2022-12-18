@@ -6,6 +6,7 @@ import Home from "@components/pages/Home";
 import Order from "@components/pages/Order";
 import Product from "@components/pages/Product";
 import { appendPath, getLinkProps, getRouteProps } from "@utils/routes";
+import Supplier from "@components/pages/Supplier/index.js";
 
 const directory = "/e";
 
@@ -36,7 +37,7 @@ const employeePages = [
     path: "/suppliers",
     label: "Supplier",
     icon: <FiTruck />,
-    element: <h1>Supplier</h1>,
+    element: <Supplier/>,
     navLink: true,
   },
 ];
