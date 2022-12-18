@@ -20,7 +20,7 @@ DB_PASSWORD       =
 JWT_SECRET        = superdupersecuresecret
 JWT_ISSUER        = http://localhost:3000/auth
 JWT_AUDIENCE      = http://localhost:3000
-JWT_ACCESS_EXP    = 1d
+JWT_ACCESS_EXP    = 15m
 JWT_REFRESH_EXP   = 1d
 REDIS_HOST        = <<your redis host here>>
 REDIS_USERNAME    = <<your redis user name>>
@@ -42,7 +42,7 @@ npm start
 ```
 6. You should be able to login through the login portal using the following credentials.
 ```
-email: john.buot@gmail.com
+email: jonh.buot@gmail.com
 password: 1SecretPassword!
 ```
 7. ...
