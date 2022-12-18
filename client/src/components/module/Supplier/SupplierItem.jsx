@@ -1,20 +1,20 @@
 import styles from "./SupplierItem/SupplierItem.module.css";
 
-function  SupplierItem({ id, name, number, str_no, str_name, bldg, city, zip_code }) {
+function  SupplierItem({ id, name, contactNumber, address }) {
     return (
         <li className={styles.container}>
             <div>
-                <p className={styles.label}>Supplier-ID# {id}</p>
+                <p className={styles.label}>Supplier {id}</p>
                 <h2 className={styles.supplierName}>{name}</h2>
             </div>
             <div className={styles.details}>
                 <div className={styles.contactContainer}>
                     <p className={styles.label}>Contact:</p>
-                    <h2 className={styles.supplierContact}>{number}</h2>
+                    <h2 className={styles.supplierContact}>{contactNumber}</h2>
                 </div>
                 <div className={styles.addressContainer}>
                     <p className={styles.label}>Address:</p>
-                    <h2 className={styles.supplierAddress}>{str_no} {str_name} {bldg} {city} {zip_code}</h2>
+                    <h2 className={styles.supplierAddress}>{address}</h2>
                 </div>
             </div>
         </li>
