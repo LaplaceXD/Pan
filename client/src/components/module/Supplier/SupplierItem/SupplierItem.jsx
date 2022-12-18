@@ -16,7 +16,7 @@ function SupplierItem({ id, name, contactNumber, streetNumber, streetName, build
         <div className={styles.addressContainer}>
           <p className={styles.label}>Address:</p>
           <h2 className={styles.supplierAddress}>
-            {streetNumber} {streetName}, {building}, {city} {zipCode}
+            {streetNumber} {streetName} {building} {city} {zipCode}
           </h2>
         </div>
       </div>
