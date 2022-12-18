@@ -22,12 +22,12 @@
   display: inline-flex;
 }
 
-.contactContainer,
-.addressContainer {
+.contact-container,
+.address-container {
   margin-left: 3em;
 }
 
-.addressContainer {
+.address-container {
   width: 700px;
 }
 
@@ -39,14 +39,14 @@
   font-size: 0.9rem;
 }
 
-.supplierName {
+.supplier-name {
   color: var(--secondary-color);
   font-weight: var(--font-regular);
   font-size: 2rem;
 }
 
-.supplierContact,
-.supplierAddress {
+.supplier-contact,
+.supplier-address {
   flex: 1;
   color: var(--white);
   margin-top: 0.5em;

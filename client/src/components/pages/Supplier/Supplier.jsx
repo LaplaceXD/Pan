@@ -2,14 +2,36 @@ import React from "react";
 
 import { Header, List, SearchBar } from "@components/common/index.js";
 import { Supplier as SupplierModule, UserBanner } from "@components/module";
-import filter from "@hooks/filter.js";
-import useQuery from "@hooks/query.js";
+import { useFilter, useQuery } from "@hooks";
 import { getAllSuppliers } from "@services/supplier.js";
+import format from "@utils/format";
 
 import styles from "./Supplier.module.css";
 
+const search = {
+  value: "",
+  filter: ({ supplier_id, name, contact_no, address }, search) => {
+    const searchLower = search.toLowerCase();
+
+    const supplierMatch = format.id(supplier_id, "SupplierID").toLowerCase().includes(searchLower);
+    const nameMatch = name.toLowerCase().includes(searchLower);
+    const contactNumberMatch = contact_no.toLowerCase().includes(searchLower);
+    const addressMatch = address.toLowerCase().includes(searchLower);
+
+    return supplierMatch || nameMatch || contactNumberMatch || addressMatch;
+  },
+};
+
 function Supplier() {
-  const { data: suppliers } = useQuery("suppliers", getAllSuppliers);
+  const { data } = useQuery("suppliers", getAllSuppliers);
+  const suppliers = data?.map(({ supplier_id, name, contact_no, ...address }) => ({
+    supplier_id,
+    name,
+    contact_no,
+    address: format.address(address),
+  }));
+  const { filter, data: filteredSuppliers } = useFilter(suppliers, { search });
+
   return (
     <main className={styles.container}>
       <Header title="Supplier List" className={styles.header}>
@@ -24,28 +46,10 @@ function Supplier() {
       <List
         column
         className={styles.supplierItem}
-        items={suppliers}
+        items={filteredSuppliers}
         itemKey={(suppliers) => suppliers.supplier_id}
-        RenderComponent={({
-          supplier_id,
-          name,
-          contact_no,
-          street_no,
-          street_name,
-          building,
-          city,
-          zip_code,
-        }) => (
-          <SupplierModule.Item
-            id={supplier_id}
-            name={name}
-            contactNumber={contact_no}
-            streetNumber={street_no}
-            streetName={street_name}
-            building={building}
-            city={city}
-            zipCode={zip_code}
-          />
+        RenderComponent={({ supplier_id, name, contact_no, address }) => (
+          <SupplierModule.Item id={supplier_id} name={name} contactNumber={contact_no} address={address} />
         )}
       />
     </main>
