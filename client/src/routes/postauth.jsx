@@ -27,12 +27,12 @@ const postauth = [
     element: <Routes.Protected />,
     children: [
       {
-        element: <Routes.Redirect map={getDirectoryMap(pages)} />,
+        element: <Routes.Redirect map={getDirectoryMap(restrictedPages)} />,
         index: true,
       },
       {
         path: "/account",
-        element: <Routes.Redirect map={getDirectoryMap(pages, "/account")} />,
+        element: <Routes.Redirect map={getDirectoryMap(restrictedPages, "/account")} />,
         exact: true,
       },
       ...restrictedPages.map(({ name: role, links, routes, directory }) => ({
