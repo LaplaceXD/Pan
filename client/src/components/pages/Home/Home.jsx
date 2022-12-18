@@ -6,7 +6,7 @@ import { Button, Grid, Header, SearchBar } from "@components/common";
 import { Category, Modal, Order, Product } from "@components/module";
 import { PreviewLayout } from "@components/template";
 import { useFilter, useMutation, useQuery } from "@hooks";
-import { createOrder } from "@services/orders";
+import { createOrder } from "@services/order";
 import { getAllProducts } from "@services/product";
 
 import styles from "./Home.module.css";
