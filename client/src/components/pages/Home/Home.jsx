@@ -109,7 +109,11 @@ function Home() {
 
       <div className={styles.checkoutBtns}>
         <Button label="Clear Cart" onClick={handleCartClear} secondary />
-        <Button label="Confirm Order" onClick={handleCartSubmit} disabled={createOrderMutation.isLoading} />
+        <Button
+          label="Confirm Order"
+          onClick={handleCartSubmit}
+          disabled={createOrderMutation.isLoading || cart.length === 0}
+        />
       </div>
     </>
   );
