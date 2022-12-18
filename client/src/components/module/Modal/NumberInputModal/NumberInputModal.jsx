@@ -14,6 +14,8 @@ function NumberInputModal({
   buttonLabel = "Confirm",
   min = 0,
   max = Infinity,
+  maxLength = 5,
+  maxDecimalLength = 2,
   initialValue = 0,
   isInteger = false,
   children,
@@ -40,6 +42,16 @@ function NumberInputModal({
     onClose();
   }
 
+  function handleChange(e) {
+    const [int, frac] = e.currentTarget.value.split(".");
+    const intIsWithinMaxLength = int.length <= maxLength;
+    const fracIsWithinMaxLength = frac ? frac.length <= maxDecimalLength : true;
+
+    if (intIsWithinMaxLength && fracIsWithinMaxLength) {
+      formik.handleChange(e);
+    }
+  }
+
   return (
     <Modal open={open} onClose={handleClose} fadeIn withCloseBtn>
       <div className={styles.container}>
@@ -49,7 +61,7 @@ function NumberInputModal({
             label={capitalized}
             id={name}
             name={name}
-            onChange={formik.handleChange}
+            onChange={handleChange}
             onBlur={formik.handleBlur}
             value={formik.values[name]}
             error={formik.errors[name]}
