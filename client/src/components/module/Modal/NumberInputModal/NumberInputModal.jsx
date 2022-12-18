@@ -1,3 +1,4 @@
+import { clsx } from "clsx";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
@@ -18,6 +19,7 @@ function NumberInputModal({
   maxDecimalLength = 2,
   initialValue = 0,
   isInteger = false,
+  className,
   children,
 }) {
   const capitalized = format.capitalize(name);
@@ -54,7 +56,7 @@ function NumberInputModal({
 
   return (
     <Modal open={open} onClose={handleClose} fadeIn withCloseBtn>
-      <div className={styles.container}>
+      <div className={clsx(styles.container, className)}>
         <form method="POST" className={styles.content} onSubmit={formik.handleSubmit}>
           <Field
             type="number"
