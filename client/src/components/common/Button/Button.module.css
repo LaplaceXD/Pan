@@ -16,14 +16,13 @@
 }
 
 .btn:disabled {
-  --btn-bg: var(--primary-color);
-  color: var(--gray);
+  --btn-bg: var(--primary-color) !important;
+  --btn-font-color: var(--gray) !important;
   cursor: unset;
 }
 
 .btn:disabled:hover {
-  background: var(--btn-bg);
-  box-shadow: none;
+  filter: unset;
 }
 
 .btn:disabled:active {
@@ -31,8 +30,7 @@
 }
 
 .btn:hover {
-  background: var(--white);
-  box-shadow: inset 0 0 0 4px var(--btn-bg);
+  filter: brightness(1.1);
 }
 
 .btn:active {
