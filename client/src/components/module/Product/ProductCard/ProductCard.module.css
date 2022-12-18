@@ -22,6 +22,7 @@
 
   border: 2px solid var(--color);
   color: var(--color);
+  transition: border 250ms ease;
 }
 
 .container.isDisabled:hover {
@@ -56,7 +57,7 @@
   font-size: 2rem;
   font-weight: var(--font-bold);
 
-  transition: background 250ms ease, color 250ms ease;
+  transition: background 250ms ease;
 }
 
 .img {
