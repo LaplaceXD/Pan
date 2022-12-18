@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 import * as Yup from "yup";
 
 import { Button, Field } from "@components/common";
-import useAuth from "@hooks/auth/useAuth";
+import { useAuth } from "@hooks";
 
 function LoginForm({ ...props }) {
   const auth = useAuth();

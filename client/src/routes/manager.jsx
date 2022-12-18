@@ -1,20 +1,17 @@
 import { BiNotepad } from "react-icons/bi";
-import { BsBoxSeam } from "react-icons/bs";
+import { BsBoxSeam, BsPeople } from "react-icons/bs";
 import { FiHome, FiTruck } from "react-icons/fi";
 
-import Home from "@components/pages/Home";
-import Order from "@components/pages/Order";
-import Product from "@components/pages/Product";
 import { appendPath, getLinkProps, getRouteProps } from "@utils/routes";
 
-const directory = "/e";
+const directory = "/m";
 
-const employeePages = [
+const managerPages = [
   {
     path: "",
     label: "Home",
     icon: <FiHome />,
-    element: <Home />,
+    element: <h1>Home</h1>,
     index: true,
     navLink: true,
   },
@@ -22,27 +19,34 @@ const employeePages = [
     path: "/orders",
     label: "Orders",
     icon: <BiNotepad />,
-    element: <Order />,
+    element: <h1>Orders</h1>,
     navLink: true,
   },
   {
     path: "/products",
     label: "Products",
     icon: <BsBoxSeam />,
-    element: <Product />,
+    element: <h1>Products</h1>,
     navLink: true,
   },
   {
     path: "/suppliers",
     label: "Supplier",
     icon: <FiTruck />,
-    element: <h1>Supplier</h1>,
+    element: <h1>Suppliers</h1>,
+    navLink: true,
+  },
+  {
+    path: "/employees",
+    label: "Employees",
+    icon: <BsPeople />,
+    element: <h1>Employees</h1>,
     navLink: true,
   },
 ];
 
 export default {
   directory,
-  links: getLinkProps(appendPath(directory, employeePages)),
-  routes: getRouteProps(appendPath(directory, employeePages)),
+  links: getLinkProps(appendPath(directory, managerPages)),
+  routes: getRouteProps(appendPath(directory, managerPages)),
 };

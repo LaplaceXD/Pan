@@ -1,8 +1,8 @@
-function appendPath(path, pages) {
-  return pages.map((page) => ({ ...pages, path: path + page.path }));
+export function appendPath(path, pages) {
+  return pages.map((page) => ({ ...page, path: path + page.path }));
 }
 
-function flattenPages(pages) {
+export function flattenPages(pages) {
   return pages.reduce((flattened, { children, ...page }) => {
     let buffer = [...flattened, page];
 

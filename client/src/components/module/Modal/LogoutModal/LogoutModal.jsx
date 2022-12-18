@@ -2,7 +2,7 @@ import { useState } from "react";
 import { redirect } from "react-router-dom";
 import { toast } from "react-toastify";
 
-import { useAuth } from "@hooks/auth";
+import { useAuth } from "@hooks";
 import ConfirmModal from "../ConfirmModal";
 
 function LogoutModal({ open, onClose }) {

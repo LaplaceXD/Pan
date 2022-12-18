@@ -1,5 +1,5 @@
 import { Options } from "@components/common";
-import useQuery from "@hooks/query";
+import { useQuery } from "@hooks";
 import { getAllCategories } from "@services/category";
 
 function CategoryOptions({ options, ...props }) {

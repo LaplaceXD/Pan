@@ -3,7 +3,7 @@ import styles from "./ConfirmModal.module.css";
 
 function ConfirmModal({ open, onClose, onConfirm, confirmDisabled, confirmLabel, title, description }) {
   return (
-    <Modal open={open} onClose={onClose}>
+    <Modal open={open} onClose={onClose} slideIn>
       <div className={styles.content}>
         <div className={styles.title}>{title}</div>
         <div className={styles.description}>{description}</div>

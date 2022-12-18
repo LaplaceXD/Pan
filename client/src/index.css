@@ -48,6 +48,17 @@ input[type="submit"]:hover {
   cursor: pointer;
 }
 
+/* Removes the arrows in the number field */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+
+input[type="number"] {
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+
 button {
   border: none;
 }
