@@ -37,11 +37,23 @@ function Home() {
   const { filter, data: filteredProducts } = useFilter(products, { search, category });
 
   const [productId, setProductId] = useState(null);
+  const [editingLine, setEditingLine] = useState(false);
   const cart = useCart(products);
 
   function handleProductClick(id) {
-    quantityModal.open();
     setProductId(id);
+    quantityModal.open();
+  }
+
+  function handleLineClick(id) {
+    setEditingLine(true);
+    setProductId(id);
+    quantityModal.open();
+  }
+
+  function handleQuantityModalClose() {
+    editingLine && setEditingLine(false);
+    quantityModal.close();
   }
 
   function handleCartItemAdd(values, setSubmitting) {
@@ -54,9 +66,26 @@ function Home() {
     setSubmitting(false);
   }
 
+  function handleCartItemEdit(values, setSubmitting) {
+    setSubmitting(true);
+
+    cart.edit({ ...values, id: productId });
+    setProductId(null);
+    quantityModal.close();
+
+    setSubmitting(false);
+  }
+
+  function handleCartItemRemove() {
+    cart.remove(productId);
+    setProductId(null);
+    quantityModal.close();
+  }
+
   async function handleCartSubmit(_, setSubmitting) {
     setSubmitting(true);
     await createOrder.execute(cart.items.map(({ product_id, quantity }) => ({ product_id, quantity })));
+    if (createOrder.isError) toast.error(createOrder.error.message);
 
     cartConfirmModal.close();
     cart.clear();
@@ -71,6 +100,7 @@ function Home() {
         <Order.Lines
           lines={cart.items}
           className={styles.checkoutSummary}
+          onLineClick={({ product_id }) => handleLineClick(product_id)}
           onItemIncrement={({ product_id }) => cart.increment(product_id)}
           onItemDecrement={({ product_id }) => cart.decrement(product_id)}
           withCounter
@@ -119,10 +149,15 @@ function Home() {
       />
 
       <Modal.CartItem
+        value={cart.get(productId)?.quantity ?? 1}
         max={100}
-        onSubmit={handleCartItemAdd}
-        onClose={quantityModal.close}
+        onAdd={handleCartItemAdd}
+        onEdit={handleCartItemEdit}
+        onSubmit={editingLine ? handleCartItemAdd : handleCartItemEdit}
+        onRemove={handleCartItemRemove}
+        onClose={handleQuantityModalClose}
         open={quantityModal.isOpen}
+        editing={editingLine}
       />
 
       <Modal.CartConfirm
