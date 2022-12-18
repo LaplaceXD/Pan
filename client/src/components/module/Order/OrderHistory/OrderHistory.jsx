@@ -5,8 +5,6 @@ import OrderHistoryItem from "../OrderHistoryItem";
 import styles from "./OrderHistory.module.css";
 
 function OrderHistory({ history, className, onItemSelect, itemIsSelected }) {
-  if (history?.length === 0) return <p>There is no history.</p>;
-
   return (
     <List
       column

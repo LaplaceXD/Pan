@@ -6,21 +6,25 @@ import { getAllProducts } from "@services/product";
 
 import styles from "./Product.module.css";
 
-const categoryFilter = ({ category_id }, category) => category_id === category;
-const searchFilter = ({ name, description }, search) => {
-  const searchLower = search.toLowerCase();
-  const nameMatch = name.toLowerCase().includes(searchLower);
-  const descMatch = description.toLowerCase().includes(searchLower);
+const category = {
+  value: 0,
+  filter: ({ category_id }, category) => category_id === category,
+};
 
-  return nameMatch || descMatch;
+const search = {
+  value: "",
+  filter: ({ name, description }, search) => {
+    const searchLower = search.toLowerCase();
+    const nameMatch = name.toLowerCase().includes(searchLower);
+    const descMatch = description.toLowerCase().includes(searchLower);
+
+    return nameMatch || descMatch;
+  },
 };
 
 function Product() {
   const { data: products } = useQuery("products", getAllProducts);
-  const { data: filteredProducts, filter } = useFilter(products, {
-    search: { value: "", filter: searchFilter },
-    category: { value: 0, filter: categoryFilter },
-  });
+  const { data: filteredProducts, filter } = useFilter(products, { search, category });
 
   return (
     <main className={styles.container}>
