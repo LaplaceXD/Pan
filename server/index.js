@@ -2,6 +2,7 @@ require("dotenv").config();
 
 const config = require("config");
 const helmet = require("helmet");
+const compression = require("compression");
 const cors = require("cors");
 const express = require("express");
 require("express-async-errors");
@@ -22,6 +23,7 @@ const server = http.createServer(app);
 
 app.use(cors({ ...config.get("cors") }));
 app.use(helmet());
+app.use(compression());
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
