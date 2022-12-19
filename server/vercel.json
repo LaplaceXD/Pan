@@ -1,14 +1,5 @@
 {
   "version": 2,
-  "functions": {
-    "*.js": {
-      "includeFiles": "config/**"
-    }
-  },
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "/$1"
-    }
-  ]
+  "builds": [{ "src": "./index.js", "use": "@vercel/node" }],
+  "rewrites": [{ "source": "/(.*)", "destination": "./index.js" }]
 }
