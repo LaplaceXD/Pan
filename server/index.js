@@ -1,6 +1,6 @@
 require("dotenv").config();
 
-process.env["NODE_CONFIG_DIR"] = __dirname;
+process.env["NODE_CONFIG_DIR"] = path.join(__dirname, "config/");
 
 const config = require("config");
 const helmet = require("helmet");
