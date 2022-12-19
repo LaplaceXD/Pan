@@ -22,4 +22,6 @@ router.post(
   orderController.create
 );
 
+router.delete("/:id", [auth, permit({ allow: [roles(role.MANAGER)] })], orderController.remove);
+
 module.exports = router;

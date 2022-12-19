@@ -66,6 +66,17 @@ class Order {
     return retVal;
   }
 
+  async delete() {
+    try {
+      const conn = await db.connect();
+      await conn.execute("DELETE FROM `order` WHERE order_id = :order_id", this);
+      await conn.end();
+    } catch (err) {
+      console.log("[ORDER ERROR]", err.message);
+      throw new InternalServerError();
+    }
+  }
+
   // Displays all order data
   static async findAll() {
     let retVal = null;
