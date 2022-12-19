@@ -82,14 +82,18 @@ function Home() {
 
   async function handleCartSubmit(_, setSubmitting) {
     setSubmitting(true);
-    await createOrder.execute(cart.items.map(({ product_id, quantity }) => ({ product_id, quantity })));
-    if (createOrder.isError) toast.error(createOrder.error.message);
+
+    const { error, isRedirect } = await createOrder.execute(
+      cart.items.map(({ product_id, quantity }) => ({ product_id, quantity }))
+    );
+
+    setSubmitting(false);
+    if (isRedirect) return;
+    if (error) return toast.error(error);
 
     cartConfirmModal.close();
     cart.clear();
     toast.success("Order placed.");
-
-    setSubmitting(false);
   }
 
   const CheckoutPreview = (
