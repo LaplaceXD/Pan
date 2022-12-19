@@ -1,0 +1,36 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 50%;
+    left: calc(50% + 4.75em);
+    transform: translate(-50%, -50%);
+
+    background: var(--accent-color);
+    border-radius: 16px;
+    overflow: hidden;
+    width: 850px;
+    padding: 0 1em 3em 3em;
+}
+
+.content {
+    display: inline-flex;
+    align-items: center;
+    margin-bottom: 3em;
+}
+
+.img {
+    border-radius: 12px;
+    margin: 0 2.5em;
+}
+
+.header {
+    text-align: right;
+    color: #83C5BE;
+    font-size: 1.25em;
+    padding-top: 0.5em;
+}
+
+.content {
+    padding-top: 3em;
+}

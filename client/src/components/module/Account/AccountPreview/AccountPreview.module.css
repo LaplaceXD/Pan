@@ -1,0 +1,30 @@
+.header {
+    text-align: right;
+}
+
+.contentLine {
+    margin-bottom: 1em;
+}
+
+.footer {
+    margin-top: 1.5em;
+}
+
+.name {
+    color: #F2D492;
+    font-weight: normal;
+    font-size: 3em;
+    margin-bottom: 0.25em;
+}
+
+.label {
+    color: #ADB5BD;
+    font-size: 0.9em;
+    margin-bottom: 0.25em;
+}
+
+.data {
+    color: #EFEEE6;
+    font-weight: normal;
+    font-size: 1.4em;
+}

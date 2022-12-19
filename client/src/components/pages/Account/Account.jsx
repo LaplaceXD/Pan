@@ -1,10 +1,8 @@
-import styles from  "./Account.module.css"
-import { Account as Card } from "../../module"
-import { useAuth } from "@hooks";
-import useQuery from "@hooks/query.js";
-import { getEmployeeById } from "@services/employee.js";
-import placeholderImg from "@assets/imgs/emp-img.jpg";
-import {useState} from "react";
+import { AccountLayout } from "../../template";
+import { Account as Acc } from "../../module"
+import styles from "./Account.module.css"
+import { useQuery, useAuth } from "@hooks";
+import { getEmployeeById } from "@services/employee";
 import format from "@utils/format";
 
 function Account() {
@@ -16,17 +14,31 @@ function Account() {
     const capitalizedRole = account?.role.charAt(0).toUpperCase() + account?.role.slice(1);
 
     console.log(account);
+
     return (
-        <div>
-            <Card
-                img={placeholderImg}
-                header={capitalizedRole}
-                name={fullName}
-                id={format.id(account?.employee_id)}
-                email={account?.email}
-                contact={account?.contact_no}
+        <AccountLayout header={capitalizedRole} className={styles.container}>
+            {/*<Acc.AccountPreview*/}
+            {/*    name={fullName}*/}
+            {/*    id={format.id(account?.employee_id)}*/}
+            {/*    email={account?.email}*/}
+            {/*    contact={account?.contact_no}*/}
+            {/*    leftBtn={'Edit profile'}*/}
+            {/*    rightBtn={'Change Password'}*/}
+            {/*/>*/}
+            {/*<Acc.EditEmployeeAccount*/}
+            {/*    firstName={account?.first_name}*/}
+            {/*    lastName={account?.last_name}*/}
+            {/*    id={format.id(account?.employee_id)}*/}
+            {/*    email={account?.email}*/}
+            {/*    contact={account?.contact_no}*/}
+            {/*    leftBtn={'Cancel'}*/}
+            {/*    rightBtn={'Save'}*/}
+            {/*/>*/}
+            <Acc.ChangeAccountPassword
+                leftBtn={'Cancel'}
+                rightBtn={'Save'}
             />
-        </div>
+        </AccountLayout>
     );
 }
 
