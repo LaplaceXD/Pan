@@ -14,7 +14,7 @@ function Login() {
     <Navigate to="/" />
   ) : (
     <main className={styles.container}>
-      <img src={banner} alt="Bread." />
+      <img src={banner} alt="Bread." className={styles.img} />
 
       <div className={styles.content}>
         <img src={logo} alt="Pan logo." />
