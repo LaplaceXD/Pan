@@ -19,6 +19,7 @@ class Product {
     this.unit_price = product.unit_price;
     this.image_src = product.image_src || "";
     this.is_available = product.is_available || availability.AVAILABLE;
+    this.available_stock = product.available_stock || 0;
   }
 
   // Saves the product into the database
@@ -99,8 +100,18 @@ class Product {
 
     try {
       const conn = await db.connect();
+      const [quantity] = await conn.query(`SELECT product_id, SUM(quantity) AS total_quantity FROM stock GROUP BY product_id;`); 
       const [data] = await conn.query(`SELECT p.product_id, p.category_id, c.name AS category_name, p.creator_id, p.date_created, p.name, p.description, p.unit_price, p.image_src, p.is_available FROM product AS p INNER JOIN category AS c ON p.category_id = c.category_id;`);
       await conn.end();
+
+      data.forEach((item) => {
+        item.available_stock = 0;
+        quantity.forEach((q_item) => {
+          if (q_item.product_id === item.product_id) {
+            item.available_stock = q_item.total_quantity;
+          }
+        })
+      })
 
       retVal = data.map((d) => new Product(d));
     } catch (err) {
@@ -116,10 +127,17 @@ class Product {
 
     try {
       const conn = await db.connect();
+      const [product] = await conn.query(`SELECT product_id, SUM(quantity) AS total_quantity FROM stock GROUP BY product_id HAVING product_id = :id;`, { id }); 
       const [data] = await conn.execute("SELECT p.product_id, p.category_id, c.name AS category_name, p.creator_id, p.date_created, p.name, p.description, p.unit_price, p.image_src, p.is_available FROM product AS p INNER JOIN category AS c ON p.category_id = c.category_id WHERE product_id = :id", { id });
       await conn.end();
 
-      if (data.length !== 0) retVal = new Product(data[0]);
+      
+
+      if (data.length === 0) return retVal;
+      total_quantity = product.length === 0 ? 0 : product.total_quantity;
+      data[0].available_stock = total_quantity;
+
+      retVal = new Product(data[0]);
     } catch (err) {
       console.log("[EMPLOYEE DB ERROR]", err.message);
       throw new InternalServerError(err);
