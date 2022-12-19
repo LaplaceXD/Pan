@@ -1,5 +1,8 @@
 require("dotenv").config();
 
+const path = require("path");
+process.env["NODE_CONFIG_DIR"] = path.join(path.resolve("./"), "config/");
+
 const config = require("config");
 const helmet = require("helmet");
 const compression = require("compression");
