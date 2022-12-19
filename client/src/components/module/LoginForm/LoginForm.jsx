@@ -22,7 +22,7 @@ function LoginForm({ ...props }) {
       const success = await toast.promise(async () => await handleLogin(values), {
         error: { render: ({ data }) => data },
         success: "Logged in.",
-        loading: "Logging in...",
+        pending: "Logging in...",
       });
 
       success && redirect("/");
