@@ -20,7 +20,7 @@ const search = {
   },
 };
 
-function Order() {
+function Order({ showDelete = false }) {
   const deleteModal = useModal();
 
   const { data: orders } = useQuery("orders", getAllOrders);
@@ -38,12 +38,14 @@ function Order() {
         <OrderModule.Lines lines={order?.details} className={styles.orderSummary} disabledLines showCount />
       </OrderModule.Details>
 
-      <Button
-        label="Delete Order Record"
-        className={styles.orderDelete}
-        onClick={deleteModal.open}
-        disabled={orderId === null}
-      />
+      {showDelete ? (
+        <Button
+          label="Delete Order Record"
+          className={styles.orderDelete}
+          onClick={deleteModal.open}
+          disabled={orderId === null}
+        />
+      ) : null}
     </>
   );
 
@@ -64,17 +66,19 @@ function Order() {
         onItemSelect={(id) => setOrderId(id === orderId ? null : id)}
       />
 
-      <Modal.Confirm
-        title="Delete?"
-        description="Are you sure you want to delete this record?"
-        open={deleteModal.isOpen}
-        onClose={deleteModal.close}
-        confirmLabel="Delete"
-        onConfirm={() => {
-          alert(orderId);
-          deleteModal.close();
-        }}
-      />
+      {showDelete ? (
+        <Modal.Confirm
+          title="Delete?"
+          description="Are you sure you want to delete this record?"
+          open={deleteModal.isOpen}
+          onClose={deleteModal.close}
+          confirmLabel="Delete"
+          onConfirm={() => {
+            alert(orderId);
+            deleteModal.close();
+          }}
+        />
+      ) : null}
     </PreviewLayout>
   );
 }

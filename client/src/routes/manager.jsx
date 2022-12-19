@@ -1,7 +1,8 @@
 import { BiNotepad } from "react-icons/bi";
-import { BsBoxSeam, BsPeople } from "react-icons/bs";
+import { BsBoxSeam } from "react-icons/bs";
 import { FiHome, FiTruck } from "react-icons/fi";
 
+import Order from "@components/pages/Order";
 import { appendPath, getLinkProps, getRouteProps } from "@utils/routes";
 
 const directory = "/m";
@@ -19,7 +20,7 @@ const managerPages = [
     path: "/orders",
     label: "Orders",
     icon: <BiNotepad />,
-    element: <h1>Orders</h1>,
+    element: <Order showDelete />,
     navLink: true,
   },
   {
@@ -36,13 +37,13 @@ const managerPages = [
     element: <h1>Suppliers</h1>,
     navLink: true,
   },
-  {
-    path: "/employees",
-    label: "Employees",
-    icon: <BsPeople />,
-    element: <h1>Employees</h1>,
-    navLink: true,
-  },
+  // {
+  //   path: "/employees",
+  //   label: "Employees",
+  //   icon: <BsPeople />,
+  //   element: <h1>Employees</h1>,
+  //   navLink: true,
+  // },
 ];
 
 export default {
