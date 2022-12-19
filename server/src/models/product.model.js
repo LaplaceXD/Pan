@@ -25,7 +25,7 @@ class Product {
     try {
       const conn = await db.connect();
       const [data] = await conn.execute(
-        `INSERT INTO Product (creator_id, category_id, date_created, name, description, unit_price)
+        `INSERT INTO product (creator_id, category_id, date_created, name, description, unit_price)
         VALUES (:creator_id, :category_id, :date_created, :name, :description, :unit_price)`,
         this
       );
@@ -49,7 +49,7 @@ class Product {
     try {
       const conn = await db.connect();
       await conn.execute(
-        `UPDATE Product 
+        `UPDATE product 
         SET 
           creator_id = :creator_id, 
           category_id = :category_id, 
@@ -80,7 +80,7 @@ class Product {
 
       const conn = await db.connect();
       await conn.execute(
-        `UPDATE Product SET is_available = :is_available WHERE product_id = :product_id;`,
+        `UPDATE product SET is_available = :is_available WHERE product_id = :product_id;`,
         this
       );
       await conn.end();
@@ -96,7 +96,7 @@ class Product {
 
     try {
       const conn = await db.connect();
-      const [data] = await conn.query(`SELECT * FROM Product`);
+      const [data] = await conn.query(`SELECT * FROM product`);
       await conn.end();
 
       retVal = data.map((d) => new Product(d));

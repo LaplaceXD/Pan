@@ -43,7 +43,7 @@ class Employee {
     try {
       const conn = await db.connect();
       const [data] = await conn.execute(
-        `INSERT INTO Employee (first_name, last_name, password, contact_no, email, date_employed)
+        `INSERT INTO employee (first_name, last_name, password, contact_no, email, date_employed)
         VALUES (:first_name, :last_name, :password, :contact_no, :email, :date_employed)`,
         this
       );
@@ -67,7 +67,7 @@ class Employee {
     try {
       const conn = await db.connect();
       await conn.execute(
-        `UPDATE Employee 
+        `UPDATE employee 
         SET 
           first_name = :first_name,
           last_name = :last_name,
@@ -95,7 +95,7 @@ class Employee {
     try {
       const conn = await db.connect();
       await conn.execute(
-        `UPDATE Employee 
+        `UPDATE employee 
         SET 
           password = :password
         WHERE
@@ -118,7 +118,7 @@ class Employee {
 
       const conn = await db.connect();
       await conn.execute(
-        `UPDATE Employee SET is_active = :is_active WHERE employee_id = :employee_id`,
+        `UPDATE employee SET is_active = :is_active WHERE employee_id = :employee_id`,
         this
       );
 
@@ -135,7 +135,7 @@ class Employee {
 
     try {
       const conn = await db.connect();
-      const [data] = await conn.query(`SELECT * FROM Employee`);
+      const [data] = await conn.query(`SELECT * FROM employee`);
       await conn.end();
 
       retVal = data.map((d) => new Employee(d));
