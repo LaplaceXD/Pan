@@ -11,3 +11,7 @@ export async function getOrderById(orderId, { signal }) {
 export async function createOrder(order) {
   return await auth.post("/orders", order);
 }
+
+export async function deleteOrderById(orderId) {
+  return await auth.delete("/orders/" + orderId);
+}

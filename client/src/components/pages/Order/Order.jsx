@@ -1,10 +1,12 @@
 import { useState } from "react";
+import { useQueryClient } from "react-query";
+import { toast } from "react-toastify";
 
 import { Button, Header, SearchBar } from "@components/common";
 import { Modal, Order as OrderModule } from "@components/module";
 import { PreviewLayout } from "@components/template";
-import { useFilter, useModal, useQuery } from "@hooks";
-import { getAllOrders, getOrderById } from "@services/order";
+import { useFilter, useModal, useMutation, useQuery } from "@hooks";
+import { deleteOrderById, getAllOrders, getOrderById } from "@services/order";
 import format from "@utils/format";
 
 import styles from "./Order.module.css";
@@ -20,9 +22,11 @@ const search = {
   },
 };
 
-function Order() {
+function Order({ showDelete = false }) {
   const deleteModal = useModal();
+  const queryClient = useQueryClient();
 
+  const deleteOrder = useMutation(deleteOrderById);
   const { data: orders } = useQuery("orders", getAllOrders);
   const { filter, data: filteredOrders } = useFilter(orders, { search });
 
@@ -31,6 +35,17 @@ function Order() {
     orderId ? getOrderById(orderId, { signal }) : null
   );
 
+  async function handleDeleteOrder() {
+    const { error, isRedirect } = await deleteOrder.execute(orderId);
+    if (isRedirect) return;
+    if (error) toast.error(error);
+
+    await queryClient.invalidateQueries("orders");
+    setOrderId(null);
+    deleteModal.close();
+    toast.success("Order deleted successfully.");
+  }
+
   const OrderPreview = (
     <>
       <OrderModule.Details total={order?.total} className={styles.orderPreview}>
@@ -38,12 +53,14 @@ function Order() {
         <OrderModule.Lines lines={order?.details} className={styles.orderSummary} disabledLines showCount />
       </OrderModule.Details>
 
-      <Button
-        label="Delete Order Record"
-        className={styles.orderDelete}
-        onClick={deleteModal.open}
-        disabled={orderId === null}
-      />
+      {showDelete ? (
+        <Button
+          label="Delete Order Record"
+          className={styles.orderDelete}
+          onClick={deleteModal.open}
+          disabled={orderId === null}
+        />
+      ) : null}
     </>
   );
 
@@ -64,17 +81,17 @@ function Order() {
         onItemSelect={(id) => setOrderId(id === orderId ? null : id)}
       />
 
-      <Modal.Confirm
-        title="Delete?"
-        description="Are you sure you want to delete this record?"
-        open={deleteModal.isOpen}
-        onClose={deleteModal.close}
-        confirmLabel="Delete"
-        onConfirm={() => {
-          alert(orderId);
-          deleteModal.close();
-        }}
-      />
+      {showDelete ? (
+        <Modal.Confirm
+          title="Delete?"
+          description="Are you sure you want to delete this record?"
+          open={deleteModal.isOpen}
+          onClose={deleteModal.close}
+          confirmLabel="Delete"
+          confirmDisabled={deleteOrder.isLoading}
+          onConfirm={handleDeleteOrder}
+        />
+      ) : null}
     </PreviewLayout>
   );
 }

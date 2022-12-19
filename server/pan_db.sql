@@ -59,7 +59,7 @@ CREATE TABLE
         quantity INT NOT NULL,
         notes TEXT,
         CONSTRAINT PK_OrderLine PRIMARY KEY (order_id, product_id),
-        CONSTRAINT FK_OrderLine_Order FOREIGN KEY (order_id) REFERENCES `order` (order_id),
+        CONSTRAINT FK_OrderLine_Order FOREIGN KEY (order_id) REFERENCES `order` (order_id) ON DELETE CASCADE,
         CONSTRAINT FK_OrderLine_Product FOREIGN KEY (product_id) REFERENCES product (product_id)
     );
 
