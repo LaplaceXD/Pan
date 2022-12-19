@@ -19,5 +19,8 @@
       "access": "JWT_ACCESS_EXP",
       "refresh": "JWT_REFRESH_EXP"
     }
+  },
+  "cors": {
+    "origin": "CORS_ORIGIN"
   }
 }

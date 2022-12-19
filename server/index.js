@@ -1,5 +1,6 @@
 require("dotenv").config();
 
+const config = require("config");
 const helmet = require("helmet");
 const cors = require("cors");
 const express = require("express");
@@ -19,14 +20,7 @@ const { error } = require("./src/middleware");
 const app = express();
 const server = http.createServer(app);
 
-app.use(
-  cors({
-    credentials: true,
-    methods: "GET,POST,PUT,DELETE",
-    allowedHeaders: "Authorization,Content-Type",
-    origin: "http://localhost:5173",
-  })
-);
+app.use(cors({ ...config.get("cors") }));
 app.use(helmet());
 
 app.use(express.urlencoded({ extended: true }));
