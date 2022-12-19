@@ -35,7 +35,7 @@ function LoginForm({ ...props }) {
   return (
     <form method="POST" onSubmit={formik.handleSubmit} {...props}>
       <Field
-        label="Email:"
+        label="Email"
         type="text"
         id="email"
         name="email"
@@ -45,7 +45,7 @@ function LoginForm({ ...props }) {
         error={formik.touched.email && formik.errors.email}
       />
       <Field
-        label="Password:"
+        label="Password"
         type="password"
         id="password"
         name="password"
