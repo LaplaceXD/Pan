@@ -18,16 +18,6 @@ Pan is an inventory management system made for Pan. This system was made with th
 ```
 # server/.env should contain the following variables
 
-DB_HOST           = localhost
-DB_USER           = root
-DB_DATABASE       = pan_db
-DB_PASSWORD       =
-JWT_SECRET        = superdupersecuresecret
-JWT_ISSUER        = http://localhost:3000/auth
-JWT_AUDIENCE      = http://localhost:3000
-JWT_ACCESS_EXP    = 15m
-JWT_REFRESH_EXP   = 2h
-CORS_ORIGIN       = http://localhost:5173
 REDIS_HOST        = <<your redis host here>>
 REDIS_USERNAME    = <<your redis user name>>
 REDIS_PASSWORD    = <<your redis password>>
