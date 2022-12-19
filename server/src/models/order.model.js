@@ -95,6 +95,7 @@ class Order {
         INNER JOIN order_line ol ON ol.order_id = o.order_id
         INNER JOIN product p ON p.product_id = ol.product_id
         GROUP BY o.order_id
+        ORDER BY o.date_placed DESC
         `
       );
       await conn.end();
