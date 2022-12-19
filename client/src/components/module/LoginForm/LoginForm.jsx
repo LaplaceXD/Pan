@@ -1,10 +1,10 @@
 import { useFormik } from "formik";
-import { redirect } from "react-router-dom";
 import { toast } from "react-toastify";
 import * as Yup from "yup";
 
 import { Button, Field } from "@components/common";
 import { useAuth } from "@hooks";
+import { redirect } from "react-router-dom";
 
 function LoginForm({ ...props }) {
   const auth = useAuth();
@@ -19,18 +19,29 @@ function LoginForm({ ...props }) {
       password: Yup.string().required("Password is required."),
     }),
     onSubmit: async (values) => {
-      formik.setSubmitting(true);
-      const error = await auth.login(values);
+      const success = await toast.promise(async () => await handleLogin(values), {
+        error: { render: ({ data }) => data },
+        success: "Logged in.",
+        loading: "Logging in...",
+      });
 
-      if (error) {
-        formik.setSubmitting(false);
-        toast.error("Invalid credentials.");
-      } else {
-        redirect("/");
-        toast.success("Logged in.");
-      }
+      success && redirect("/");
     },
   });
+
+  async function handleLogin(values) {
+    formik.setSubmitting(true);
+    const error = await auth.login(values);
+
+    if (error) {
+      formik.setFieldValue("password", "");
+      formik.setTouched({ email: true, password: false });
+      formik.setSubmitting(false);
+      throw error;
+    }
+
+    return true;
+  }
 
   return (
     <form method="POST" onSubmit={formik.handleSubmit} {...props}>
