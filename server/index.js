@@ -7,6 +7,13 @@ const express = require("express");
 require("express-async-errors");
 const http = require("http");
 
+console.log({
+  cors: config.get("cors"),
+  jwt: config.get("jwt"),
+  db: config.get("db"),
+  redis: config.get("redis"),
+});
+
 const authRoutes = require("./src/routes/auth.route");
 const orderRoutes = require("./src/routes/order.route");
 const categoryRoutes = require("./src/routes/categories.route");

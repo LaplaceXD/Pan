@@ -1,0 +1,10 @@
+{
+  "jwt": {
+    "issuer": "pan-ashy-pi.vercel.app/api",
+    "audience": "pan-ashy-pi.vercel.app",
+    "expiresIn": {
+      "access": "15m",
+      "refresh": "2h"
+    }
+  }
+}
