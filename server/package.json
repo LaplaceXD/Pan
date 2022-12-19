@@ -1,13 +1,16 @@
 {
   "name": "pan-api",
   "version": "1.0.0",
-  "description": "API for pan.",
+  "description": "API for the Inventory Management System of Pan.",
   "main": "index.js",
   "scripts": {
     "build": "set NODE_ENV=production&& node index.js",
     "start": "nodemon index.js"
   },
-  "author": "",
+  "engines": {
+    "node": "18.12.1"
+  },
+  "author": "Pan",
   "license": "MIT",
   "dependencies": {
     "bcrypt": "^5.1.0",
