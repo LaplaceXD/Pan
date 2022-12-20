@@ -1,8 +1,18 @@
 import { Button, Field } from "@components/common";
+import { useFormik } from "formik";
 
 import styles from "./EditForm.module.css";
 
 function EditForm({ firstName, lastName, email, contact, onCancel }) {
+    const formik = useFormik({
+        initialValues: {
+            firstName: `${firstName}`,
+            lastName: `${lastName}`,
+            email: `${email}`,
+            contact: `${contact}`,
+        }
+    });
+
   return (
     <form method="POST" className={styles.container}>
       <Field
@@ -11,7 +21,8 @@ function EditForm({ firstName, lastName, email, contact, onCancel }) {
         id="firstName"
         name="firstName"
         className={styles.field}
-        value={firstName}
+        value={formik.values.firstName}
+        onChange={formik.handleChange}
       />
       <Field
         label="Last Name"
@@ -19,7 +30,8 @@ function EditForm({ firstName, lastName, email, contact, onCancel }) {
         id="lastName"
         name="lastName"
         className={styles.field}
-        value={lastName}
+        value={formik.values.lastName}
+        onChange={formik.handleChange}
       />
       <Field
         label="Email address"
@@ -27,7 +39,8 @@ function EditForm({ firstName, lastName, email, contact, onCancel }) {
         id="email"
         name="email"
         className={styles.field}
-        value={email}
+        value={formik.values.email}
+        onChange={formik.handleChange}
       />
       <Field
         label="Contact Number"
@@ -35,7 +48,8 @@ function EditForm({ firstName, lastName, email, contact, onCancel }) {
         id="contact"
         name="contact"
         className={styles.field}
-        value={contact}
+        value={formik.values.contact}
+        onChange={formik.handleChange}
       />
 
       <div className={styles.buttons}>
