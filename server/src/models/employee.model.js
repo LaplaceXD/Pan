@@ -16,7 +16,9 @@ class Employee {
     this.date_employed = employee.date_employed || new Date();
     this.image_src = employee.image_src || "";
     this.role = employee.role || role.EMPLOYEE;
-    this.is_active = employee.is_active === true || employee.is_active === status.ACTIVE;
+    this.is_active = employee.is_active
+      ? employee.is_active === true || employee.is_active === status.ACTIVE
+      : true;
   }
 
   async tokenize(jti) {
