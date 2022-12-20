@@ -43,12 +43,12 @@ npm start
 6. You should be able to login through the login portal using the following credentials.
 > Employee
 ```
-email: employee.test@pan.com
+email: employee@pan.com
 password: pan@employee123!
 ```
 > Manager
 ```
-email: manager.test@pan.com
+email: manager@pan.com
 password: pan@manager123!
 ```
 
