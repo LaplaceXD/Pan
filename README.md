@@ -41,10 +41,15 @@ npm start
 ```
 
 6. You should be able to login through the login portal using the following credentials.
-
+> Employee
 ```
-email: jonh.buot@gmail.com
-password: 1SecretPassword!
+email: employee.test@pan.com
+password: pan@manager123!
+```
+> Manager
+```
+email: manager.test@pan.com
+password: pan@employee123!
 ```
 
 7. ...
