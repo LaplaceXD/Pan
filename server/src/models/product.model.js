@@ -5,17 +5,23 @@ const { InternalServerError } = require("../../helpers/errors");
 const { db } = require("../providers");
 const { availability } = require("../constants/product");
 
+const Category = require("../models/categories.model");
+
 class Product {
   constructor(product) {
     this.product_id = product.product_id || 0;
-    this.category_id = product.category_id || 0;
+    this.category_id = product.category_id || null;
+    this.category_name = product.category_name || "";
     this.creator_id = product.creator_id;
-    this.date_created = product.date_created;
+    this.date_created = product.date_created || new Date();
     this.name = product.name;
     this.description = product.description;
-    this.unit_price = product.unit_price;
+    this.unit_price = parseFloat(product.unit_price);
     this.image_src = product.image_src || "";
-    this.is_available = product.is_available || availability.AVAILABLE;
+    this.is_available = product.is_available
+      ? product.is_available === true || product.is_available === availability.AVAILABLE
+      : true;
+    this.available_stock = product.available_stock ? parseInt(product.available_stock) : 0;
   }
 
   // Saves the product into the database
@@ -25,8 +31,8 @@ class Product {
     try {
       const conn = await db.connect();
       const [data] = await conn.execute(
-        `INSERT INTO Product (creator_id, category_id, date_created, name, description, unit_price)
-        VALUES (:creator_id, :category_id, :date_created, :name, :description, :unit_price)`,
+        `INSERT INTO product (creator_id, category_id, name, description, unit_price)
+        VALUES (:creator_id, :category_id, :name, :description, :unit_price)`,
         this
       );
       await conn.end();
@@ -49,7 +55,7 @@ class Product {
     try {
       const conn = await db.connect();
       await conn.execute(
-        `UPDATE Product 
+        `UPDATE product 
         SET 
           creator_id = :creator_id, 
           category_id = :category_id, 
@@ -75,13 +81,12 @@ class Product {
   // Toggles availability of given product
   async toggleStatus() {
     try {
-      this.is_available =
-        this.is_available === availability.AVAILABLE ? availability.UNAVAILABLE : availability.AVAILABLE;
+      const is_available = this.is_available ? availability.UNAVAILABLE : availability.AVAILABLE;
 
       const conn = await db.connect();
       await conn.execute(
-        `UPDATE Product SET is_available = :is_available WHERE product_id = :product_id;`,
-        this
+        `UPDATE product SET is_available = :is_available WHERE product_id = :product_id;`,
+        { ...this, is_available }
       );
       await conn.end();
     } catch (err) {
@@ -96,9 +101,19 @@ class Product {
 
     try {
       const conn = await db.connect();
-      const [data] = await conn.query(`SELECT * FROM Product`);
-      await conn.end();
+      const [data] = await conn.execute(
+        `SELECT 
+          COALESCE(c.name, "Others") AS category_name,
+          p.*,
+          COALESCE(SUM(s.quantity) - SUM(ol.quantity), 0) AS available_stock
+        FROM product p 
+        LEFT JOIN stock s ON s.product_id = p.product_id
+        LEFT JOIN order_line ol ON ol.product_id = p.product_id
+        LEFT JOIN category c ON c.category_id = p.category_id
+        GROUP BY p.product_id`
+      );
 
+      await conn.end();
       retVal = data.map((d) => new Product(d));
     } catch (err) {
       console.log("[PRODUCT ERROR]", err.message);
@@ -113,7 +128,19 @@ class Product {
 
     try {
       const conn = await db.connect();
-      const [data] = await conn.execute("SELECT * FROM product WHERE product_id = :id", { id });
+      const [data] = await conn.execute(
+        `SELECT 
+          COALESCE(c.name, "Others") AS category_name,
+          p.*,
+          COALESCE(SUM(s.quantity) - SUM(ol.quantity), 0) AS available_stock
+        FROM product p 
+        LEFT JOIN stock s ON s.product_id = p.product_id
+        LEFT JOIN order_line ol ON ol.product_id = p.product_id
+        LEFT JOIN category c ON c.category_id = p.category_id
+        WHERE p.product_id = :id
+        GROUP BY p.product_id`,
+        { id }
+      );
       await conn.end();
 
       if (data.length !== 0) retVal = new Product(data[0]);
@@ -126,13 +153,17 @@ class Product {
   }
 
   static async validate(product) {
+    let match = "category_id" in product ? await Category.findById(product.category_id) : null;
+
     const schema = Joi.object()
       .keys({
         name: Joi.string().label("Name").min(2).max(300).required().trim(),
         description: Joi.string().label("Description").min(2).max(300).required().trim(),
         unit_price: Joi.number().label("Unit Price").precision(2).required(),
-        date_created: Joi.date().label("Date Created").max("now").iso().required(),
-        category_id: Joi.number().min(0).label("Category ID"),
+        category_id: Joi.number()
+          .min(0)
+          .label("Category ID")
+          .not("category_id" in product && !match ? product.category_id : 0),
       })
       .options({ abortEarly: false });
 

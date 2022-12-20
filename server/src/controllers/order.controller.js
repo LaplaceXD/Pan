@@ -31,8 +31,17 @@ const create = async (req, res) => {
   res.status(200).send(data);
 };
 
+const remove = async (req, res) => {
+  const order = await Order.findById(req.params.id);
+  if (!order) throw new NotFound(ORDER_404);
+
+  await order.delete();
+  res.status(200).send({ message: "Successfully deleted order." });
+};
+
 module.exports = {
   getAll,
   getById,
   create,
+  remove,
 };

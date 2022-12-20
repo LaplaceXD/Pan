@@ -9,7 +9,9 @@ class Category {
     this.category_id = category.category_id || 0;
     this.name = category.name;
     this.image_src = category.image_src || "";
-    this.is_available = category.is_available || availability.AVAILABLE;
+    this.is_available = category.is_available
+      ? category.is_available === true || category.is_available === availability.AVAILABLE
+      : true;
   }
 
   async save() {
@@ -55,7 +57,7 @@ class Category {
   async delete() {
     try {
       const conn = await db.connect();
-      await conn.execute(`DELETE FROM Category WHERE category_id = :category_id`, this);
+      await conn.execute(`DELETE FROM category WHERE category_id = :category_id`, this);
       await conn.end();
     } catch (err) {
       console.log("[CATEGORY DELETE ERROR]", err.message);
@@ -65,13 +67,12 @@ class Category {
 
   async toggleStatus() {
     try {
-      this.is_available =
-        this.is_available === availability.AVAILABLE ? availability.UNAVAILABLE : availability.UNAVAILABLE;
+      const is_available = this.is_available ? availability.UNAVAILABLE : availability.AVAILABLE;
 
       const conn = await db.connect();
       await conn.execute(
-        `UPDATE Category SET is_available = :is_available WHERE category_id = :category_id`,
-        this
+        `UPDATE category SET is_available = :is_available WHERE category_id = :category_id`,
+        { ...this, is_available }
       );
 
       await conn.end();

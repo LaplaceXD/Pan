@@ -2,7 +2,6 @@
   "db": {
     "host": "DB_HOST",
     "user": "DB_USER",
-    "database": "DB_DATABASE",
     "password": "DB_PASSWORD"
   },
   "redis": {
@@ -12,12 +11,9 @@
     "port": "REDIS_PORT"
   },
   "jwt": {
-    "secret": "JWT_SECRET",
-    "issuer": "JWT_ISSUER",
-    "audience": "JWT_AUDIENCE",
-    "expiresIn": {
-      "access": "JWT_ACCESS_EXP",
-      "refresh": "JWT_REFRESH_EXP"
-    }
+    "secret": "JWT_SECRET"
+  },
+  "cors": {
+    "origin": "CORS_ORIGIN"
   }
 }

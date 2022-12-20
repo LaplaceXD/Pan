@@ -13,10 +13,12 @@ class Employee {
     this.password = employee.password || "";
     this.contact_no = employee.contact_no;
     this.email = employee.email;
-    this.date_employed = employee.date_employed;
+    this.date_employed = employee.date_employed || new Date();
     this.image_src = employee.image_src || "";
     this.role = employee.role || role.EMPLOYEE;
-    this.is_active = employee.is_active || status.ACTIVE;
+    this.is_active = employee.is_active
+      ? employee.is_active === true || employee.is_active === status.ACTIVE
+      : true;
   }
 
   async tokenize(jti) {
@@ -43,7 +45,7 @@ class Employee {
     try {
       const conn = await db.connect();
       const [data] = await conn.execute(
-        `INSERT INTO Employee (first_name, last_name, password, contact_no, email, date_employed)
+        `INSERT INTO employee (first_name, last_name, password, contact_no, email, date_employed)
         VALUES (:first_name, :last_name, :password, :contact_no, :email, :date_employed)`,
         this
       );
@@ -67,7 +69,7 @@ class Employee {
     try {
       const conn = await db.connect();
       await conn.execute(
-        `UPDATE Employee 
+        `UPDATE employee 
         SET 
           first_name = :first_name,
           last_name = :last_name,
@@ -95,7 +97,7 @@ class Employee {
     try {
       const conn = await db.connect();
       await conn.execute(
-        `UPDATE Employee 
+        `UPDATE employee 
         SET 
           password = :password
         WHERE
@@ -114,13 +116,13 @@ class Employee {
   // Deactivates/Activates an account with given employee ID
   async toggleStatus() {
     try {
-      this.is_active = this.is_active === status.ACTIVE ? status.INACTIVE : status.ACTIVE;
+      const is_active = this.is_active ? status.INACTIVE : status.ACTIVE;
 
       const conn = await db.connect();
-      await conn.execute(
-        `UPDATE Employee SET is_active = :is_active WHERE employee_id = :employee_id`,
-        this
-      );
+      await conn.execute(`UPDATE employee SET is_active = :is_active WHERE employee_id = :employee_id`, {
+        ...this,
+        is_active,
+      });
 
       await conn.end();
     } catch (err) {
@@ -135,7 +137,7 @@ class Employee {
 
     try {
       const conn = await db.connect();
-      const [data] = await conn.query(`SELECT * FROM Employee`);
+      const [data] = await conn.query(`SELECT * FROM employee`);
       await conn.end();
 
       retVal = data.map((d) => new Employee(d));
@@ -159,6 +161,7 @@ class Employee {
       console.log("[EMPLOYEE DB ERROR]", err.message);
       throw new InternalServerError(err);
     }
+
     return retVal;
   }
 
@@ -179,38 +182,41 @@ class Employee {
     return retVal;
   }
 
-  static async validate(employee, params = {}) {
-    let match = await Employee.findByEmail(employee.email);
+  static async validate(employee, params = {}, auth = {}) {
+    let match = "email" in employee ? await Employee.findByEmail(employee.email) : null;
+    const isEditing = "id" in params;
+    const isEditingOwnAccount = isEditing && parseInt(params.id) === match?.employee_id;
+    const isManagerRole = "role" in auth && auth.role === role.MANAGER;
 
-    // If id exist in params then this validation is used when an account is being edited
-    // This line basically ensures that an employee's email is not flagged as used, even
-    // though the account technically owns it
-    if (params.hasOwnProperty("id") && parseInt(params.id) === match?.employee_id) match = null;
+    let schema = {
+      first_name: Joi.string().label("First Name").min(2).max(300).required().trim(),
+      last_name: Joi.string().label("Last Name").min(2).max(300).required().trim(),
+      email: Joi.string()
+        .label("Email")
+        .email()
+        .not(!isEditingOwnAccount && match ? match.email : "")
+        .required()
+        .messages({
+          "any.invalid": "{{#label}} is already in use.",
+        })
+        .trim(),
+      contact_no: Joi.string()
+        .label("Contact Number")
+        .length(11)
+        .regex(/^\d+$/)
+        .message("{{#label}} must contain digits only.")
+        .required()
+        .trim(),
+    };
 
-    const schema = Joi.object()
-      .keys({
-        first_name: Joi.string().label("First Name").min(2).max(300).required().trim(),
-        last_name: Joi.string().label("Last Name").min(2).max(300).required().trim(),
-        email: Joi.string()
-          .label("Email")
-          .email()
-          .not(match?.email ?? "")
-          .required()
-          .messages({
-            "any.invalid": "{{#label}} is already in use.",
-          })
-          .trim(),
-        contact_no: Joi.string()
-          .label("Contact Number")
-          .length(11)
-          .regex(/^\d+$/)
-          .message("{{#label}} must contain digits only.")
-          .required()
-          .trim(),
+    if (isManagerRole || !isEditing) {
+      schema = {
+        ...schema,
         date_employed: Joi.date().label("Date Employed").max("now").iso().required(),
-      })
-      .options({ abortEarly: false });
+      };
+    }
 
+    schema = Joi.object().keys(schema).options({ abortEarly: false });
     return schema.validate(employee);
   }
 
