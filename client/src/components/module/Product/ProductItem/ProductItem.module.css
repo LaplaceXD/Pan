@@ -59,17 +59,25 @@
 .side-details {
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly;
+  justify-content: space-around;
   width: 15%;
 }
 
 .side-detail {
   display: inline-flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 2px;
 }
 
 .side-detail span {
   color: var(--white);
   font-size: 1.5rem;
+}
+
+.side-detail span.unavailable {
+  color: var(--error-color);
+}
+
+.side-detail span.available {
+  color: var(--tertiary-color);
 }

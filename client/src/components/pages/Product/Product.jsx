@@ -48,13 +48,21 @@ function Product() {
         className={styles.productList}
         items={filteredProducts}
         itemKey={(product) => product.product_id}
-        RenderComponent={({ name, description, category_name, available_stock, unit_price }) => (
+        RenderComponent={({
+          name,
+          description,
+          category_name,
+          available_stock,
+          is_available,
+          unit_price,
+        }) => (
           <ProductModule.Item
             img={empImg}
             name={name}
             category={category_name}
             description={description}
-            availableStock={available_stock}
+            stock={available_stock}
+            isAvailable={is_available}
             unitPrice={parseFloat(unit_price)}
           />
         )}
