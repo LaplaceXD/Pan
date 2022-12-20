@@ -13,12 +13,25 @@ const category = {
 
 const search = {
   value: "",
-  filter: ({ name, description }, search) => {
+  filter: ({ name, description, available_stock, is_available }, search) => {
     const searchLower = search.toLowerCase();
     const nameMatch = name.toLowerCase().includes(searchLower);
     const descMatch = description.toLowerCase().includes(searchLower);
 
-    return nameMatch || descMatch;
+    let statusMatch = true;
+    switch (searchLower) {
+      case "available":
+        statusMatch = is_available && available_stock > 0;
+        break;
+      case "out of stock":
+        statusMatch = is_available && available_stock <= 0;
+        break;
+      case "unavailable":
+        statusMatch = !is_available;
+        break;
+    }
+
+    return nameMatch || descMatch || statusMatch;
   },
 };
 
