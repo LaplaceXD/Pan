@@ -1,0 +1,35 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.name {
+  color: var(--secondary-color);
+  font-weight: var(--font-regular);
+  font-size: 3em;
+}
+
+.detail {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.detail span:first-child {
+  color: var(--text-color);
+  font-size: 0.9em;
+}
+
+.detail span:last-child {
+  color: var(--white);
+  font-weight: normal;
+  font-size: 1.4em;
+}
+
+.buttons {
+  display: flex;
+  gap: 16px;
+  margin-top: 8px;
+  white-space: nowrap;
+}

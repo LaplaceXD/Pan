@@ -1,8 +1,9 @@
+import { clsx } from "clsx";
 import styles from "./Field.module.css";
 
-function Field({ label, id, error, ...props }) {
+function Field({ label, id, error, className, ...props }) {
   return (
-    <div className={styles.container}>
+    <div className={clsx(styles.container, className)}>
       <label className={styles.label} htmlFor={id}>
         {label}
       </label>

@@ -1,7 +1,9 @@
-import AccountPreview from "./AccountPreview";
-import AccountButton from "./AccountButton";
+import Details from "./AccountDetails";
+import ChangePasswordForm from "./ChangePasswordForm";
+import EditForm from "./EditForm";
 
 export default {
-    AccountPreview,
-    AccountButton,
+  Details,
+  EditForm,
+  ChangePasswordForm,
 };
