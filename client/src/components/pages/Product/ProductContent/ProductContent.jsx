@@ -19,17 +19,9 @@ const search = {
     const descMatch = description.toLowerCase().includes(searchLower);
 
     let statusMatch = false;
-    switch (searchLower) {
-      case "available":
-        statusMatch = is_available && available_stock > 0;
-        break;
-      case "out of stock":
-        statusMatch = is_available && available_stock <= 0;
-        break;
-      case "unavailable":
-        statusMatch = !is_available;
-        break;
-    }
+    if ("available".startsWith(searchLower)) statusMatch = is_available && available_stock > 0;
+    else if ("out of stock".startsWith(searchLower)) statusMatch = is_available && available_stock <= 0;
+    else if ("unavailable".startsWith(searchLower)) statusMatch = !is_available;
 
     return nameMatch || descMatch || statusMatch;
   },
