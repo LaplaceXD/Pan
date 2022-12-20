@@ -11,9 +11,14 @@ function Report() {
                 <UserBanner imgSize={56} />
             </Header>
             <div className={styles.content}>
-                <ReportModule.ReportCard title={'Inventory Report'}/>
-                <ReportModule.ReportCard title={'Sales Report'}/>
-                <ReportModule.ReportCard title={'Transaction List'}/>
+                <div className={styles.cards}>
+                    <ReportModule.ReportCard title={'Inventory Report'}/>
+                    <ReportModule.ReportCard title={'Sales Report'}/>
+                    <ReportModule.ReportCard title={'Transaction List'}/>
+                </div>
+                <div className={styles.item}>
+                    <ReportModule.ReportItem title={"Employee Details"}/>
+                </div>
             </div>
         </div>
     );

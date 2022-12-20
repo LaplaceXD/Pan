@@ -1,7 +1,7 @@
 .container {
     border-radius: 16px;
     width: 350px;
-    margin: 1.5em 2em 0;
+    margin: 2em 2em 0;
     display: inline-flex;
     flex-direction: column;
     grid-template-columns: repeat(5, 1fr);
@@ -28,7 +28,7 @@
     font-weight: var(--font-regular);
     color: var(--white);
     float: left;
-    margin-bottom: 2em;
+    margin-bottom: 3em;
 }
 
 .btn {

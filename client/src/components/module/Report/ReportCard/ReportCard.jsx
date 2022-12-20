@@ -13,7 +13,7 @@ function ReportCard({title}) {
                 <h1 className={styles.title}>{title}</h1>
                 <div className={styles.footer}>
                     <Button label={"Download Latest Report"} className={styles.btn}></Button>
-                    <Button label={"View Past Report"} className={styles.btn} secondary>View Past Report</Button>
+                    <Button label={"View Past Report"} className={styles.btn} secondary></Button>
                 </div>
             </div>
         </div>
