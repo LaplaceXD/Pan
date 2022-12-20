@@ -8,14 +8,14 @@ import { useAuth } from "@hooks";
 function AccountPreview({ editState, setEditState, firstName, lastName, fullName, id, email, contact, leftBtn, rightBtn }) {
     const auth = useAuth();
 
-    const formik = useFormik({
-        initialValues: {
-            firstName: `${firstName}`,
-            lastName: `${lastName}`,
-            email: `${email}`,
-            contact: `${contact}`,
-        },
-    });
+    // const formik = useFormik({
+    //     initialValues: {
+    //         firstName: `${firstName}`,
+    //         lastName: `${lastName}`,
+    //         email: `${email}`,
+    //         contact: `${contact}`,
+    //     }
+    // });
 
     console.log(firstName);
 
@@ -48,28 +48,28 @@ function AccountPreview({ editState, setEditState, firstName, lastName, fullName
                             type="text"
                             id="firstName"
                             name="firstName"
-                            value={formik.values.firstName}
+                            value={firstName}
                         />
                         <AccountField
                             label="Last Name"
                             type="text"
                             id="lastName"
                             name="lastName"
-                            value={formik.values.lastName}
+                            value={lastName}
                         />
                         <AccountField
                             label="Email address"
                             type="text"
                             id="email"
                             name="email"
-                            value={formik.values.email}
+                            value={email}
                         />
                         <AccountField
                             label="Contact Number"
                             type="text"
                             id="contact"
                             name="contact"
-                            value={formik.values.contact}
+                            value={contact}
                         />
                     </form>
                 </div>
@@ -78,13 +78,13 @@ function AccountPreview({ editState, setEditState, firstName, lastName, fullName
                 editState === 2 &&
                 <form method="POST">
                     <AccountField
-                        label="Enter New Password:"
+                        label="Enter New Password"
                         type="password"
                         id="newPassword"
                         name="newPassword"
                     />
                     <AccountField
-                        label="Confirm New Password:"
+                        label="Confirm New Password"
                         type="password"
                         id="confirmPassword"
                         name="confirmPassword"

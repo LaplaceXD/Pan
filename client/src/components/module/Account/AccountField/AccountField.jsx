@@ -1,8 +1,8 @@
 import styles from "./AccountField.module.css";
 
-function AccountField({ label, id, error, ...props }) {
+function AccountField({ className, label, id, error, ...props }) {
     return (
-        <div className={styles.container}>
+        <div className={`${styles.container} ${className}`}>
             <label className={styles.label} htmlFor={id}>
                 {label}
             </label>
