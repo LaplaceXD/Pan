@@ -4,6 +4,10 @@ const { InternalServerError, NotFound, BadRequest } = require("../../helpers/err
 const { hash } = require("../providers");
 const Employee = require("../models/employee.model");
 
+const sendgridMailer = require('@sendgrid/mail');
+const { markAsUntransferable } = require("worker_threads");
+sendgridMailer.setApiKey(process.env.SENDGRID_API_KEY);
+
 function generatePassword() {
   return crypto.randomBytes(8).toString("base64").replaceAll("=", "");
 }
@@ -54,11 +58,30 @@ const changePassword = async (req, res) => {
   const employee = await Employee.findById(req.params.id);
   if (!employee) throw new NotFound(EMPLOYEE_404);
 
-  const isCurrentCorrect = await hash.compare(req.body.current_password, employee.password);
-  if (!isCurrentCorrect) throw new BadRequest({ current_password: "Current password does not match." });
+  // const isCurrentCorrect = await hash.compare(req.body.current_password, employee.password);
+  // if (!isCurrentCorrect) throw new BadRequest({ current_password: "Current password does not match." });
 
   employee.password = await hash.hashPassword(req.body.new_password);
   await employee.savePassword();
+
+  const msg = {
+    to: employee.email, // Change to your recipient
+    from: 'pan.project.2104@gmail.com', // Change to your verified sender
+    subject: 'Password Reset',
+    html: `<p> Good day, this email is to let you know that your password has been recently changed.</p>
+           <p>Here is your new password:</p>
+           <h1>` + req.body.new_password + `</h1>
+           <p> If you did not authorize this change, please consult your manager </p>`
+    
+  }
+  sendgridMailer
+    .send(msg)
+    .then(() => {
+      console.log('Email sent')
+    })
+    .catch((error) => {
+      console.error(error)
+    })
 
   res.status(200).send({
     message: "Successfully changed password.",
