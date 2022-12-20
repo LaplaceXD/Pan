@@ -33,7 +33,7 @@ function Home() {
   const createOrder = useMutation(createOrderService);
   const { data: products } = useQuery("products", getAllProducts);
   const { filter, data: filteredProducts } = useFilter(
-    products.filter(({ is_available }) => is_available),
+    products?.filter(({ is_available }) => is_available),
     { search, category }
   );
 
