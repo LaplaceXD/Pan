@@ -10,16 +10,16 @@ const Category = require("../models/categories.model");
 class Product {
   constructor(product) {
     this.product_id = product.product_id || 0;
-    this.category_id = product.category_id || 0;
+    this.category_id = product.category_id || null;
     this.category_name = product.category_name || "";
     this.creator_id = product.creator_id;
-    this.date_created = product.date_created;
+    this.date_created = product.date_created || new Date();
     this.name = product.name;
     this.description = product.description;
     this.unit_price = product.unit_price;
     this.image_src = product.image_src || "";
     this.is_available = product.is_available || availability.AVAILABLE;
-    this.available_stock = product.available_stock || 0;
+    this.available_stock = product.available_stock ? parseInt(product.available_stock) : 0;
   }
 
   // Saves the product into the database
@@ -29,8 +29,8 @@ class Product {
     try {
       const conn = await db.connect();
       const [data] = await conn.execute(
-        `INSERT INTO product (creator_id, category_id, date_created, name, description, unit_price)
-        VALUES (:creator_id, :category_id, :date_created, :name, :description, :unit_price)`,
+        `INSERT INTO product (creator_id, category_id, name, description, unit_price)
+        VALUES (:creator_id, :category_id, :name, :description, :unit_price)`,
         this
       );
       await conn.end();
@@ -100,23 +100,19 @@ class Product {
 
     try {
       const conn = await db.connect();
-      const [quantity] = await conn.query(
-        `SELECT product_id, SUM(quantity) AS total_quantity FROM stock GROUP BY product_id;`
+      const [data] = await conn.execute(
+        `SELECT 
+          COALESCE(c.name, "Others") AS category_name,
+          p.*,
+          COALESCE(SUM(s.quantity) - SUM(ol.quantity), 0) AS available_stock
+        FROM product p 
+        LEFT JOIN stock s ON s.product_id = p.product_id
+        LEFT JOIN order_line ol ON ol.product_id = p.product_id
+        LEFT JOIN category c ON c.category_id = p.category_id
+        GROUP BY p.product_id`
       );
-      const [data] = await conn.query(
-        `SELECT p.product_id, p.category_id, c.name AS category_name, p.creator_id, p.date_created, p.name, p.description, p.unit_price, p.image_src, p.is_available FROM product AS p INNER JOIN category AS c ON p.category_id = c.category_id;`
-      );
+
       await conn.end();
-
-      data.forEach((item) => {
-        item.available_stock = 0;
-        quantity.forEach((q_item) => {
-          if (q_item.product_id === item.product_id) {
-            item.available_stock = q_item.total_quantity;
-          }
-        });
-      });
-
       retVal = data.map((d) => new Product(d));
     } catch (err) {
       console.log("[PRODUCT ERROR]", err.message);
@@ -131,21 +127,22 @@ class Product {
 
     try {
       const conn = await db.connect();
-      const [product] = await conn.query(
-        `SELECT product_id, SUM(quantity) AS total_quantity FROM stock GROUP BY product_id HAVING product_id = :id;`,
-        { id }
-      );
       const [data] = await conn.execute(
-        "SELECT p.product_id, p.category_id, c.name AS category_name, p.creator_id, p.date_created, p.name, p.description, p.unit_price, p.image_src, p.is_available FROM product AS p INNER JOIN category AS c ON p.category_id = c.category_id WHERE product_id = :id",
+        `SELECT 
+          COALESCE(c.name, "Others") AS category_name,
+          p.*,
+          COALESCE(SUM(s.quantity) - SUM(ol.quantity), 0) AS available_stock
+        FROM product p 
+        LEFT JOIN stock s ON s.product_id = p.product_id
+        LEFT JOIN order_line ol ON ol.product_id = p.product_id
+        LEFT JOIN category c ON c.category_id = p.category_id
+        WHERE p.product_id = :id
+        GROUP BY p.product_id`,
         { id }
       );
       await conn.end();
 
-      if (data.length === 0) return retVal;
-      total_quantity = product.length === 0 ? 0 : product.total_quantity;
-      data[0].available_stock = total_quantity;
-
-      retVal = new Product(data[0]);
+      if (data.length !== 0) retVal = new Product(data[0]);
     } catch (err) {
       console.log("[EMPLOYEE DB ERROR]", err.message);
       throw new InternalServerError(err);
@@ -155,16 +152,20 @@ class Product {
   }
 
   static async validate(product) {
-    let match = await Category.findById(product.category_id);
-    match = !match ? product.category_id : null;
+    let match = "category_id" in product ? await Category.findById(product.category_id) : null;
 
     const schema = Joi.object()
       .keys({
         name: Joi.string().label("Name").min(2).max(300).required().trim(),
         description: Joi.string().label("Description").min(2).max(300).required().trim(),
         unit_price: Joi.number().label("Unit Price").precision(2).required(),
-        date_created: Joi.date().label("Date Created").max("now").iso().required(),
-        category_id: Joi.number().min(0).label("Category ID").not(match),
+        category_id: Joi.number()
+          .min(0)
+          .label("Category ID")
+          .not(!match ? product.category_id : 0)
+          .messages({
+            "any.invalid": "{{#label}} can't have the value " + product.category_id,
+          }),
       })
       .options({ abortEarly: false });
 
