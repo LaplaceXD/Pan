@@ -1,20 +1,38 @@
+import React from "react";
 import { Button, Field } from "@components/common";
 import { useFormik } from "formik";
+import { useMutation } from "@hooks";
+import { editEmployee as editEmployeeService } from "@services/employee";
 
 import styles from "./EditForm.module.css";
 
-function EditForm({ firstName, lastName, email, contact, onCancel }) {
+function EditForm({ id, firstName, lastName, email, contact, onCancel }) {
+    const editEmployee = useMutation(editEmployeeService);
+
     const formik = useFormik({
         initialValues: {
             firstName: `${firstName}`,
             lastName: `${lastName}`,
             email: `${email}`,
             contact: `${contact}`,
-        }
+        },
+        onSubmit: async (values) => {
+            const { error, isRedirect } = await editEmployee.execute(id);
+
+            console.log(error, isRedirect);
+
+            // setSubmitting(false);
+            // if (isRedirect) return;
+            // if (error) return toast.error(error);
+            //
+            // cartConfirmModal.close();
+            // cart.clear();
+            // toast.success("Order placed.");
+        },
     });
 
   return (
-    <form method="POST" className={styles.container}>
+    <form method="POST" className={styles.container} onSubmit={formik.handleSubmit}>
       <Field
         label="First Name"
         type="text"

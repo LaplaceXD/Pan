@@ -42,6 +42,7 @@ function Account() {
       header: `Edit ${format.capitalize(user.role)} Profile`,
       content: (
         <AccountModule.EditForm
+          id={user.id}
           firstName={account?.first_name}
           lastName={account?.last_name}
           email={account?.email}
