@@ -14,7 +14,7 @@ class Stock {
     this.date_supplied = stock.date_supplied;
     this.quantity = stock.quantity;
     this.unit = stock.unit;
-    this.unit_price = stock.unit_price;
+    this.unit_price = praseFloat(stock.unit_price);
     this.notes = stock.notes || "";
   }
 

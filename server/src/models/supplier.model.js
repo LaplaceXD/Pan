@@ -16,7 +16,7 @@ class Supplier {
     this.zip_code = supplier.zip_code;
     this.contact_no = supplier.contact_no;
     this.email = supplier.email;
-    this.is_active = supplier.is_active || status.ACTIVE;
+    this.is_active = supplier.is_active === true || supplier.is_active === status.ACTIVE;
   }
 
   // Saves the supplier into the database
@@ -97,13 +97,13 @@ class Supplier {
   // Deactivates supplier with given supplier ID
   async toggleStatus() {
     try {
-      this.is_active = this.is_active === status.ACTIVE ? status.INACTIVE : status.ACTIVE;
+      const is_active = this.is_active ? status.INACTIVE : status.ACTIVE;
 
       const conn = await db.connect();
-      await conn.execute(
-        `UPDATE supplier SET is_active = :is_active WHERE supplier_id = :supplier_id`,
-        this
-      );
+      await conn.execute(`UPDATE supplier SET is_active = :is_active WHERE supplier_id = :supplier_id`, {
+        ...this,
+        is_active,
+      });
 
       await conn.end();
     } catch (err) {

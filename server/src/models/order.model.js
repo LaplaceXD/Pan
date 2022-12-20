@@ -10,7 +10,7 @@ class Order {
     this.employee_name = order.employee_name || "";
     this.date_placed = order.date_placed || new Date();
     this.details = order.details || [];
-    this.total = order.total || 0;
+    this.total = order.total ? parseFloat(order.total) : 0;
   }
 
   // Saves the order into the database
