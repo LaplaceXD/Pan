@@ -1,10 +1,11 @@
 import { PreviewLayout } from "@components/template";
 import styles from "./Product.module.css";
 import ProductContent from "./ProductContent";
+import ProductPreview from "./ProductPreview";
 
 function Product({ withPreview = false }) {
   return withPreview ? (
-    <PreviewLayout className={styles.previewContainer}>
+    <PreviewLayout PreviewComponent={<ProductPreview />} className={styles.previewContainer}>
       <ProductContent />
     </PreviewLayout>
   ) : (
