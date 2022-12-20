@@ -44,12 +44,12 @@ npm start
 > Employee
 ```
 email: employee.test@pan.com
-password: pan@manager123!
+password: pan@employee123!
 ```
 > Manager
 ```
 email: manager.test@pan.com
-password: pan@employee123!
+password: pan@manager123!
 ```
 
 7. ...
