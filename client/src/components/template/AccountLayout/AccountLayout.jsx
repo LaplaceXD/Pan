@@ -4,7 +4,7 @@ import { clsx } from "clsx";
 
 import { BoxImage } from "@components/common";
 
-function AccountLayout({ imgSize = 250, PreviewComponent, children, className, header, useOutlet }) {
+function AccountLayout({ imgSize = 250, editState, PreviewComponent, children, className, header, useOutlet }) {
     return (
         <div className={styles.container}>
 

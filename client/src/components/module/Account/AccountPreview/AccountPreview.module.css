@@ -28,3 +28,14 @@
     font-weight: normal;
     font-size: 1.4em;
 }
+
+.header {
+    text-align: right;
+    color: #83C5BE;
+    font-size: 1.25em;
+    padding-top: 0.5em;
+}
+
+.buttonYellow {
+    background-color: yellow !important;
+}

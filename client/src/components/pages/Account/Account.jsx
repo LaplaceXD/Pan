@@ -4,8 +4,11 @@ import styles from "./Account.module.css"
 import { useQuery, useAuth } from "@hooks";
 import { getEmployeeById } from "@services/employee";
 import format from "@utils/format";
+import {useState} from "react";
 
 function Account() {
+    const [editState, setEditState] = useState(0);
+
     const { user } = useAuth();
     const { data: account } = useQuery(["account", user.id], ({ signal }) =>
         user.id ? getEmployeeById(user.id, { signal }) : null
@@ -15,16 +18,18 @@ function Account() {
 
     console.log(account);
 
+    const thisHeader = editState === 0 ? capitalizedRole : (editState === 1 ? `Edit ${capitalizedRole} Profile` : 'Change Password');
+
     return (
-        <AccountLayout header={capitalizedRole} className={styles.container}>
-            {/*<Acc.AccountPreview*/}
-            {/*    name={fullName}*/}
-            {/*    id={format.id(account?.employee_id)}*/}
-            {/*    email={account?.email}*/}
-            {/*    contact={account?.contact_no}*/}
-            {/*    leftBtn={'Edit profile'}*/}
-            {/*    rightBtn={'Change Password'}*/}
-            {/*/>*/}
+        <AccountLayout header={thisHeader} className={styles.container}>
+            <Acc.AccountPreview
+                name={fullName}
+                id={format.id(account?.employee_id)}
+                email={account?.email}
+                contact={account?.contact_no}
+                editState={editState}
+                setEditState={setEditState}
+            />
             {/*<Acc.EditEmployeeAccount*/}
             {/*    firstName={account?.first_name}*/}
             {/*    lastName={account?.last_name}*/}
@@ -34,10 +39,10 @@ function Account() {
             {/*    leftBtn={'Cancel'}*/}
             {/*    rightBtn={'Save'}*/}
             {/*/>*/}
-            <Acc.ChangeAccountPassword
-                leftBtn={'Cancel'}
-                rightBtn={'Save'}
-            />
+            {/*<Acc.ChangeAccountPassword*/}
+            {/*    leftBtn={'Cancel'}*/}
+            {/*    rightBtn={'Save'}*/}
+            {/*/>*/}
         </AccountLayout>
     );
 }
