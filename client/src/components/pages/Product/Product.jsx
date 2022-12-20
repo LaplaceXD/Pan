@@ -1,6 +1,6 @@
 import empImg from "@assets/imgs/emp-img.jpg";
 import { Header, List, SearchBar } from "@components/common";
-import { Category, Product as Prod, UserBanner } from "@components/module";
+import { Category, Product as ProductModule, UserBanner } from "@components/module";
 import { useFilter, useQuery } from "@hooks";
 import { getAllProducts } from "@services/product";
 
@@ -48,13 +48,13 @@ function Product() {
         className={styles.productList}
         items={filteredProducts}
         itemKey={(product) => product.product_id}
-        RenderComponent={({ name, description, unit_price }) => (
-          <Prod.Item
+        RenderComponent={({ name, description, category_name, available_stock, unit_price }) => (
+          <ProductModule.Item
             img={empImg}
             name={name}
-            category="Bread"
+            category={category_name}
             description={description}
-            availableStock={50}
+            availableStock={available_stock}
             unitPrice={parseFloat(unit_price)}
           />
         )}
