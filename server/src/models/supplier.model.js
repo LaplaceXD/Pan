@@ -68,7 +68,7 @@ class Supplier {
     try {
       const conn = await db.connect();
       await conn.execute(
-        `UPDATE Supplier 
+        `UPDATE supplier 
         SET
           name = :name,
           building = :building,
@@ -101,7 +101,7 @@ class Supplier {
 
       const conn = await db.connect();
       await conn.execute(
-        `UPDATE Supplier SET is_active = :is_active WHERE supplier_id = :supplier_id`,
+        `UPDATE supplier SET is_active = :is_active WHERE supplier_id = :supplier_id`,
         this
       );
 
@@ -118,7 +118,7 @@ class Supplier {
 
     try {
       const conn = await db.connect();
-      const [data] = await conn.query(`SELECT * FROM Supplier`);
+      const [data] = await conn.query(`SELECT * FROM supplier`);
       await conn.end();
 
       retVal = data.map((d) => new Supplier(d));
@@ -136,7 +136,7 @@ class Supplier {
       const conn = await db.connect();
       const [data] = await conn.execute(
         `SELECT *
-        FROM Supplier
+        FROM supplier
         WHERE supplier_id = :supplier_id`,
         { supplier_id }
       );

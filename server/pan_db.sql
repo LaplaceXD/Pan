@@ -3,7 +3,7 @@ CREATE DATABASE IF NOT EXISTS pan_db;
 USE pan_db;
 
 CREATE TABLE
-    IF NOT EXISTS `Employee` (
+    IF NOT EXISTS `employee` (
         employee_id INT NOT NULL AUTO_INCREMENT,
         first_name VARCHAR(300) NOT NULL,
         last_name VARCHAR(300) NOT NULL,
@@ -19,16 +19,16 @@ CREATE TABLE
     );
 
 CREATE TABLE
-    IF NOT EXISTS `Order` (
+    IF NOT EXISTS `order` (
         order_id INT NOT NULL AUTO_INCREMENT,
         employee_id INT NOT NULL,
         date_placed DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
         CONSTRAINT PK_Order PRIMARY KEY (order_id),
-        CONSTRAINT FK_Order_Employee FOREIGN KEY (employee_id) REFERENCES Employee (employee_id)
+        CONSTRAINT FK_Order_Employee FOREIGN KEY (employee_id) REFERENCES employee (employee_id)
     );
 
 CREATE TABLE
-    IF NOT EXISTS `Category` (
+    IF NOT EXISTS `category` (
         category_id INT NOT NULL AUTO_INCREMENT,
         name VARCHAR(100) NOT NULL,
         image_src VARCHAR(128) NOT NULL DEFAULT '',
@@ -37,7 +37,7 @@ CREATE TABLE
     );
 
 CREATE TABLE
-    IF NOT EXISTS `Product` (
+    IF NOT EXISTS `product` (
         product_id INT NOT NULL AUTO_INCREMENT,
         category_id INT DEFAULT NULL,
         creator_id INT NOT NULL,
@@ -48,23 +48,23 @@ CREATE TABLE
         image_src VARCHAR(128) NOT NULL DEFAULT '',
         is_available ENUM ('0', '1') NOT NULL DEFAULT '1',
         CONSTRAINT PK_Product PRIMARY KEY (product_id),
-        CONSTRAINT FK_Product_Category FOREIGN KEY (category_id) REFERENCES Category (category_id) ON DELETE SET NULL,
-        CONSTRAINT FK_Product_Employee FOREIGN KEY (creator_id) REFERENCES Employee (employee_id)
+        CONSTRAINT FK_Product_Category FOREIGN KEY (category_id) REFERENCES category (category_id) ON DELETE SET NULL,
+        CONSTRAINT FK_Product_Employee FOREIGN KEY (creator_id) REFERENCES employee (employee_id)
     );
 
 CREATE TABLE
-    IF NOT EXISTS `Order_Line` (
+    IF NOT EXISTS `order_line` (
         order_id INT NOT NULL,
         product_id INT NOT NULL,
         quantity INT NOT NULL,
         notes TEXT,
         CONSTRAINT PK_OrderLine PRIMARY KEY (order_id, product_id),
-        CONSTRAINT FK_OrderLine_Order FOREIGN KEY (order_id) REFERENCES `Order` (order_id),
-        CONSTRAINT FK_OrderLine_Product FOREIGN KEY (product_id) REFERENCES Product (product_id)
+        CONSTRAINT FK_OrderLine_Order FOREIGN KEY (order_id) REFERENCES `order` (order_id) ON DELETE CASCADE,
+        CONSTRAINT FK_OrderLine_Product FOREIGN KEY (product_id) REFERENCES product (product_id)
     );
 
 CREATE TABLE
-    IF NOT EXISTS `Supplier` (
+    IF NOT EXISTS `supplier` (
         supplier_id INT NOT NULL AUTO_INCREMENT,
         name VARCHAR(300) NOT NULL,
         building VARCHAR(150),
@@ -79,7 +79,7 @@ CREATE TABLE
     );
 
 CREATE TABLE
-    IF NOT EXISTS `Stock` (
+    IF NOT EXISTS `stock` (
         stock_id INT NOT NULL AUTO_INCREMENT,
         product_id INT NOT NULL,
         supplier_id INT NOT NULL,
@@ -89,8 +89,8 @@ CREATE TABLE
         unit_price DECIMAL(7, 2) NOT NULL,
         notes TEXT,
         CONSTRAINT PK_Stock PRIMARY KEY (stock_id),
-        CONSTRAINT FK_Stock_Product FOREIGN KEY (product_id) REFERENCES Product (product_id),
-        CONSTRAINT FK_Stock_Supplier FOREIGN KEY (supplier_id) REFERENCES Supplier (supplier_id)
+        CONSTRAINT FK_Stock_Product FOREIGN KEY (product_id) REFERENCES product (product_id),
+        CONSTRAINT FK_Stock_Supplier FOREIGN KEY (supplier_id) REFERENCES supplier (supplier_id)
     );
 
 -- SAMPLE DATA FOR CATEGORY TABLE -- 

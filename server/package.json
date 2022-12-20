@@ -1,17 +1,20 @@
 {
   "name": "pan-api",
   "version": "1.0.0",
-  "description": "API for pan.",
+  "description": "API for the Inventory Management System of Pan.",
   "main": "index.js",
   "scripts": {
-    "build": "node index.js",
-    "start": "nodemon index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "set NODE_ENV=production&& node index.js",
+    "start": "nodemon index.js"
   },
-  "author": "",
+  "engines": {
+    "node": "18.12.1"
+  },
+  "author": "Pan",
   "license": "MIT",
   "dependencies": {
     "bcrypt": "^5.1.0",
+    "compression": "^1.7.4",
     "config": "^3.3.8",
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",

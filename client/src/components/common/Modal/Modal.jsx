@@ -9,7 +9,15 @@ const RIGHT_CLICK = 0;
 const ESCAPE_KEY = "Escape";
 const DIALOG_TAG_NAME = "DIALOG";
 
-function Modal({ open, children, onClose, className, withCloseBtn = false }) {
+function Modal({
+  open,
+  children,
+  onClose,
+  className,
+  slideIn = false,
+  fadeIn = false,
+  withCloseBtn = false,
+}) {
   const ref = useRef(null);
   const [target, setTarget] = useState(null);
 
@@ -45,7 +53,7 @@ function Modal({ open, children, onClose, className, withCloseBtn = false }) {
   return (
     <Portal id="modal-container">
       <dialog
-        className={clsx(styles.dialog, className)}
+        className={clsx(styles.dialog, fadeIn && styles.fadeIn, slideIn && styles.slideIn, className)}
         ref={ref}
         onKeyDown={handleEscape}
         onMouseDown={handleMouseDown}

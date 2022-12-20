@@ -1,0 +1,9 @@
+.container {
+  flex: 1;
+  overflow-y: scroll;
+  padding: 1.75em;
+}
+
+.header h1 {
+  flex: 1;
+}

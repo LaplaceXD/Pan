@@ -1,13 +1,17 @@
-function appendPath(path, pages) {
-  return pages.map((page) => ({ ...pages, path: path + page.path }));
+export function appendPath(path, pages) {
+  return pages.map((page) => ({ ...page, path: path + page.path }));
 }
 
-function flattenPages(pages) {
+export function flattenPages(pages) {
   return pages.reduce((flattened, { children, ...page }) => {
     let buffer = [...flattened, page];
 
     return children ? buffer.concat(...flattenPages(appendPath(page.path, children))) : buffer;
   }, []);
+}
+
+export function getDirectoryMap(pages, path = "") {
+  return pages.reduce((map, { name, directory }) => ({ ...map, [name]: directory + path }), {});
 }
 
 export function getLinkProps(pages) {

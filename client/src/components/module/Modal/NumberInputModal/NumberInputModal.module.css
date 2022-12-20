@@ -1,0 +1,10 @@
+.container {
+  padding: 3em;
+  width: 20vw;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}

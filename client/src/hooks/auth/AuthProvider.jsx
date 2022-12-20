@@ -20,7 +20,7 @@ function AuthProvider({ children }) {
   });
 
   async function logout() {
-    await logoutEmployee(token.pair.get());
+    await logoutEmployee();
 
     token.pair.remove();
     setAuth(null);

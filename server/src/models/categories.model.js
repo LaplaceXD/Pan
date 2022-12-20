@@ -55,7 +55,7 @@ class Category {
   async delete() {
     try {
       const conn = await db.connect();
-      await conn.execute(`DELETE FROM Category WHERE category_id = :category_id`, this);
+      await conn.execute(`DELETE FROM category WHERE category_id = :category_id`, this);
       await conn.end();
     } catch (err) {
       console.log("[CATEGORY DELETE ERROR]", err.message);
@@ -70,7 +70,7 @@ class Category {
 
       const conn = await db.connect();
       await conn.execute(
-        `UPDATE Category SET is_available = :is_available WHERE category_id = :category_id`,
+        `UPDATE category SET is_available = :is_available WHERE category_id = :category_id`,
         this
       );
 

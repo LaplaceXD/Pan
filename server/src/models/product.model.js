@@ -5,7 +5,7 @@ const { InternalServerError } = require("../../helpers/errors");
 const { db } = require("../providers");
 const { availability } = require("../constants/product");
 
-const Category = require("../models/categories.model")
+const Category = require("../models/categories.model");
 
 class Product {
   constructor(product) {
@@ -29,7 +29,7 @@ class Product {
     try {
       const conn = await db.connect();
       const [data] = await conn.execute(
-        `INSERT INTO Product (creator_id, category_id, date_created, name, description, unit_price)
+        `INSERT INTO product (creator_id, category_id, date_created, name, description, unit_price)
         VALUES (:creator_id, :category_id, :date_created, :name, :description, :unit_price)`,
         this
       );
@@ -53,7 +53,7 @@ class Product {
     try {
       const conn = await db.connect();
       await conn.execute(
-        `UPDATE Product 
+        `UPDATE product 
         SET 
           creator_id = :creator_id, 
           category_id = :category_id, 
@@ -84,7 +84,7 @@ class Product {
 
       const conn = await db.connect();
       await conn.execute(
-        `UPDATE Product SET is_available = :is_available WHERE product_id = :product_id;`,
+        `UPDATE product SET is_available = :is_available WHERE product_id = :product_id;`,
         this
       );
       await conn.end();
@@ -100,8 +100,12 @@ class Product {
 
     try {
       const conn = await db.connect();
-      const [quantity] = await conn.query(`SELECT product_id, SUM(quantity) AS total_quantity FROM stock GROUP BY product_id;`); 
-      const [data] = await conn.query(`SELECT p.product_id, p.category_id, c.name AS category_name, p.creator_id, p.date_created, p.name, p.description, p.unit_price, p.image_src, p.is_available FROM product AS p INNER JOIN category AS c ON p.category_id = c.category_id;`);
+      const [quantity] = await conn.query(
+        `SELECT product_id, SUM(quantity) AS total_quantity FROM stock GROUP BY product_id;`
+      );
+      const [data] = await conn.query(
+        `SELECT p.product_id, p.category_id, c.name AS category_name, p.creator_id, p.date_created, p.name, p.description, p.unit_price, p.image_src, p.is_available FROM product AS p INNER JOIN category AS c ON p.category_id = c.category_id;`
+      );
       await conn.end();
 
       data.forEach((item) => {
@@ -110,8 +114,8 @@ class Product {
           if (q_item.product_id === item.product_id) {
             item.available_stock = q_item.total_quantity;
           }
-        })
-      })
+        });
+      });
 
       retVal = data.map((d) => new Product(d));
     } catch (err) {
@@ -127,11 +131,15 @@ class Product {
 
     try {
       const conn = await db.connect();
-      const [product] = await conn.query(`SELECT product_id, SUM(quantity) AS total_quantity FROM stock GROUP BY product_id HAVING product_id = :id;`, { id }); 
-      const [data] = await conn.execute("SELECT p.product_id, p.category_id, c.name AS category_name, p.creator_id, p.date_created, p.name, p.description, p.unit_price, p.image_src, p.is_available FROM product AS p INNER JOIN category AS c ON p.category_id = c.category_id WHERE product_id = :id", { id });
+      const [product] = await conn.query(
+        `SELECT product_id, SUM(quantity) AS total_quantity FROM stock GROUP BY product_id HAVING product_id = :id;`,
+        { id }
+      );
+      const [data] = await conn.execute(
+        "SELECT p.product_id, p.category_id, c.name AS category_name, p.creator_id, p.date_created, p.name, p.description, p.unit_price, p.image_src, p.is_available FROM product AS p INNER JOIN category AS c ON p.category_id = c.category_id WHERE product_id = :id",
+        { id }
+      );
       await conn.end();
-
-      
 
       if (data.length === 0) return retVal;
       total_quantity = product.length === 0 ? 0 : product.total_quantity;
@@ -148,7 +156,7 @@ class Product {
 
   static async validate(product) {
     let match = await Category.findById(product.category_id);
-    match = (!match) ? product.category_id : null;
+    match = !match ? product.category_id : null;
 
     const schema = Joi.object()
       .keys({

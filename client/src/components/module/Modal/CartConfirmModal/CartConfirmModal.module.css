@@ -1,0 +1,19 @@
+.details {
+  display: grid;
+  row-gap: 6px;
+  grid-template-columns: repeat(3, 1fr);
+  font-size: 1.1rem;
+  color: var(--text-color);
+}
+
+.details p:nth-child(2n - 1) {
+  grid-column: span 2;
+}
+
+/* Styles the change with a top row border */
+.details p:nth-child(5),
+.details p:nth-child(6) {
+  border-top: 1px solid var(--white);
+  color: var(--white);
+  padding-top: 4px;
+}

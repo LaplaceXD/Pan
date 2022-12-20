@@ -9,8 +9,12 @@
   border: none;
 }
 
-.dialog[open] {
+.dialog[open].slide-in {
   animation: slide-in 0.75s ease normal;
+}
+
+.dialog[open].fade-in {
+  animation: fade-in 0.45s ease-out normal;
 }
 
 @keyframes slide-in {
@@ -19,6 +23,15 @@
   }
   to {
     transform: translate(-50%, -50%);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }
 
