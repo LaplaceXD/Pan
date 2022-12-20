@@ -1,5 +1,6 @@
+const { boolean } = require("joi");
 const Joi = require("joi");
-const { InternalServerError } = require("../../helpers/errors");
+const { InternalServerError,NotFound } = require("../../helpers/errors");
 const { db } = require("../providers");
 
 class Stock {
@@ -17,6 +18,8 @@ class Stock {
   async save() {
     let retVal = null;
 
+    if(Stock.validateProductID(this.product_id)||Stock.validateSupplierID(this.supplier_id)){throw new NotFound("PRODUCTANDORSUPPLIERID_ERROR");}
+    console.log(Stock.validateProductID(this.product_id)||Stock.validateSupplierID(this.supplier_id));
     try {
       const conn = await db.connect();
       const [data] = await conn.execute(
@@ -42,11 +45,47 @@ class Stock {
 
       this.stock_id = data.insertId;
       retVal = this;
+      return retVal
     } catch (err) {
       console.log("[STOCK SAVE ERROR]", err.message);
       throw new InternalServerError(err);
-    }
+    };
+    
+  }
 
+  static async validateProductID(productId){
+    let retVal = false;
+    try {
+      const conn = await db.connect();
+      const [data] = await conn.execute("SELECT * FROM product WHERE product_id = :productId", { productId });
+      console.log(data);
+      await conn.end();
+
+      if (data.length !== 0) {
+        retVal = true;
+      }
+    } catch (error) {
+      console.log("[STOCK PRODUCT ID ERROR]", err.message);
+      throw new InternalServerError(err);
+    }
+    return retVal;
+  }
+
+  static async validateSupplierID(supplierId){
+    let retVal = false;
+    try {
+      const conn = await db.connect();
+      const [data] = await conn.execute("SELECT * FROM supplier WHERE supplier_id = :supplierId", { supplierId });
+      console.log(data);
+      await conn.end();
+
+      if (data.length !== 0) {
+        retVal = true;
+      }
+    } catch (error) {
+      console.log("[STOCK SUPPLIER ID ERROR]", err.message);
+      throw new InternalServerError(err);
+    }
     return retVal;
   }
 
