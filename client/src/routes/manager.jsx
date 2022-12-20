@@ -3,6 +3,7 @@ import { BsBoxSeam } from "react-icons/bs";
 import { FiHome, FiTruck } from "react-icons/fi";
 
 import Order from "@components/pages/Order";
+import Product from "@components/pages/Product";
 import { appendPath, getLinkProps, getRouteProps } from "@utils/routes";
 
 const directory = "/m";
@@ -27,7 +28,7 @@ const managerPages = [
     path: "/products",
     label: "Products",
     icon: <BsBoxSeam />,
-    element: <h1>Products</h1>,
+    element: <Product withPreview />,
     navLink: true,
   },
   {
