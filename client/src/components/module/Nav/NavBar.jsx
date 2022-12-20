@@ -1,19 +1,16 @@
-import { useState } from "react";
 import { FiLogOut, FiUser } from "react-icons/fi";
 
 import logo from "@assets/Logo_128x128.svg";
 import { List } from "@components/common";
 import { Modal } from "@components/module";
+import { useModal } from "@hooks";
 
 import styles from "./Nav.module.css";
 import NavButton from "./NavButton";
 import NavLink from "./NavLink";
 
 function NavBar({ links }) {
-  const [openModal, setOpenModal] = useState(false);
-
-  const handleModalClose = () => setOpenModal(false);
-  const handleModalOpen = () => setOpenModal(true);
+  const logoutModal = useModal();
 
   return (
     <aside className={styles.container}>
@@ -27,8 +24,8 @@ function NavBar({ links }) {
         />
         <ul className={styles.navList}>
           <NavLink to="/account" label="Account" Icon={<FiUser />} />
-          <NavButton onClick={handleModalOpen} label="Logout" Icon={<FiLogOut />} />
-          <Modal.Logout open={openModal} onClose={handleModalClose} />
+          <NavButton onClick={logoutModal.open} label="Logout" Icon={<FiLogOut />} />
+          <Modal.Logout open={logoutModal.isOpen} onClose={logoutModal.close} />
         </ul>
       </nav>
     </aside>

@@ -1,46 +1,59 @@
 import React from "react";
-import {Header, List, SearchBar} from "@components/common/index.js";
-import { UserBanner } from "@components/module/index.js";
-import filter from "@hooks/filter.js";
+
+import { Header, List, SearchBar } from "@components/common/index.js";
+import { Supplier as SupplierModule, UserBanner } from "@components/module";
+import { useFilter, useQuery } from "@hooks";
+import { getAllSuppliers } from "@services/supplier.js";
+import format from "@utils/format";
 
 import styles from "./Supplier.module.css";
-import SupplierItem from "@components/module/Supplier/index.js";
-import useQuery from "@hooks/query.js";
-import {getAllSuppliers} from "@services/supplier.js";
+
+const search = {
+  value: "",
+  filter: ({ supplier_id, name, contact_no, address }, search) => {
+    const searchLower = search.toLowerCase();
+
+    const supplierMatch = format.id(supplier_id, "SupplierID").toLowerCase().includes(searchLower);
+    const nameMatch = name.toLowerCase().includes(searchLower);
+    const contactNumberMatch = contact_no.toLowerCase().includes(searchLower);
+    const addressMatch = address.toLowerCase().includes(searchLower);
+
+    return supplierMatch || nameMatch || contactNumberMatch || addressMatch;
+  },
+};
 
 function Supplier() {
-    const { data: suppliers } = useQuery("suppliers", getAllSuppliers);
-    return (
-        <main className={styles.container}>
-            <Header title="Supplier List" className={styles.header}>
-                <SearchBar
-                    className={styles.search}
-                    value={filter.search}
-                    onSearch={(e) => filter.handleSearch(e.currentTarget.value)}
-                />
-                <UserBanner imgSize={56} />
-            </Header>
+  const { data } = useQuery("suppliers", getAllSuppliers);
+  const suppliers = data?.map(({ supplier_id, name, contact_no, ...address }) => ({
+    supplier_id,
+    name,
+    contact_no,
+    address: format.address(address),
+  }));
+  const { filter, data: filteredSuppliers } = useFilter(suppliers, { search });
 
-            <List
-                column
-                className={styles.supplierItem}
-                items={suppliers}
-                itemKey={(suppliers) => suppliers.supplier_id}
-                RenderComponent={({ supplier_id, name, contact_no, street_no, street_name, building, city, zip_code}) => (
-                    <SupplierItem
-                        id={supplier_id}
-                        name={name}
-                        number={contact_no}
-                        str_no={street_no}
-                        str_name={street_name}
-                        bldg={building}
-                        city={city}
-                        zip_code={zip_code}
-                    />
-                )}
-            />
-        </main>
-    );
+  return (
+    <main className={styles.container}>
+      <Header title="Supplier List" className={styles.header}>
+        <SearchBar
+          className={styles.search}
+          value={filter.search}
+          onSearch={(e) => filter.handleSearch(e.currentTarget.value)}
+        />
+        <UserBanner imgSize={56} />
+      </Header>
+
+      <List
+        column
+        className={styles.supplierItem}
+        items={filteredSuppliers}
+        itemKey={(suppliers) => suppliers.supplier_id}
+        RenderComponent={({ supplier_id, name, contact_no, address }) => (
+          <SupplierModule.Item id={format.id(supplier_id)} name={name} contactNumber={contact_no} address={address} />
+        )}
+      />
+    </main>
+  );
 }
 
 export default Supplier;

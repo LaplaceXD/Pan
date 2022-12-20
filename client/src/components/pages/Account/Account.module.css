@@ -1,0 +1,33 @@
+.page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.container {
+  position: relative;
+  background: var(--field-color);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  padding: 8em 6em;
+  gap: 32px;
+
+  width: 90%;
+  max-width: 1024px;
+}
+
+.img {
+  border-radius: 16px;
+}
+
+.header {
+  position: absolute;
+  top: 0;
+  right: 0;
+  font-size: 1.25em;
+  color: var(--tertiary-color);
+  font-weight: var(--font-regular);
+  margin: 0.5em 1em;
+}

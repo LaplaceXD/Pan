@@ -1,9 +1,12 @@
 import clsx from "clsx";
 import styles from "./Button.module.css";
 
-function Button({ label, secondary, className, ...props }) {
+function Button({ label, secondary, error, className, ...props }) {
   return (
-    <button className={clsx(styles.btn, secondary && styles.secondary, className)} {...props}>
+    <button
+      className={clsx(styles.btn, secondary && styles.secondary, error && styles.error, className)}
+      {...props}
+    >
       {label}
     </button>
   );

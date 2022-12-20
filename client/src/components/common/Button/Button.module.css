@@ -1,10 +1,11 @@
 .btn {
   --btn-bg: var(--secondary-color);
+  --btn-font-color: var(--primary-color);
 
   width: 100%;
 
   background: var(--btn-bg);
-  color: var(--primary-color);
+  color: var(--btn-font-color);
 
   padding: 12px 16px;
   font-size: 1.1rem;
@@ -15,14 +16,13 @@
 }
 
 .btn:disabled {
-  --btn-bg: var(--primary-color);
-  color: var(--gray);
+  --btn-bg: var(--primary-color) !important;
+  --btn-font-color: var(--gray) !important;
   cursor: unset;
 }
 
 .btn:disabled:hover {
-  background: var(--btn-bg);
-  box-shadow: none;
+  filter: unset;
 }
 
 .btn:disabled:active {
@@ -30,8 +30,7 @@
 }
 
 .btn:hover {
-  background: var(--white);
-  box-shadow: inset 0 0 0 4px var(--btn-bg);
+  filter: brightness(1.1);
 }
 
 .btn:active {
@@ -40,4 +39,9 @@
 
 .btn.secondary {
   --btn-bg: var(--text-color);
+}
+
+.btn.error {
+  --btn-bg: var(--error-color);
+  --btn-font-color: var(--primary-color);
 }

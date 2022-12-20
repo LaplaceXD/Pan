@@ -1,5 +1,8 @@
 import { Routes } from "@components/module";
 import { NavLayout } from "@components/template";
+import { getDirectoryMap } from "@utils/routes";
+
+import { Account } from "../components/pages/Account";
 
 import employee from "./employee";
 import manager from "./manager";
@@ -9,40 +12,47 @@ const roles = Object.freeze({
   MANAGER: "manager",
 });
 
+const restrictedPages = [
+  {
+    name: roles.EMPLOYEE,
+    ...employee,
+  },
+  {
+    name: roles.MANAGER,
+    ...manager,
+  },
+];
+
 const postauth = [
   {
     path: "/",
     element: <Routes.Protected />,
     children: [
       {
-        element: (
-          <Routes.Redirect
-            map={{
-              [roles.EMPLOYEE]: employee.directory,
-              [roles.MANAGER]: manager.directory,
-            }}
-          />
-        ),
+        element: <Routes.Redirect map={getDirectoryMap(restrictedPages)} />,
         index: true,
       },
       {
-        element: <Routes.Restricted for={roles.EMPLOYEE} />,
+        path: "/account",
+        element: <Routes.Redirect map={getDirectoryMap(restrictedPages, "/account")} />,
+        exact: true,
+      },
+      ...restrictedPages.map(({ name: role, links, routes, directory }) => ({
+        element: <Routes.Restricted for={role} useOutlet />,
         children: [
+          /* Actual page with the navlayout and its routes */
           {
-            element: <NavLayout links={employee.links} useOutlet />,
-            children: employee.routes,
+            element: <NavLayout links={links} useOutlet />,
+            children: [
+              ...routes,
+              {
+                path: directory + "/account",
+                element: <Account/>,
+              },
+            ],
           },
         ],
-      },
-      {
-        element: <Routes.Restricted for={roles.MANAGER} />,
-        children: [
-          {
-            element: <NavLayout links={manager.links} useOutlet />,
-            children: manager.routes,
-          },
-        ],
-      },
+      })),
     ],
   },
 ];

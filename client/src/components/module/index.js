@@ -5,4 +5,6 @@ export { default as Nav } from "./Nav";
 export { default as Order } from "./Order";
 export { default as Product } from "./Product";
 export { default as Routes } from "./Routes";
+export { default as Supplier } from "./Supplier";
 export { default as UserBanner } from "./UserBanner";
+export { default as Account } from  "./Account";

@@ -40,13 +40,13 @@ router.put(
 
 router.post(
   "/:id/password",
-  [auth, permit({ allow: [roles(role.MANAGER)] })],
+  [auth, permit({ allow: [roles(role.MANAGER)], deny: [sameRoleAndNotOwner(Employee)] })],
   employeeController.resetPassword
 );
 
 router.put(
   "/:id/status",
-  [auth, permit({ allow: [roles(role.MANAGER)] })],
+  [auth, permit({ allow: [roles(role.MANAGER)], deny: [sameRoleAndNotOwner(Employee)] })],
   employeeController.toggleStatus
 );
 

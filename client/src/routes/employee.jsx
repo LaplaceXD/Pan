@@ -5,8 +5,8 @@ import { FiHome, FiTruck } from "react-icons/fi";
 import Home from "@components/pages/Home";
 import Order from "@components/pages/Order";
 import Product from "@components/pages/Product";
+import Supplier from "@components/pages/Supplier";
 import { appendPath, getLinkProps, getRouteProps } from "@utils/routes";
-import Supplier from "@components/pages/Supplier/index.js";
 
 const directory = "/e";
 
@@ -37,7 +37,7 @@ const employeePages = [
     path: "/suppliers",
     label: "Supplier",
     icon: <FiTruck />,
-    element: <Supplier/>,
+    element: <Supplier />,
     navLink: true,
   },
 ];

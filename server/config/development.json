@@ -1,0 +1,19 @@
+{
+  "db": {
+    "host": "localhost",
+    "user": "root",
+    "password": ""
+  },
+  "jwt": {
+    "secret": "superdupersecuresecret",
+    "issuer": "http://localhost:3000/api",
+    "audience": "http://localhost:3000",
+    "expiresIn": {
+      "access": "1d",
+      "refresh": "1d"
+    }
+  },
+  "cors": {
+    "origin": "http://localhost:5173"
+  }
+}

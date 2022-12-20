@@ -5,111 +5,117 @@ import empImg from "@assets/imgs/emp-img.jpg";
 import { Button, Grid, Header, SearchBar } from "@components/common";
 import { Category, Modal, Order, Product } from "@components/module";
 import { PreviewLayout } from "@components/template";
-import { useFilter, useMutation, useQuery } from "@hooks";
-import { createOrder } from "@services/order";
+import { useCart, useFilter, useModal, useMutation, useQuery } from "@hooks";
+import { createOrder as createOrderService } from "@services/order";
 import { getAllProducts } from "@services/product";
 
 import styles from "./Home.module.css";
 
-const categoryFilter = ({ category_id }, category) => category_id === category;
-const searchFilter = ({ name }, search) => {
-  const searchLower = search.toLowerCase();
-  const nameMatch = name.toLowerCase().includes(searchLower);
+const category = {
+  value: 0,
+  filter: ({ category_id }, category) => category_id === category,
+};
 
-  return nameMatch;
+const search = {
+  value: "",
+  filter: ({ name }, search) => {
+    const searchLower = search.toLowerCase();
+    const nameMatch = name.toLowerCase().includes(searchLower);
+
+    return nameMatch;
+  },
 };
 
 function Home() {
-  const [openModal, setOpenModal] = useState(false);
-  const [productId, setProductId] = useState(null);
-  const [cart, setCart] = useState([]);
+  const quantityModal = useModal();
+  const cartConfirmModal = useModal();
 
-  const createOrderMutation = useMutation(createOrder);
+  const createOrder = useMutation(createOrderService);
   const { data: products } = useQuery("products", getAllProducts);
-  const { filter, data: filteredProducts } = useFilter(products, {
-    search: {
-      value: "",
-      filter: searchFilter,
-    },
-    category: {
-      value: 0,
-      filter: categoryFilter,
-    },
-  });
+  const { filter, data: filteredProducts } = useFilter(products, { search, category });
+
+  const [productId, setProductId] = useState(null);
+  const [editingLine, setEditingLine] = useState(false);
+  const cart = useCart(products);
 
   function handleProductClick(id) {
-    setOpenModal(true);
     setProductId(id);
+    quantityModal.open();
   }
 
-  function handleCloseModal() {
-    setOpenModal(false);
+  function handleLineClick(id) {
+    setEditingLine(true);
+    setProductId(id);
+    quantityModal.open();
   }
 
-  function handleItemIncrement(id) {
-    const incrementedItem = cart.map((item) => {
-      if (id !== item.product_id) return item;
-      return { ...item, quantity: item.quantity + 1 };
-    });
-
-    setCart(incrementedItem);
-  }
-
-  function handleItemDecrement(id) {
-    const decrementedItem = cart.map((item) => {
-      if (id !== item.product_id) return item;
-      return { ...item, quantity: item.quantity - 1 };
-    });
-
-    setCart(decrementedItem.filter(({ quantity }) => quantity !== 0));
-  }
-
-  function handleCartClear() {
-    setCart([]);
+  function handleQuantityModalClose() {
+    editingLine && setEditingLine(false);
+    quantityModal.close();
   }
 
   function handleCartItemAdd(values, setSubmitting) {
     setSubmitting(true);
 
-    if (!cart.find(({ product_id }) => product_id === productId)) {
-      setCart([...cart, { ...values, product_id: productId }]);
-    }
-
+    cart.add({ ...values, id: productId });
     setProductId(null);
-    setOpenModal(false);
+    quantityModal.close();
 
     setSubmitting(false);
   }
 
-  async function handleCartSubmit() {
-    await createOrderMutation.execute(cart);
-    setCart([]);
+  function handleCartItemEdit(values, setSubmitting) {
+    setSubmitting(true);
+
+    cart.edit({ ...values, id: productId });
+    setProductId(null);
+    quantityModal.close();
+
+    setSubmitting(false);
+  }
+
+  function handleCartItemRemove() {
+    cart.remove(productId);
+    setProductId(null);
+    quantityModal.close();
+  }
+
+  async function handleCartSubmit(_, setSubmitting) {
+    setSubmitting(true);
+
+    const { error, isRedirect } = await createOrder.execute(
+      cart.items.map(({ product_id, quantity }) => ({ product_id, quantity }))
+    );
+
+    setSubmitting(false);
+    if (isRedirect) return;
+    if (error) return toast.error(error);
+
+    cartConfirmModal.close();
+    cart.clear();
     toast.success("Order placed.");
   }
 
-  const mappedCart = cart.map(({ quantity, product_id }) => ({
-    quantity,
-    ...products.find(({ product_id: id }) => id === product_id),
-  }));
-
   const CheckoutPreview = (
     <>
-      <Order.Details
-        total={mappedCart.reduce((total, { unit_price, quantity }) => total + unit_price * quantity, 0)}
-        className={styles.checkoutPreview}
-      >
+      <Order.Details total={cart.total} className={styles.checkoutPreview}>
         <Order.Lines
-          lines={mappedCart}
+          lines={cart.items}
           className={styles.checkoutSummary}
-          onItemIncrement={({ product_id }) => handleItemIncrement(product_id)}
-          onItemDecrement={({ product_id }) => handleItemDecrement(product_id)}
+          onLineClick={({ product_id }) => handleLineClick(product_id)}
+          onItemIncrement={({ product_id }) => cart.increment(product_id)}
+          onItemDecrement={({ product_id }) => cart.decrement(product_id)}
           withCounter
         />
       </Order.Details>
 
       <div className={styles.checkoutBtns}>
-        <Button label="Clear Cart" onClick={handleCartClear} secondary />
-        <Button label="Confirm Order" onClick={handleCartSubmit} disabled={createOrderMutation.isLoading} />
+        <Button label="Clear Cart" onClick={cart.clear} secondary />
+        <Button
+          label="Confirm Order"
+          onClick={cartConfirmModal.open}
+          disabled={cartConfirmModal.isOpen || cart.isEmpty}
+        />
       </div>
     </>
   );
@@ -137,16 +143,30 @@ function Home() {
             name={name}
             price={unit_price}
             onClick={() => handleProductClick(product_id)}
+            disabled={!!cart.get(product_id)}
+            disabledContent="In Cart"
+            disabledColorPrimary
           />
         )}
       />
 
       <Modal.CartItem
-        open={openModal}
-        onClose={handleCloseModal}
-        min={1}
+        value={cart.get(productId)?.quantity ?? 1}
         max={100}
-        onSubmit={handleCartItemAdd}
+        onAdd={handleCartItemAdd}
+        onEdit={handleCartItemEdit}
+        onSubmit={editingLine ? handleCartItemAdd : handleCartItemEdit}
+        onRemove={handleCartItemRemove}
+        onClose={handleQuantityModalClose}
+        open={quantityModal.isOpen}
+        editing={editingLine}
+      />
+
+      <Modal.CartConfirm
+        onSubmit={handleCartSubmit}
+        onClose={cartConfirmModal.close}
+        open={cartConfirmModal.isOpen}
+        total={cart.total}
       />
     </PreviewLayout>
   );

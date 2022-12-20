@@ -7,8 +7,9 @@ import styles from "./OrderLines.module.css";
 
 function OrderSummary({
   lines,
-  itemKey,
+  onLineClick,
   className,
+  disabledLines = false,
   showCount = false,
   withCounter = false,
   onItemIncrement,
@@ -24,10 +25,12 @@ function OrderSummary({
         RenderComponent={(line) => (
           <OrderLine
             name={line.name}
-            price={line.quantity * line.unit_price}
+            price={line.quantity * (line.unit_price || line.selling_price)}
             quantity={line.quantity}
+            onClick={() => onLineClick(line)}
             onIncrement={() => onItemIncrement(line)}
             onDecrement={() => onItemDecrement(line)}
+            disabled={disabledLines}
             withCounter={withCounter}
           />
         )}

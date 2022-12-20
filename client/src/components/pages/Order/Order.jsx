@@ -1,51 +1,66 @@
 import { useState } from "react";
+import { useQueryClient } from "react-query";
+import { toast } from "react-toastify";
 
 import { Button, Header, SearchBar } from "@components/common";
 import { Modal, Order as OrderModule } from "@components/module";
 import { PreviewLayout } from "@components/template";
-import { useFilter, useQuery } from "@hooks";
-import { getAllOrders, getOrderById } from "@services/order";
+import { useFilter, useModal, useMutation, useQuery } from "@hooks";
+import { deleteOrderById, getAllOrders, getOrderById } from "@services/order";
 import format from "@utils/format";
 
 import styles from "./Order.module.css";
 
-const FILTERS = {
-  search: {
-    value: "",
-    filter({ employee_name, order_id }, search) {
-      const searchLower = search.toLowerCase();
-      const nameMatch = employee_name.toLowerCase().includes(searchLower);
-      const idMatch = format.id(order_id).toLowerCase().includes(searchLower);
+const search = {
+  value: "",
+  filter: ({ employee_name, order_id }, search) => {
+    const searchLower = search.toLowerCase();
+    const nameMatch = employee_name.toLowerCase().includes(searchLower);
+    const idMatch = format.id(order_id).toLowerCase().includes(searchLower);
 
-      return nameMatch || idMatch;
-    },
+    return nameMatch || idMatch;
   },
 };
 
-function Order() {
+function Order({ showDelete = false }) {
+  const deleteModal = useModal();
+  const queryClient = useQueryClient();
+
+  const deleteOrder = useMutation(deleteOrderById);
   const { data: orders } = useQuery("orders", getAllOrders);
-  const { filter, data: filteredOrders } = useFilter(orders, FILTERS);
+  const { filter, data: filteredOrders } = useFilter(orders, { search });
 
   const [orderId, setOrderId] = useState(null);
   const { data: order } = useQuery(["order", orderId], ({ signal }) =>
     orderId ? getOrderById(orderId, { signal }) : null
   );
 
-  const [openModal, setOpenModal] = useState(false);
+  async function handleDeleteOrder() {
+    const { error, isRedirect } = await deleteOrder.execute(orderId);
+    if (isRedirect) return;
+    if (error) toast.error(error);
+
+    await queryClient.invalidateQueries("orders");
+    setOrderId(null);
+    deleteModal.close();
+    toast.success("Order deleted successfully.");
+  }
 
   const OrderPreview = (
     <>
       <OrderModule.Details total={order?.total} className={styles.orderPreview}>
         <OrderModule.Header order={order} className={styles.orderHeader} />
-        <OrderModule.Lines lines={order?.details} className={styles.orderSummary} showCount />
+        <OrderModule.Lines lines={order?.details} className={styles.orderSummary} disabledLines showCount />
       </OrderModule.Details>
 
-      <Button
-        label="Delete Order Record"
-        className={styles.orderDelete}
-        onClick={() => setOpenModal(true)}
-        disabled={orderId === null}
-      />
+      {showDelete ? (
+        <Button
+          label="Delete Order Record"
+          className={styles.orderDelete}
+          onClick={deleteModal.open}
+          disabled={orderId === null}
+        />
+      ) : null}
     </>
   );
 
@@ -66,17 +81,17 @@ function Order() {
         onItemSelect={(id) => setOrderId(id === orderId ? null : id)}
       />
 
-      <Modal.Confirm
-        title="Delete?"
-        description="Are you sure you want to delete this record?"
-        open={openModal}
-        onClose={() => setOpenModal(false)}
-        confirmLabel="Delete"
-        onConfirm={() => {
-          alert(orderId);
-          setOpenModal(false);
-        }}
-      />
+      {showDelete ? (
+        <Modal.Confirm
+          title="Delete?"
+          description="Are you sure you want to delete this record?"
+          open={deleteModal.isOpen}
+          onClose={deleteModal.close}
+          confirmLabel="Delete"
+          confirmDisabled={deleteOrder.isLoading}
+          onConfirm={handleDeleteOrder}
+        />
+      ) : null}
     </PreviewLayout>
   );
 }

@@ -36,7 +36,7 @@ async function post(path, body, { token = null, signal = null } = DEFAULT_OPTION
     method: "POST",
     headers,
     signal,
-    body: JSON.stringify(body),
+    body: JSON.stringify(typeof body === "function" ? body() : body),
   });
 
   return parsedResponse(res);
@@ -50,7 +50,7 @@ async function put(path, body, { token = null, signal = null } = DEFAULT_OPTIONS
     method: "PUT",
     headers,
     signal,
-    body: JSON.stringify(body),
+    body: JSON.stringify(typeof body === "function" ? body() : body),
   });
 
   return parsedResponse(res);
