@@ -57,7 +57,7 @@ CREATE TABLE
         order_id INT NOT NULL,
         product_id INT NOT NULL,
         quantity INT NOT NULL,
-        notes TEXT,
+        selling_price DECIMAL(7, 2) NOT NULL,
         CONSTRAINT PK_OrderLine PRIMARY KEY (order_id, product_id),
         CONSTRAINT FK_OrderLine_Order FOREIGN KEY (order_id) REFERENCES `order` (order_id) ON DELETE CASCADE,
         CONSTRAINT FK_OrderLine_Product FOREIGN KEY (product_id) REFERENCES product (product_id)
@@ -283,12 +283,12 @@ VALUES
 
 -- SAMPLE DATA FOR ORDERLINE TABLE -- 
 INSERT INTO
-    `order_line` (`order_id`, `product_id`, `quantity`, `notes`)
+    `order_line` (`order_id`, `product_id`, `quantity`, `selling_price`)
 VALUES
-    ('1', '4', '4', 'Extra warm'),
-    ('2', '1', '2', 'N/A'),
-    ('2', '2', '2', 'Less butter'),
-    ('3', '3', '1', 'Crispy crust');
+    ('1', '4', '4', '2.99'),
+    ('2', '1', '2', '9.99'),
+    ('2', '2', '2', '7.99'),
+    ('3', '3', '1', '19.99');
 
 -- SAMPLE DATA FOR SUPPLIER TABLE --
 INSERT INTO
