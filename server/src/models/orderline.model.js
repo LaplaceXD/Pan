@@ -8,7 +8,7 @@ class OrderLine {
     this.name = line.name || "";
     this.description = line.description || "";
     this.quantity = line.quantity;
-    this.unit_price = line.unit_price ? parseFloat(line.unit_price) : 0;
+    this.selling_price = line.selling_price ? parseFloat(line.selling_price) : 0;
     this.total = line.total ? parseFloat(line.total) : 0;
   }
 
@@ -18,9 +18,14 @@ class OrderLine {
     try {
       const conn = await db.connect();
       await conn.execute(
-        `INSERT INTO order_line (order_id, product_id, quantity, notes)
-          VALUES (:order_id, :product_id, :quantity, :notes)`,
-        { ...this, notes: "" }
+        `INSERT INTO order_line (order_id, product_id, quantity, selling_price)
+          VALUES (
+            :order_id,
+            :product_id,
+            :quantity,
+            (SELECT unit_price FROM product WHERE product_id = :product_id) 
+          )`,
+        { ...this }
       );
 
       const [details] = await conn.execute(
@@ -29,8 +34,8 @@ class OrderLine {
           p.name,
           p.description,
           ol.quantity,
-          p.unit_price,
-          ol.quantity * p.unit_price AS subtotal
+          ol.selling_price,
+          ol.quantity * ol.selling_price AS total
         FROM order_line ol
         INNER JOIN product p ON p.product_id = ol.product_id
         WHERE ol.order_id = :order_id
@@ -59,8 +64,8 @@ class OrderLine {
           p.name,
           p.description,
           ol.quantity,
-          p.unit_price,
-          ol.quantity * p.unit_price AS subtotal
+          ol.selling_price,
+          ol.quantity * ol.selling_price AS total
         FROM order_line ol
         INNER JOIN product p ON p.product_id = ol.product_id
         WHERE ol.order_id = :orderId`,

@@ -29,9 +29,9 @@ class Order {
         this.details.map((detail) => new OrderLine({ ...detail, order_id: this.order_id }).save())
       );
 
-      this.total = this.details
-        .reduce((total, { total: subtotal }) => total + parseFloat(subtotal), 0)
-        .toFixed(2);
+      this.total = parseFloat(
+        this.details.reduce((total, { total: subtotal }) => total + parseFloat(subtotal), 0).toFixed(2)
+      );
       retVal = this;
     } catch (err) {
       console.log("[ORDER ERROR]", err.message);
@@ -125,7 +125,6 @@ class Order {
         Joi.object({
           product_id: Joi.number().label("Product ID").min(1).required(),
           quantity: Joi.number().label("Quantity").min(1).required(),
-          notes: Joi.string().label("Notes").min(0).max(300),
         })
       )
       .options({ abortEarly: false });
