@@ -19,6 +19,8 @@ function EditForm({ id, firstName, lastName, email, contact, onCancel }) {
         onSubmit: async (values) => {
             const { error, isRedirect } = await editEmployee.execute(id);
 
+            alert(JSON.stringify(values, null, 2));
+
             console.log(error, isRedirect);
 
             // setSubmitting(false);
