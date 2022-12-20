@@ -1,6 +1,6 @@
 import empImg from "@assets/imgs/emp-img.jpg";
 import { Header, List, SearchBar } from "@components/common";
-import { Category, Product as Prod, UserBanner } from "@components/module";
+import { Category, Product as ProductModule, UserBanner } from "@components/module";
 import { useFilter, useQuery } from "@hooks";
 import { getAllProducts } from "@services/product";
 
@@ -13,12 +13,25 @@ const category = {
 
 const search = {
   value: "",
-  filter: ({ name, description }, search) => {
+  filter: ({ name, description, available_stock, is_available }, search) => {
     const searchLower = search.toLowerCase();
     const nameMatch = name.toLowerCase().includes(searchLower);
     const descMatch = description.toLowerCase().includes(searchLower);
 
-    return nameMatch || descMatch;
+    let statusMatch = true;
+    switch (searchLower) {
+      case "available":
+        statusMatch = is_available && available_stock > 0;
+        break;
+      case "out of stock":
+        statusMatch = is_available && available_stock <= 0;
+        break;
+      case "unavailable":
+        statusMatch = !is_available;
+        break;
+    }
+
+    return nameMatch || descMatch || statusMatch;
   },
 };
 
@@ -48,13 +61,21 @@ function Product() {
         className={styles.productList}
         items={filteredProducts}
         itemKey={(product) => product.product_id}
-        RenderComponent={({ name, description, unit_price }) => (
-          <Prod.Item
+        RenderComponent={({
+          name,
+          description,
+          category_name,
+          available_stock,
+          is_available,
+          unit_price,
+        }) => (
+          <ProductModule.Item
             img={empImg}
             name={name}
-            category="Bread"
+            category={category_name}
             description={description}
-            availableStock={50}
+            stock={available_stock}
+            isAvailable={is_available}
             unitPrice={parseFloat(unit_price)}
           />
         )}
