@@ -107,32 +107,27 @@ VALUES
         'Bread',
         '../../images/category/bread.jpg',
         '1'
-    ),
-    (
+    ), (
         '2',
         'Cakes',
         '../../images/category/cakes.jpg',
         '1'
-    ),
-    (
+    ), (
         '3',
         'Pies',
         '../../images/category/pies.jpg',
         '1'
-    ),
-    (
+    ), (
         '4',
         'Muffins',
         '../../images/category/muffins.jpg',
         '1'
-    ),
-    (
+    ), (
         '5',
         'Cookies',
         '../../images/category/cookies.jpg',
         '1'
-    ),
-    (
+    ), (
         '6',
         'Doughnuts',
         '../../images/category/doughnuts.jpg',
@@ -158,47 +153,66 @@ VALUES
         1,
         'Jonh',
         'Buot',
-        'superdupersecretpassword',
-        '12345678910',
+        '$2b$10$qcPZ9U16R5ynxV4kyQ1RAekhPqAtrM6qKhSH0OMFTsMCXbP54WVcS',
+        '09345678910',
         'jonh.buot@gmail.com',
         CURRENT_DATE(),
         '../../images/employee/jonhbuot.jpg',
         'manager',
         '1'
-    ),
-    (
+    ), (
         2,
         'Nathan',
         'Arriesgado',
-        'superdupersecretpassword',
-        '10987654321',
+        '$2b$10$aFfQ6N.gAMrH/fOUPnrSyeVzeIiTyOCrcJu3Pz0ttoJm0j/ZYKEWe',
+        '09987654321',
         'nathan.arriesgado@gmail.com',
         CURRENT_DATE(),
         '../../images/employee/nathanarriesgado.jpg',
         'employee',
         '1'
-    ),
-    (
+    ), (
         3,
         'Erwin',
         'Antepuesto',
-        'superdupersecretpassword',
-        '11223344556',
+        '$2b$10$aFfQ6N.gAMrH/fOUPnrSyeVzeIiTyOCrcJu3Pz0ttoJm0j/ZYKEWe',
+        '09223344556',
         'erwin.antepuesto@gmail.com',
         CURRENT_DATE(),
         '../../images/employee/nathanarriesgado.jpg',
         'employee',
         '1'
-    ),
-    (
+    ), (
         4,
         'Sherly',
         'Jao',
-        'superdupersecretpassword',
-        '15263748596',
+        '$2b$10$aFfQ6N.gAMrH/fOUPnrSyeVzeIiTyOCrcJu3Pz0ttoJm0j/ZYKEWe',
+        '09263748596',
         'sherly.jao@gmail.com',
         CURRENT_DATE(),
         '../../images/employee/nathanarriesgado.jpg',
+        'employee',
+        '1'
+    ), (
+        5,
+        'Manager',
+        'User',
+        '$2b$10$qcPZ9U16R5ynxV4kyQ1RAekhPqAtrM6qKhSH0OMFTsMCXbP54WVcS',
+        '09823782938',
+        'manager@pan.com',
+        CURRENT_DATE(),
+        '',
+        'manager',
+        '1'
+    ), (
+        6,
+        'Employee',
+        'User',
+        '$2b$10$aFfQ6N.gAMrH/fOUPnrSyeVzeIiTyOCrcJu3Pz0ttoJm0j/ZYKEWe',
+        '09278197382',
+        'employee@pan.com',
+        CURRENT_DATE(),
+        '',
         'employee',
         '1'
     );
@@ -235,8 +249,7 @@ VALUES
         '9.99',
         '../../images/product/painauchocolat.jpg',
         '1'
-    ),
-    (
+    ), (
         2,
         '1',
         '2',
@@ -246,8 +259,7 @@ VALUES
         '7.99',
         '../../images/product/frenchtoast.jpg',
         '1'
-    ),
-    (
+    ), (
         3,
         '3',
         '3',
@@ -257,8 +269,7 @@ VALUES
         '19.99',
         '../../images/product/raspberrypie.jpg',
         '1'
-    ),
-    (
+    ), (
         4,
         '5',
         '4',
@@ -266,7 +277,7 @@ VALUES
         'Macademia Nut Cookie',
         'White chocolate cookies with brown sugar, almonds, and macademia nuts.',
         '2.99',
-        '../../images/product/macademiacookies.jpg',
+        '../../images/product/macademiacookie.jpg',
         '1'
     );
 
@@ -305,8 +316,7 @@ VALUES
         '83726192874',
         'wheatandgoodsco@gmail.com',
         '1'
-    ),
-    (
+    ), (
         2,
         'Bread Express',
         'Daytona Apartment',
@@ -317,8 +327,7 @@ VALUES
         '18572940192',
         'breadexpress@gmail.com',
         '1'
-    ),
-    (
+    ), (
         3,
         'House of Sweets',
         'Bunzel',
@@ -346,21 +355,38 @@ INSERT INTO
 VALUES
     (
         1,
-        '2',
+        '1',
         '2',
         CURRENT_DATE(),
-        '50',
-        '',
-        '49.99',
+        '10',
+        '5',
+        '49.95',
         'N/A'
-    ),
-    (
+    ), (
         2,
+        '2',
+        '1',
+        CURRENT_DATE(),
+        '10',
+        '10',
+        '79.90',
+        'N/A'
+    ), (
+        3,
+        '3',
+        '1',
+        CURRENT_DATE(),
+        '20',
+        '1',
+        '19.99',
+        'N/A'
+    ), (
+        4,
         '4',
         '3',
         CURRENT_DATE(),
-        '30',
-        '',
-        '99.99',
+        '3',
+        '50',
+        '149.50',
         'N/A'
     );

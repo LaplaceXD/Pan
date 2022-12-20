@@ -159,6 +159,7 @@ class Employee {
       console.log("[EMPLOYEE DB ERROR]", err.message);
       throw new InternalServerError(err);
     }
+
     return retVal;
   }
 
@@ -179,38 +180,41 @@ class Employee {
     return retVal;
   }
 
-  static async validate(employee, params = {}) {
-    let match = await Employee.findByEmail(employee.email);
+  static async validate(employee, params = {}, auth = {}) {
+    let match = "email" in employee ? await Employee.findByEmail(employee.email) : null;
+    const isEditing = "id" in params;
+    const isEditingOwnAccount = isEditing && parseInt(params.id) === match?.employee_id;
+    const isManagerRole = "role" in auth && auth.role === role.MANAGER;
 
-    // If id exist in params then this validation is used when an account is being edited
-    // This line basically ensures that an employee's email is not flagged as used, even
-    // though the account technically owns it
-    if (params.hasOwnProperty("id") && parseInt(params.id) === match?.employee_id) match = null;
+    let schema = {
+      first_name: Joi.string().label("First Name").min(2).max(300).required().trim(),
+      last_name: Joi.string().label("Last Name").min(2).max(300).required().trim(),
+      email: Joi.string()
+        .label("Email")
+        .email()
+        .not(!isEditingOwnAccount && match ? match.email : "")
+        .required()
+        .messages({
+          "any.invalid": "{{#label}} is already in use.",
+        })
+        .trim(),
+      contact_no: Joi.string()
+        .label("Contact Number")
+        .length(11)
+        .regex(/^\d+$/)
+        .message("{{#label}} must contain digits only.")
+        .required()
+        .trim(),
+    };
 
-    const schema = Joi.object()
-      .keys({
-        first_name: Joi.string().label("First Name").min(2).max(300).required().trim(),
-        last_name: Joi.string().label("Last Name").min(2).max(300).required().trim(),
-        email: Joi.string()
-          .label("Email")
-          .email()
-          .not(match?.email ?? "")
-          .required()
-          .messages({
-            "any.invalid": "{{#label}} is already in use.",
-          })
-          .trim(),
-        contact_no: Joi.string()
-          .label("Contact Number")
-          .length(11)
-          .regex(/^\d+$/)
-          .message("{{#label}} must contain digits only.")
-          .required()
-          .trim(),
+    if (isManagerRole || !isEditing) {
+      schema = {
+        ...schema,
         date_employed: Joi.date().label("Date Employed").max("now").iso().required(),
-      })
-      .options({ abortEarly: false });
+      };
+    }
 
+    schema = Joi.object().keys(schema).options({ abortEarly: false });
     return schema.validate(employee);
   }
 

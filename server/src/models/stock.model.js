@@ -1,6 +1,10 @@
 const Joi = require("joi");
+
 const { InternalServerError } = require("../../helpers/errors");
 const { db } = require("../providers");
+
+const Product = require("../models/product.model");
+const Supplier = require("../models/supplier.model");
 
 class Stock {
   constructor(stock) {
@@ -59,8 +63,6 @@ class Stock {
       await conn.execute(
         `UPDATE stock 
         SET 
-          product_id     =   :product_id,
-          supplier_id    =   :supplier_id,
           date_supplied  =   :date_supplied,
           quantity       =   :quantity,
           unit           =   :unit,
@@ -127,9 +129,7 @@ class Stock {
     return retVal;
   }
 
-  static validate(stock, params = {}) {
-    const { id } = params;
-
+  static async validate(stock, params = {}) {
     let schema = {
       date_supplied: Joi.date().label("Date Supplied").max("now").iso().required(),
       quantity: Joi.number().min(0).label("Quantity").required(),
@@ -139,10 +139,16 @@ class Stock {
     };
 
     // If creating then include checking for product_id, and supplier_id
-    if (!id) {
+    if (!("id" in params)) {
+      let productMatch = await Product.findById(stock.product_id);
+      let supplierMatch = await Supplier.findById(stock.supplier_id);
+
+      productMatch = !productMatch ? stock.product_id : null;
+      supplierMatch = !supplierMatch ? stock.supplier_id : null;
+
       schema = {
-        product_id: Joi.number().greater(0).label("Product ID").required(),
-        supplier_id: Joi.number().greater(0).label("Supplier ID").required(),
+        product_id: Joi.number().greater(0).label("Product ID").required().not(productMatch),
+        supplier_id: Joi.number().greater(0).label("Supplier ID").required().not(supplierMatch),
         ...schema,
       };
     }
