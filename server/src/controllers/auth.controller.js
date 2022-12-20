@@ -2,7 +2,6 @@ const Joi = require("joi");
 
 const { BadRequest, Unauthorized } = require("../../helpers/errors");
 const { hash, jwt } = require("../providers");
-const { status } = require("../constants/employee");
 
 const Employee = require("../models/employee.model");
 
@@ -33,7 +32,7 @@ const login = async (req, res) => {
   if (error) throw new BadRequest(DEFAULT_INVALID_MSG);
 
   const data = await Employee.findByEmail(req.body.email);
-  if (!data || data.is_active === status.INACTIVE) throw new BadRequest(DEFAULT_INVALID_MSG);
+  if (!data || !data.is_active) throw new BadRequest(DEFAULT_INVALID_MSG);
 
   const passMatch = await hash.compare(req.body.password, data.password);
   if (!passMatch) throw new BadRequest(DEFAULT_INVALID_MSG);
@@ -66,7 +65,7 @@ const refresh = async (req, res) => {
   if (!id || !jti) throw new BadRequest("Invalid access.");
 
   const data = await Employee.findById(id);
-  if (!data || data.is_active === status.INACTIVE) throw new BadRequest("Invalid access.");
+  if (!data || !data.is_active) throw new BadRequest("Invalid access.");
 
   const { access, refresh } = await data.tokenize(jti);
   res.status(200).send({ access, refresh });

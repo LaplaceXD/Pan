@@ -16,9 +16,11 @@ class Product {
     this.date_created = product.date_created || new Date();
     this.name = product.name;
     this.description = product.description;
-    this.unit_price = product.unit_price;
+    this.unit_price = parseFloat(product.unit_price);
     this.image_src = product.image_src || "";
-    this.is_available = product.is_available || availability.AVAILABLE;
+    this.is_available = product.is_available
+      ? product.is_available === true || product.is_available === availability.AVAILABLE
+      : true;
     this.available_stock = product.available_stock ? parseInt(product.available_stock) : 0;
   }
 
@@ -79,13 +81,12 @@ class Product {
   // Toggles availability of given product
   async toggleStatus() {
     try {
-      this.is_available =
-        this.is_available === availability.AVAILABLE ? availability.UNAVAILABLE : availability.AVAILABLE;
+      const is_available = this.is_available ? availability.UNAVAILABLE : availability.AVAILABLE;
 
       const conn = await db.connect();
       await conn.execute(
         `UPDATE product SET is_available = :is_available WHERE product_id = :product_id;`,
-        this
+        { ...this, is_available }
       );
       await conn.end();
     } catch (err) {
@@ -162,10 +163,7 @@ class Product {
         category_id: Joi.number()
           .min(0)
           .label("Category ID")
-          .not(!match ? product.category_id : 0)
-          .messages({
-            "any.invalid": "{{#label}} can't have the value " + product.category_id,
-          }),
+          .not("category_id" in product && !match ? product.category_id : 0),
       })
       .options({ abortEarly: false });
 

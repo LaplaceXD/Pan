@@ -16,7 +16,9 @@ class Supplier {
     this.zip_code = supplier.zip_code;
     this.contact_no = supplier.contact_no;
     this.email = supplier.email;
-    this.is_active = supplier.is_active || status.ACTIVE;
+    this.is_active = supplier.is_active
+      ? supplier.is_active === true || supplier.is_active === status.ACTIVE
+      : true;
   }
 
   // Saves the supplier into the database
@@ -52,6 +54,7 @@ class Supplier {
 
       this.supplier_id = data.insertId;
       retVal = this;
+      console.log(this);
     } catch (err) {
       console.log("[SUPPLIER ERROR]", err.message);
       throw new InternalServerError();
@@ -97,13 +100,13 @@ class Supplier {
   // Deactivates supplier with given supplier ID
   async toggleStatus() {
     try {
-      this.is_active = this.is_active === status.ACTIVE ? status.INACTIVE : status.ACTIVE;
+      const is_active = this.is_active ? status.INACTIVE : status.ACTIVE;
 
       const conn = await db.connect();
-      await conn.execute(
-        `UPDATE supplier SET is_active = :is_active WHERE supplier_id = :supplier_id`,
-        this
-      );
+      await conn.execute(`UPDATE supplier SET is_active = :is_active WHERE supplier_id = :supplier_id`, {
+        ...this,
+        is_active,
+      });
 
       await conn.end();
     } catch (err) {
@@ -155,9 +158,9 @@ class Supplier {
   static validate(supplier) {
     const schema = Joi.object({
       name: Joi.string().label("Name").min(2).max(300).required(),
-      building: Joi.string().label("Building"),
-      street_no: Joi.string().label("Street Number"),
-      street_name: Joi.string().label("Street Name"),
+      building: Joi.string().label("Building").allow(""),
+      street_no: Joi.string().label("Street Number").allow(""),
+      street_name: Joi.string().label("Street Name").allow(""),
       city: Joi.string().label("City").required(),
       zip_code: Joi.string().label("Zip Code").required(),
       contact_no: Joi.string()
