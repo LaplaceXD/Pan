@@ -2,6 +2,7 @@ import { BiNotepad } from "react-icons/bi";
 import { BsBoxSeam } from "react-icons/bs";
 import { FiHome, FiTruck } from "react-icons/fi";
 
+import Report from "@components/pages/Report";
 import Order from "@components/pages/Order";
 import { appendPath, getLinkProps, getRouteProps } from "@utils/routes";
 
@@ -12,7 +13,7 @@ const managerPages = [
     path: "",
     label: "Home",
     icon: <FiHome />,
-    element: <h1>Home</h1>,
+    element: <Report/>,
     index: true,
     navLink: true,
   },

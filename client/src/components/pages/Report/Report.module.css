@@ -1,0 +1,10 @@
+.container {
+    flex: 1;
+    padding: 1.75em;
+    text-align: center;
+}
+
+.content {
+    display: inline-flex;
+    justify-content: space-between;
+}
