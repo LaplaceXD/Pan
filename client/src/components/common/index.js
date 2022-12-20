@@ -6,5 +6,6 @@ export { default as Header } from "./Header";
 export { default as List } from "./List";
 export { default as Modal } from "./Modal";
 export { default as Options } from "./Options";
+export { default as PasswordField } from "./PasswordField";
 export { default as Portal } from "./Portal";
 export { default as SearchBar } from "./SearchBar";

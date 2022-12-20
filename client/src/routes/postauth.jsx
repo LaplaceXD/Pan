@@ -2,6 +2,8 @@ import { Routes } from "@components/module";
 import { NavLayout } from "@components/template";
 import { getDirectoryMap } from "@utils/routes";
 
+import { Account } from "../components/pages/Account";
+
 import employee from "./employee";
 import manager from "./manager";
 
@@ -45,7 +47,7 @@ const postauth = [
               ...routes,
               {
                 path: directory + "/account",
-                element: <h1>Account</h1>,
+                element: <Account/>,
               },
             ],
           },
