@@ -2,15 +2,29 @@ import styles from "./AccountPreview.module.css";
 import AccountButton from "../AccountButton";
 import AccountField from "../AccountField";
 import React, { useState } from "react";
+import { useFormik } from "formik";
+import { useAuth } from "@hooks";
 
-function AccountPreview({ editState, setEditState, name, id, email, contact, leftBtn, rightBtn }) {
+function AccountPreview({ editState, setEditState, firstName, lastName, fullName, id, email, contact, leftBtn, rightBtn }) {
+    const auth = useAuth();
+
+    const formik = useFormik({
+        initialValues: {
+            firstName: `${firstName}`,
+            lastName: `${lastName}`,
+            email: `${email}`,
+            contact: `${contact}`,
+        },
+    });
+
+    console.log(firstName);
 
     return (
         <div>
             {
                 editState === 0 &&
                 <div>
-                    <h1 className={styles.name}>{name}</h1>
+                    <h1 className={styles.name}>{fullName}</h1>
                     <div className={styles.contentLine}>
                         <p className={styles.label}>ID number</p>
                         <h2 className={styles.data}>{id}</h2>
@@ -34,24 +48,28 @@ function AccountPreview({ editState, setEditState, name, id, email, contact, lef
                             type="text"
                             id="firstName"
                             name="firstName"
+                            value={formik.values.firstName}
                         />
                         <AccountField
                             label="Last Name"
                             type="text"
                             id="lastName"
                             name="lastName"
+                            value={formik.values.lastName}
                         />
                         <AccountField
                             label="Email address"
                             type="text"
                             id="email"
                             name="email"
+                            value={formik.values.email}
                         />
                         <AccountField
                             label="Contact Number"
                             type="text"
                             id="contact"
                             name="contact"
+                            value={formik.values.contact}
                         />
                     </form>
                 </div>

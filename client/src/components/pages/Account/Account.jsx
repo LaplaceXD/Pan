@@ -23,26 +23,15 @@ function Account() {
     return (
         <AccountLayout header={thisHeader} className={styles.container}>
             <Acc.AccountPreview
-                name={fullName}
+                firstName={account?.first_name}
+                lastName={account?.last_name}
+                fullName={fullName}
                 id={format.id(account?.employee_id)}
                 email={account?.email}
                 contact={account?.contact_no}
                 editState={editState}
                 setEditState={setEditState}
             />
-            {/*<Acc.EditEmployeeAccount*/}
-            {/*    firstName={account?.first_name}*/}
-            {/*    lastName={account?.last_name}*/}
-            {/*    id={format.id(account?.employee_id)}*/}
-            {/*    email={account?.email}*/}
-            {/*    contact={account?.contact_no}*/}
-            {/*    leftBtn={'Cancel'}*/}
-            {/*    rightBtn={'Save'}*/}
-            {/*/>*/}
-            {/*<Acc.ChangeAccountPassword*/}
-            {/*    leftBtn={'Cancel'}*/}
-            {/*    rightBtn={'Save'}*/}
-            {/*/>*/}
         </AccountLayout>
     );
 }
