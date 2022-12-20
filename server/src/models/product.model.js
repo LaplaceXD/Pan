@@ -161,7 +161,7 @@ class Product {
         category_id: Joi.number()
           .min(0)
           .label("Category ID")
-          .not(!match ? product.category_id : 0)
+          .not("category_id" in product && !match ? product.category_id : 0)
           .messages({
             "any.invalid": "{{#label}} can't have the value " + product.category_id,
           }),
