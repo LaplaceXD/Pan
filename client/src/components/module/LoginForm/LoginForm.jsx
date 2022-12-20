@@ -2,7 +2,7 @@ import { useFormik } from "formik";
 import { toast } from "react-toastify";
 import * as Yup from "yup";
 
-import { Button, Field } from "@components/common";
+import { Button, Field, PasswordField } from "@components/common";
 import { useAuth } from "@hooks";
 import { redirect } from "react-router-dom";
 
@@ -55,9 +55,8 @@ function LoginForm({ ...props }) {
         value={formik.values.email}
         error={formik.touched.email && formik.errors.email}
       />
-      <Field
+      <PasswordField
         label="Password"
-        type="password"
         id="password"
         name="password"
         onChange={formik.handleChange}
