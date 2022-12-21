@@ -1,6 +1,6 @@
 import empImg from "@assets/imgs/emp-img.jpg";
 import { Header, List, SearchBar } from "@components/common";
-import { Category, Product as ProductModule, UserBanner } from "@components/module";
+import { Category, Product as ProductModule } from "@components/module";
 import { useFilter, useQuery } from "@hooks";
 import { getAllProducts } from "@services/product";
 
@@ -39,7 +39,6 @@ function Product({ selectedProductId, onProductClick }) {
           value={filter.search}
           onSearch={(e) => filter.handleSearch(e.currentTarget.value)}
         />
-        <UserBanner imgSize={56} />
       </Header>
 
       <Category.Options
