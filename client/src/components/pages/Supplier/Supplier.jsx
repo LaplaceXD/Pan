@@ -49,7 +49,7 @@ function Supplier() {
         items={filteredSuppliers}
         itemKey={(suppliers) => suppliers.supplier_id}
         RenderComponent={({ supplier_id, name, contact_no, address }) => (
-          <SupplierModule.Item id={format.id(supplier_id)} name={name} contactNumber={contact_no} address={address} />
+          <SupplierModule.Item id={supplier_id} name={name} contactNumber={contact_no} address={address} />
         )}
       />
     </main>

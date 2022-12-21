@@ -102,15 +102,20 @@ class Product {
     try {
       const conn = await db.connect();
       const [data] = await conn.execute(
-        `SELECT 
+        `SELECT
           COALESCE(c.name, "Others") AS category_name,
           p.*,
-          COALESCE(SUM(s.quantity) - SUM(ol.quantity), 0) AS available_stock
+          COALESCE(s.total_stock - SUM(ol.quantity), 0) AS available_stock
         FROM product p 
-        LEFT JOIN stock s ON s.product_id = p.product_id
+        LEFT JOIN (SELECT 
+                    SUM(quantity) AS total_stock,
+                    product_id
+                  FROM stock
+                  GROUP BY product_id) s ON s.product_id = p.product_id
         LEFT JOIN order_line ol ON ol.product_id = p.product_id
         LEFT JOIN category c ON c.category_id = p.category_id
-        GROUP BY p.product_id`
+        GROUP BY p.product_id
+        ORDER BY p.product_id DESC`
       );
 
       await conn.end();
@@ -129,12 +134,16 @@ class Product {
     try {
       const conn = await db.connect();
       const [data] = await conn.execute(
-        `SELECT 
+        `SELECT
           COALESCE(c.name, "Others") AS category_name,
           p.*,
-          COALESCE(SUM(s.quantity) - SUM(ol.quantity), 0) AS available_stock
+          COALESCE(s.total_stock - SUM(ol.quantity), 0) AS available_stock
         FROM product p 
-        LEFT JOIN stock s ON s.product_id = p.product_id
+        LEFT JOIN (SELECT 
+                    SUM(quantity) AS total_stock,
+                    product_id
+                  FROM stock
+                  GROUP BY product_id) s ON s.product_id = p.product_id
         LEFT JOIN order_line ol ON ol.product_id = p.product_id
         LEFT JOIN category c ON c.category_id = p.category_id
         WHERE p.product_id = :id

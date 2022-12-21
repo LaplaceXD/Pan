@@ -32,7 +32,10 @@ function Home() {
 
   const createOrder = useMutation(createOrderService);
   const { data: products } = useQuery("products", getAllProducts);
-  const { filter, data: filteredProducts } = useFilter(products, { search, category });
+  const { filter, data: filteredProducts } = useFilter(
+    products?.filter(({ is_available }) => is_available),
+    { search, category }
+  );
 
   const [productId, setProductId] = useState(null);
   const [editingLine, setEditingLine] = useState(false);
@@ -136,16 +139,16 @@ function Home() {
         className={styles.productGrid}
         items={filteredProducts}
         itemKey={(product) => product.product_id}
-        RenderComponent={({ product_id, name, unit_price }) => (
+        RenderComponent={({ product_id, name, unit_price, available_stock }) => (
           <Product.Card
             key={product_id}
             img={empImg}
             name={name}
             price={unit_price}
             onClick={() => handleProductClick(product_id)}
-            disabled={!!cart.get(product_id)}
-            disabledContent="In Cart"
-            disabledColorPrimary
+            disabled={!!cart.get(product_id) || available_stock <= 0}
+            disabledContent={available_stock <= 0 ? "Out of Stock" : "In Cart"}
+            disabledColorPrimary={available_stock > 0}
           />
         )}
       />

@@ -1,0 +1,17 @@
+.container {
+  display: flex;
+  width: 100%;
+  gap: 4px;
+}
+
+.container p {
+  flex: 1;
+}
+
+.container button {
+  background: transparent;
+}
+
+.container button {
+  color: inherit;
+}
