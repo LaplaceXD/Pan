@@ -27,6 +27,7 @@ function ProductForm({
       if (category !== 0) values["category"] = category;
       onSubmit(values, formik.setSubmitting);
     },
+    enableReinitialize: true,
   });
 
   function handlePriceChange(e) {

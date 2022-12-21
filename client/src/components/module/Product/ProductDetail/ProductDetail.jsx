@@ -5,11 +5,11 @@ import styles from "./ProductDetail.module.css";
 
 function ProductDetail({
   img,
-  name,
-  category,
-  description,
-  stock,
-  isAvailable,
+  name = "Product Name",
+  category = "Category Name",
+  description = "Description",
+  stock = 0,
+  isAvailable = false,
   price = 0,
   onViewStock,
   onStatusChange,
