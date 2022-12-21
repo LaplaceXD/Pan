@@ -50,6 +50,10 @@
   transform: none;
 }
 
+.container.isSelected:hover {
+  filter: none;
+}
+
 .img {
   border-radius: 12px;
   width: 17.5%;

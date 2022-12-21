@@ -19,7 +19,7 @@ function ProductDetail({
       <div className={styles.container}>
         <h3 className={styles.title}>Product Details</h3>
         <BoxImage className={styles.img} src={img} alt={`${name}'s image.`} size={256} />
-        <h4 className={styles.name}>Product Name</h4>
+        <h4 className={styles.name}>{name}</h4>
         <p className={styles.detail}>
           <span>Category:</span>
           <span>{format.capitalize(category)}</span>

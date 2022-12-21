@@ -27,10 +27,9 @@ const search = {
   },
 };
 
-function Product() {
+function Product({ selectedProductId, onProductClick }) {
   const { data: products } = useQuery("products", getAllProducts);
   const { data: filteredProducts, filter } = useFilter(products, { search, category });
-  console.log(filteredProducts);
 
   return (
     <>
@@ -55,6 +54,7 @@ function Product() {
         items={filteredProducts}
         itemKey={(product) => product.product_id}
         RenderComponent={({
+          product_id,
           name,
           description,
           category_name,
@@ -70,6 +70,8 @@ function Product() {
             stock={available_stock}
             isAvailable={is_available}
             unitPrice={parseFloat(unit_price)}
+            onClick={() => onProductClick(product_id)}
+            isSelected={selectedProductId === product_id}
           />
         )}
       />
