@@ -1,15 +1,19 @@
-import { Button } from "@components/common";
+import empImg from "@assets/imgs/emp-img.jpg";
+import { Product } from "@components/module";
+
 import styles from "./ProductPreview.module.css";
 
 function ProductPreview() {
   return (
     <div className={styles.container}>
-      <div className={styles.content}>HELLO</div>
-      <div className={styles.buttons}>
-        <Button label="View Stock" secondary />
-        <Button label="Hide Listing" secondary />
-        <Button label="Edit" />
-      </div>
+      <Product.Detail
+        name="Product Name"
+        description="Lorem Ipsum"
+        category="category"
+        img={empImg}
+        quantity={20}
+        price={123}
+      />
     </div>
   );
 }
