@@ -11,10 +11,22 @@ function CategoryOption({ children, selectProps: { selectProps }, ...props }) {
         <p>{children}</p>
         {selectProps.categories.some(({ category_id }) => category_id === props.value) ? (
           <>
-            <button type="button" onClick={() => selectProps.onOptionEdit(props.value)}>
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                selectProps.onOptionEdit(props.data);
+              }}
+            >
               <FaEdit size={20} />
             </button>
-            <button type="button" onClick={() => selectProps.onOptionDelete(props.value)}>
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                selectProps.onOptionDelete(props.data);
+              }}
+            >
               <BsTrash size={20} />
             </button>
           </>

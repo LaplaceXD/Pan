@@ -1,9 +1,11 @@
+import { useState } from "react";
 import { useQueryClient } from "react-query";
 import { toast } from "react-toastify";
 import * as Yup from "yup";
 
 import { Select } from "@components/common";
-import { useMutation, useQuery } from "@hooks";
+import { Modal } from "@components/module";
+import { useModal, useMutation, useQuery } from "@hooks";
 import { createCategory as createCategoryService, getAllCategories } from "@services/category";
 import CategoryOption from "../CategoryOption";
 
@@ -17,13 +19,19 @@ function CategorySelect({
   isDisabled,
   ...props
 }) {
+  const deleteModal = useModal();
+  const editModal = useModal();
   const queryClient = useQueryClient();
+
+  const [category, setCategory] = useState(null);
   const { data: categories } = useQuery("categories", getAllCategories);
   const createCategory = useMutation(createCategoryService);
 
-  async function handleCreateOption(value) {
+  const categoryValidationSchema = Yup.string().label("Category").min(3).max(80);
+
+  async function handleCreateCategory(value) {
     try {
-      await Yup.string().label("Category").min(3).max(80).validate(value);
+      await categoryValidationSchema.validate(value);
       const { error, isRedirect, data } = await createCategory.execute({ name: value });
 
       if (isRedirect) return;
@@ -37,24 +45,56 @@ function CategorySelect({
     }
   }
 
+  const disabled = deleteModal.isOpen || createCategory.isLoading;
+
   return (
-    <Select
-      label="Category"
-      id="category"
-      components={{ Option: CategoryOption }}
-      selectProps={{
-        categories,
-        onOptionDelete: (value) => console.log(value),
-        onOptionEdit: (value) => console.log(value),
-      }}
-      onCreateOption={handleCreateOption}
-      onChange={onChange}
-      options={categories.map(({ category_id, name }) => ({ label: name, value: category_id }))}
-      isLoading={createCategory.isLoading}
-      isDisabled={createCategory.isLoading || isDisabled}
-      isClearable
-      {...props}
-    />
+    <>
+      <Select
+        label="Category"
+        id="category"
+        components={{ Option: CategoryOption }}
+        selectProps={{
+          categories,
+          onOptionDelete: (value) => {
+            deleteModal.open();
+            setCategory(value);
+          },
+          onOptionEdit: (value) => {
+            editModal.open();
+            setCategory(value);
+          },
+        }}
+        onCreateOption={handleCreateCategory}
+        onChange={onChange}
+        options={categories.map(({ category_id, name }) => ({ label: name, value: category_id }))}
+        isLoading={disabled}
+        isDisabled={disabled || isDisabled}
+        isClearable
+        {...props}
+      />
+
+      <Modal.CategoryDelete
+        category={category?.label}
+        open={deleteModal.isOpen}
+        onClose={() => {
+          deleteModal.close();
+          setCategory(null);
+        }}
+        // onDelete={}
+        // disabledDelete={}
+      />
+
+      <Modal.CategoryEdit
+        value={category?.label}
+        open={editModal.isOpen}
+        onClose={() => {
+          editModal.close();
+          setCategory(null);
+        }}
+        // onSubmit={}
+        validationSchema={categoryValidationSchema}
+      />
+    </>
   );
 }
 
