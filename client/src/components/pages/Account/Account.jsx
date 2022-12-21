@@ -30,7 +30,7 @@ function Account() {
       content: (
         <AccountModule.Details
           id={user.id}
-          name={fullName}
+          name={account && fullName}
           email={account?.email}
           contact={account?.contact_no}
           onEditClick={() => setPage(pages.EDIT)}
@@ -48,12 +48,19 @@ function Account() {
           email={account?.email}
           contact={account?.contact_no}
           onCancel={() => setPage(pages.DETAILS)}
+          onSubmit={() => setPage(pages.DETAILS)}
         />
       ),
     },
     [pages.CHANGE_PASSWORD]: {
       header: "Change Password",
-      content: <AccountModule.ChangePasswordForm onCancel={() => setPage(pages.DETAILS)} />,
+      content: (
+        <AccountModule.ChangePasswordForm
+          id={user.id}
+          onCancel={() => setPage(pages.DETAILS)}
+          onSubmit={() => setPage(pages.DETAILS)}
+        />
+      ),
     },
   };
 
