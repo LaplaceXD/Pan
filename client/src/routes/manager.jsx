@@ -4,6 +4,7 @@ import { FiHome, FiTruck } from "react-icons/fi";
 
 import Order from "@components/pages/Order";
 import Product from "@components/pages/Product";
+import Report from "@components/pages/Report";
 import { appendPath, getLinkProps, getRouteProps } from "@utils/routes";
 
 const directory = "/m";
@@ -13,7 +14,7 @@ const managerPages = [
     path: "",
     label: "Home",
     icon: <FiHome />,
-    element: <h1>Home</h1>,
+    element: <Report />,
     index: true,
     navLink: true,
   },

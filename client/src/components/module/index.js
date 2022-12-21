@@ -1,10 +1,11 @@
+export { default as Account } from "./Account";
 export { default as Category } from "./Category";
 export { default as LoginForm } from "./LoginForm";
 export { default as Modal } from "./Modal";
 export { default as Nav } from "./Nav";
 export { default as Order } from "./Order";
 export { default as Product } from "./Product";
+export { default as Report } from "./Report";
 export { default as Routes } from "./Routes";
 export { default as Supplier } from "./Supplier";
 export { default as UserBanner } from "./UserBanner";
-export { default as Account } from  "./Account";
