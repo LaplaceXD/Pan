@@ -6,7 +6,11 @@ import * as Yup from "yup";
 import { Select } from "@components/common";
 import { Modal } from "@components/module";
 import { useModal, useMutation, useQuery } from "@hooks";
-import { createCategory as createCategoryService, getAllCategories } from "@services/category";
+import {
+  createCategory as createCategoryService,
+  editCategoryById,
+  getAllCategories,
+} from "@services/category";
 import CategoryOption from "../CategoryOption";
 
 function CategorySelect({
@@ -25,7 +29,11 @@ function CategorySelect({
 
   const [category, setCategory] = useState(null);
   const { data: categories } = useQuery("categories", getAllCategories);
+
   const createCategory = useMutation(createCategoryService);
+  const editCategory = useMutation(
+    async ({ category_id, ...body }) => await editCategoryById(category_id, body)
+  );
 
   const categoryValidationSchema = Yup.string().label("Category").min(3).max(50);
 
@@ -43,6 +51,25 @@ function CategorySelect({
     } catch ({ message }) {
       toast.error(message);
     }
+  }
+
+  async function handleEditCategory(values, setSubmitting) {
+    setSubmitting(true);
+    const { error, isRedirect } = await editCategory.execute({
+      name: values.category,
+      category_id: category.value,
+    });
+    setSubmitting(false);
+
+    console.log(error, isRedirect);
+    if (isRedirect) return;
+    if (error) return toast.error(error);
+
+    queryClient.invalidateQueries("categories");
+    queryClient.invalidateQueries("products");
+    editModal.close();
+    setCategory(null);
+    toast.success("Successfully edited category.");
   }
 
   function handleOptionDelete(value) {
@@ -99,7 +126,7 @@ function CategorySelect({
         value={category?.label}
         open={editModal.isOpen}
         onClose={handleEditModalClose}
-        // onSubmit={}
+        onSubmit={handleEditCategory}
         validationSchema={categoryValidationSchema}
       />
     </>

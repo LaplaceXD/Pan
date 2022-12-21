@@ -7,3 +7,7 @@ export async function getAllCategories({ signal }) {
 export async function createCategory(body) {
   return await auth.post("/categories", body);
 }
+
+export async function editCategoryById(categoryId, body) {
+  return await auth.put("/categories/" + categoryId, body);
+}
