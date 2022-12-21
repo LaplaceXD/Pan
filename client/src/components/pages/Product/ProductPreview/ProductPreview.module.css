@@ -19,6 +19,8 @@
   justify-content: center;
   gap: 16px;
   margin-top: 16px;
+
+  transition: filter 250ms ease;
 }
 
 .add-btn:hover {
