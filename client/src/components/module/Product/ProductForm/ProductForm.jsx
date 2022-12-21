@@ -17,17 +17,30 @@ function ProductForm({
 }) {
   const formik = useFormik({
     initialValues: { name, category: categoryId, description, price: price },
-    validateYupSchema: Yup.object({
-      name: Yup.string().label("Product Name").required(),
+    validationSchema: Yup.object({
+      name: Yup.string().label("Product Name").min(2).max(100).required(),
       category: Yup.number().integer().label("Category").required(),
-      description: Yup.string().label("Description").required(),
-      price: Yup.number().label("Unit Price").required(),
+      description: Yup.string().label("Description").min(2).max(300).required(),
+      price: Yup.number().label("Unit Price").min(0.01).required(),
     }),
     onSubmit: ({ category, ...values }) => {
       if (category !== 0) values["category"] = category;
       onSubmit(values, formik.setSubmitting);
     },
   });
+
+  function handlePriceChange(e) {
+    const INT_MAX_LENGTH = 5;
+    const FRAC_MAX_LENGTH = 2;
+
+    const [int, frac] = e.currentTarget.value.split(".");
+    const intIsWithinMaxLength = int.length <= INT_MAX_LENGTH;
+    const fracIsWithinMaxLength = frac ? frac.length <= FRAC_MAX_LENGTH : true;
+
+    if (intIsWithinMaxLength && fracIsWithinMaxLength) {
+      formik.handleChange(e);
+    }
+  }
 
   return (
     <form method="POST" className={styles.container} onSubmit={formik.handleSubmit}>
@@ -70,7 +83,7 @@ function ProductForm({
         label="Unit Price"
         id="price"
         name="price"
-        onChange={formik.handleChange}
+        onChange={handlePriceChange}
         onBlur={formik.handleBlur}
         value={formik.values.price}
         error={formik.touched.price && formik.errors.price}
