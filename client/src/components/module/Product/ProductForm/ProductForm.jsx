@@ -1,14 +1,11 @@
-import { BoxImage, Button, Field, Select } from "@components/common";
+import { BoxImage, Button, Field } from "@components/common";
+import { Category } from "@components/module";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
-import { useQuery } from "@hooks";
-import { getAllCategories } from "@services/category";
 import styles from "./ProductForm.module.css";
 
 function ProductForm({ img, name = "", categoryId = 0, description = "", price = 0, onCancel, onSubmit }) {
-  const { data: categories } = useQuery("categories", getAllCategories);
-
   const formik = useFormik({
     initialValues: { name, category: categoryId, description, price: price },
     validateYupSchema: Yup.object({
@@ -17,7 +14,8 @@ function ProductForm({ img, name = "", categoryId = 0, description = "", price =
       description: Yup.string().label("Description").required(),
       price: Yup.number().label("Unit Price").required(),
     }),
-    onSubmit: (values) => {
+    onSubmit: ({ category, ...values }) => {
+      if (category !== 0) values["category"] = category;
       onSubmit(values, formik.setSubmitting);
     },
   });
@@ -36,17 +34,14 @@ function ProductForm({ img, name = "", categoryId = 0, description = "", price =
         value={formik.values.name}
         error={formik.touched.name && formik.errors.name}
       />
-      <Select
-        label="Category"
-        id="category"
+      <Category.Select
         error={formik.touched.category && formik.errors.category}
         onBlur={formik.handleBlur}
-        onChange={(item) => formik.setFieldValue("category", item?.value ?? formik.initialValues.category)}
-        onCreateOption={(value) => console.log(value)}
-        options={categories.map(({ category_id, name }) => ({ label: name, value: category_id }))}
+        onChange={(item) => formik.setFieldValue("category", item?.value ?? 0)}
         value={formik.values.category}
-        isClearable
+        isDisabled={formik.isSubmitting}
       />
+
       <Field
         label="Description"
         id="description"
