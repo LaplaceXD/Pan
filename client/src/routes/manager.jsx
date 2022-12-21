@@ -28,7 +28,7 @@ const managerPages = [
     path: "/products",
     label: "Products",
     icon: <BsBoxSeam />,
-    element: <Product showProductEditButtons />,
+    element: <Product showProductEditButtons showProductAddButton />,
     navLink: true,
   },
   {

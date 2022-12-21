@@ -5,7 +5,16 @@ import * as Yup from "yup";
 
 import styles from "./ProductForm.module.css";
 
-function ProductForm({ img, name = "", categoryId = 0, description = "", price = 0, onCancel, onSubmit }) {
+function ProductForm({
+  title,
+  img,
+  name = "",
+  categoryId = 0,
+  description = "",
+  price = 0,
+  onCancel,
+  onSubmit,
+}) {
   const formik = useFormik({
     initialValues: { name, category: categoryId, description, price: price },
     validateYupSchema: Yup.object({
@@ -22,7 +31,7 @@ function ProductForm({ img, name = "", categoryId = 0, description = "", price =
 
   return (
     <form method="POST" className={styles.container} onSubmit={formik.handleSubmit}>
-      <h3 className={styles.title}>Product Details</h3>
+      <h3 className={styles.title}>{title}</h3>
       <BoxImage className={styles.img} src={img} alt={`${name}'s image.`} size={256} />
       <Field
         type="text"

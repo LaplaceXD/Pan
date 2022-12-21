@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { BsPlusCircle } from "react-icons/bs";
 import { useQueryClient } from "react-query";
 import { toast } from "react-toastify";
 
@@ -10,13 +11,15 @@ import { editProductById, getProductById, toggleProductStatusById } from "@servi
 import styles from "./ProductPreview.module.css";
 
 const pages = {
-  PRODUCT_FORM: Symbol(0),
-  PRODUCT_DETAIL: Symbol(1),
+  PRODUCT_EDIT_FORM: Symbol(0),
+  PRODUCT_ADD_FORM: Symbol(1),
+  PRODUCT_DETAIL: Symbol(2),
+  DEFAULT: Symbol(3),
 };
 
-function ProductPreview({ productId, showProductEditButtons = false }) {
+function ProductPreview({ productId, showProductAddButton = false, showProductEditButtons = false }) {
   const queryClient = useQueryClient();
-  const [page, setPage] = useState(pages.PRODUCT_DETAIL);
+  const [page, setPage] = useState(pages.DEFAULT);
 
   const editProduct = useMutation(
     async ({ product_id, ...body }) => await editProductById(product_id, body)
@@ -26,7 +29,7 @@ function ProductPreview({ productId, showProductEditButtons = false }) {
     productId ? getProductById(productId, { signal }) : null
   );
 
-  useEffect(() => setPage(pages.PRODUCT_DETAIL), [productId]);
+  useEffect(() => setPage(productId ? pages.PRODUCT_DETAIL : pages.DEFAULT), [productId]);
 
   async function handleEditSubmit(values, setSubmitting) {
     setSubmitting(true);
@@ -69,13 +72,13 @@ function ProductPreview({ productId, showProductEditButtons = false }) {
         stock={product?.available_stock}
         isAvailable={product?.is_available}
         price={product?.unit_price}
-        onEdit={() => setPage(pages.PRODUCT_FORM)}
+        onEdit={() => setPage(pages.PRODUCT_EDIT_FORM)}
         onStatusChange={handleStatusChange}
         statusChangeDisabled={toggleProductStatus.isLoading}
         showProductEditButtons={showProductEditButtons}
       />
     ),
-    [pages.PRODUCT_FORM]: (
+    [pages.PRODUCT_EDIT_FORM]: (
       <Product.Form
         name={product?.name}
         description={product?.description}
@@ -86,9 +89,18 @@ function ProductPreview({ productId, showProductEditButtons = false }) {
         onSubmit={handleEditSubmit}
       />
     ),
+    [pages.PRODUCT_ADD_FORM]: (
+      <Product.Form img={empImg} onCancel={() => setPage(pages.DEFAULT)} onSubmit={handleEditSubmit} />
+    ),
+    [pages.DEFAULT]: showProductAddButton ? (
+      <button className={styles.addBtn} onClick={() => setPage(pages.PRODUCT_ADD_FORM)}>
+        <BsPlusCircle size={128} />
+        Add a new Product
+      </button>
+    ) : null,
   };
 
-  return <div className={styles.container}>{product ? pageDetails[page] : null}</div>;
+  return <div className={styles.container}>{pageDetails[page]}</div>;
 }
 
 export default ProductPreview;
