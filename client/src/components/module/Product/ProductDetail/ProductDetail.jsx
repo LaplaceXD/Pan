@@ -12,7 +12,7 @@ function ProductDetail({ img, name, category, description, quantity, price = 0 }
         <h4 className={styles.name}>Product Name</h4>
         <p className={styles.detail}>
           <span>Category:</span>
-          <span>{category}</span>
+          <span>{format.capitalize(category)}</span>
         </p>
         <p className={styles.description}>{description}</p>
         <p className={styles.detail}>

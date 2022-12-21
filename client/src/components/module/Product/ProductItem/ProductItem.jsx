@@ -30,7 +30,7 @@ function ProductItem({
       <article className={styles.details}>
         <h2 className={styles.name}>{name}</h2>
         <p className={styles.category}>
-          Category: <span>{category}</span>
+          Category: <span>{format.capitalize(category)}</span>
         </p>
         <p className={styles.description}>{description}</p>
       </article>
