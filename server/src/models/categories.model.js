@@ -87,7 +87,7 @@ class Category {
 
     try {
       const conn = await db.connect();
-      const [data] = await conn.execute(`SELECT * FROM category`);
+      const [data] = await conn.execute(`SELECT * FROM category ORDER BY category_id DESC`);
       await conn.end();
 
       retVal = data.map((d) => new Category(d));

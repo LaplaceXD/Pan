@@ -114,7 +114,8 @@ class Product {
                   GROUP BY product_id) s ON s.product_id = p.product_id
         LEFT JOIN order_line ol ON ol.product_id = p.product_id
         LEFT JOIN category c ON c.category_id = p.category_id
-        GROUP BY p.product_id`
+        GROUP BY p.product_id
+        ORDER BY p.product_id DESC`
       );
 
       await conn.end();
