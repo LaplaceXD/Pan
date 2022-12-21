@@ -54,7 +54,13 @@ function Account() {
     },
     [pages.CHANGE_PASSWORD]: {
       header: "Change Password",
-      content: <AccountModule.ChangePasswordForm onCancel={() => setPage(pages.DETAILS)} />,
+      content: (
+        <AccountModule.ChangePasswordForm
+          id={user.id}
+          onCancel={() => setPage(pages.DETAILS)}
+          onSubmit={() => setPage(pages.DETAILS)}
+        />
+      ),
     },
   };
 
