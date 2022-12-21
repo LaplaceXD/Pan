@@ -36,6 +36,7 @@ const create = async (req, res) => {
   const data = await employee.save();
   if (!data) throw new InternalServerError();
 
+  Mailer.create({ email: employee.email, password: password })
 
   res.status(200).send({
     message: "Successfully changed password.",
