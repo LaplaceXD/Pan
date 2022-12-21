@@ -7,7 +7,7 @@ function Field({ label, id, error, className, children, ...props }) {
       <label className={styles.label} htmlFor={id}>
         {label}
       </label>
-      {children || <input className={styles.input} id={id} {...props} />}
+      {children || <input id={id} {...props} />}
       {error ? <p className={styles.error}>{error}</p> : null}
     </div>
   );
