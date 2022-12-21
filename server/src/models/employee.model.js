@@ -226,7 +226,7 @@ class Employee {
     if (isManagerRole || !isEditing) {
       schema = {
         ...schema,
-        date_employed: Joi.date().label("Date Employed").max("now").iso().required(),
+        date_employed: Joi.date().label("Date Employed").max("now").iso(),
       };
     }
 
