@@ -189,8 +189,22 @@ class Employee {
     const isManagerRole = "role" in auth && auth.role === role.MANAGER;
 
     let schema = {
-      first_name: Joi.string().label("First Name").min(2).max(300).required().trim(),
-      last_name: Joi.string().label("Last Name").min(2).max(300).required().trim(),
+      first_name: Joi.string()
+        .label("First Name")
+        .min(2)
+        .max(300)
+        .regex(/^[A-Za-z\s]*$/)
+        .message("{{#label}} must contain letters and spaces only.")
+        .required()
+        .trim(),
+      last_name: Joi.string()
+        .label("Last Name")
+        .regex(/^[A-Za-z\s]*$/)
+        .message("{{#label}} must contain letters and spaces only.")
+        .min(2)
+        .max(300)
+        .required()
+        .trim(),
       email: Joi.string()
         .label("Email")
         .email()
@@ -212,11 +226,11 @@ class Employee {
     if (isManagerRole || !isEditing) {
       schema = {
         ...schema,
-        date_employed: Joi.date().label("Date Employed").max("now").iso().required(),
+        date_employed: Joi.date().label("Date Employed").max("now").iso(),
       };
     }
 
-    schema = Joi.object().keys(schema).options({ abortEarly: false });
+    schema = Joi.object().keys(schema).options({ abortEarly: false }).required();
     return schema.validate(employee);
   }
 
@@ -238,7 +252,8 @@ class Employee {
           .message("{{#label}} must contain a special character (!@#$%^&*).")
           .required(),
       })
-      .options({ abortEarly: false });
+      .options({ abortEarly: false })
+      .required();
 
     return schema.validate(body);
   }
