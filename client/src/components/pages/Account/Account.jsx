@@ -30,7 +30,7 @@ function Account() {
       content: (
         <AccountModule.Details
           id={user.id}
-          name={fullName}
+          name={account && fullName}
           email={account?.email}
           contact={account?.contact_no}
           onEditClick={() => setPage(pages.EDIT)}
