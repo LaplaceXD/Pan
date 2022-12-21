@@ -18,7 +18,12 @@ function ProductForm({
   const formik = useFormik({
     initialValues: { name, category: categoryId, description, price: price },
     validationSchema: Yup.object({
-      name: Yup.string().label("Product Name").min(2).max(100).required(),
+      name: Yup.string()
+        .label("Product Name")
+        .min(2)
+        .max(100)
+        .matches(/^[\w\s\&]*$/, "Product Name must contain letters, digits, and spaces only.")
+        .required(),
       category: Yup.number().integer().label("Category").required(),
       description: Yup.string().label("Description").min(2).max(300).required(),
       price: Yup.number().label("Unit Price").min(0.01).required(),

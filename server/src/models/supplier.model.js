@@ -158,18 +158,48 @@ class Supplier {
   static validate(supplier) {
     const schema = Joi.object({
       name: Joi.string().label("Name").min(2).max(300).required(),
-      building: Joi.string().label("Building").allow(""),
-      street_no: Joi.string().label("Street Number").allow(""),
-      street_name: Joi.string().label("Street Name").allow(""),
-      city: Joi.string().label("City").required(),
-      zip_code: Joi.string().label("Zip Code").required(),
+      building: Joi.string()
+        .label("Building")
+        .min(2)
+        .max(150)
+        .regex(/^[\w\s\-\&\']*$/)
+        .message("{{#label}} must contain letters, digits, spaces, and special characters ('&-) only.")
+        .allow(""),
+      street_no: Joi.string()
+        .label("Street Number")
+        .min(2)
+        .max(10)
+        .regex(/^[\d\-]*$/)
+        .message("{{#label}} must contain digits, and dashes only.")
+        .allow("")
+        .when("street_name", { is: Joi.exist(), then: Joi.optional(), otherwise: Joi.forbidden() }),
+      street_name: Joi.string()
+        .label("Street Name")
+        .min(2)
+        .max(150)
+        .regex(/^[\w\s\-\&\']*$/)
+        .message("{{#label}} must contain letters, digits, spaces, and special characters ('&-) only.")
+        .allow(""),
+      city: Joi.string()
+        .label("City")
+        .regex(/^[\w\s\-\&\']*$/)
+        .message("{{#label}} must contain letters, digits, spaces, and special characters ('&-) only.")
+        .required(),
+      zip_code: Joi.string()
+        .label("Zip Code")
+        .length(4)
+        .regex(/^\d*$/)
+        .message("{{#label}} must contain digits only.")
+        .required(),
       contact_no: Joi.string()
         .label("Contact Number")
         .length(11)
-        .regex(/^\d{11}$/)
-        .message("Contact number must contain digits only."),
+        .regex(/^\d*$/)
+        .message("{{#label}} must contain digits only."),
       email: Joi.string().label("Email").email().required(),
-    }).options({ abortEarly: false });
+    })
+      .options({ abortEarly: false })
+      .required();
 
     return schema.validate(supplier);
   }

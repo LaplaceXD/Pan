@@ -20,12 +20,22 @@ function EditForm({ id = 0, firstName = "", lastName = "", email = "", contact =
   const formik = useFormik({
     initialValues: { firstName, lastName, email, contact },
     validationSchema: Yup.object({
-      firstName: Yup.string().label("First Name").min(2).max(100).required(),
-      lastName: Yup.string().label("Last Name").min(2).max(100).required(),
+      firstName: Yup.string()
+        .label("First Name")
+        .min(2)
+        .max(100)
+        .matches(/^[A-Za-z\s]*$/, "First Name must contain letters and spaces only.")
+        .required(),
+      lastName: Yup.string()
+        .label("Last Name")
+        .min(2)
+        .max(100)
+        .matches(/^[A-Za-z\s]*$/, "First Name must contain letters and spaces only.")
+        .required(),
       email: Yup.string().label("Email").email("Invalid email.").required(),
       contact: Yup.string()
         .label("Contact Number")
-        .matches(/\d+/, "Invalid contact number.")
+        .matches(/^\d*$/, "Invalid contact number.")
         .length(11)
         .required(),
     }),
