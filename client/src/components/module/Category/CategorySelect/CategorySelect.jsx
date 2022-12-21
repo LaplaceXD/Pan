@@ -8,6 +8,7 @@ import { Modal } from "@components/module";
 import { useModal, useMutation, useQuery } from "@hooks";
 import {
   createCategory as createCategoryService,
+  deleteCategoryById,
   editCategoryById,
   getAllCategories,
 } from "@services/category";
@@ -31,6 +32,7 @@ function CategorySelect({
   const { data: categories } = useQuery("categories", getAllCategories);
 
   const createCategory = useMutation(createCategoryService);
+  const deleteCategory = useMutation(deleteCategoryById);
   const editCategory = useMutation(
     async ({ category_id, ...body }) => await editCategoryById(category_id, body)
   );
@@ -61,7 +63,6 @@ function CategorySelect({
     });
     setSubmitting(false);
 
-    console.log(error, isRedirect);
     if (isRedirect) return;
     if (error) return toast.error(error);
 
@@ -70,6 +71,18 @@ function CategorySelect({
     editModal.close();
     setCategory(null);
     toast.success("Successfully edited category.");
+  }
+
+  async function handleDeleteCategory() {
+    const { error, isRedirect } = await deleteCategory.execute(category.value);
+    if (isRedirect) return;
+    if (error) return toast.error(error);
+
+    queryClient.invalidateQueries("categories");
+    queryClient.invalidateQueries("products");
+    deleteModal.close();
+    setCategory(null);
+    toast.success("Successfully deleted category.");
   }
 
   function handleOptionDelete(value) {
@@ -118,8 +131,8 @@ function CategorySelect({
         category={category?.label}
         open={deleteModal.isOpen}
         onClose={handleDeleteModalClose}
-        // onDelete={}
-        // disabledDelete={}
+        onDelete={handleDeleteCategory}
+        disabledDelete={deleteCategory.isLoading}
       />
 
       <Modal.CategoryEdit

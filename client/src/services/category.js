@@ -11,3 +11,7 @@ export async function createCategory(body) {
 export async function editCategoryById(categoryId, body) {
   return await auth.put("/categories/" + categoryId, body);
 }
+
+export async function deleteCategoryById(categoryId) {
+  return await auth.delete("/categories/" + categoryId);
+}
