@@ -153,7 +153,7 @@ class Stock {
       };
     }
 
-    schema = Joi.object().keys(schema).options({ abortEarly: false });
+    schema = Joi.object().keys(schema).options({ abortEarly: false }).required();
     return schema.validate(stock);
   }
 }

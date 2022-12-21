@@ -127,7 +127,8 @@ class Order {
           quantity: Joi.number().label("Quantity").min(1).required(),
         })
       )
-      .options({ abortEarly: false });
+      .options({ abortEarly: false })
+      .required();
 
     return schema.validate(order);
   }

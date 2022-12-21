@@ -118,8 +118,16 @@ class Category {
 
   static validate(category) {
     const schema = Joi.object({
-      name: Joi.string().label("Name").min(2).max(100).required(),
-    }).options({ abortEarly: false });
+      name: Joi.string()
+        .label("Name")
+        .regex(/^[\w\s\&]*$/)
+        .message("{{#label}} must contain letters, digits, and spaces only.")
+        .min(2)
+        .max(100)
+        .required(),
+    })
+      .options({ abortEarly: false })
+      .required();
 
     return schema.validate(category);
   }

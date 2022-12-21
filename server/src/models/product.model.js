@@ -166,7 +166,14 @@ class Product {
 
     const schema = Joi.object()
       .keys({
-        name: Joi.string().label("Name").min(2).max(300).required().trim(),
+        name: Joi.string()
+          .label("Name")
+          .min(2)
+          .max(300)
+          .regex(/^[\w\s\&]*$/)
+          .message("{{#label}} must contain letters, digits, and spaces only.")
+          .required()
+          .trim(),
         description: Joi.string().label("Description").min(2).max(300).required().trim(),
         unit_price: Joi.number().label("Unit Price").precision(2).required(),
         category_id: Joi.number()
@@ -174,7 +181,8 @@ class Product {
           .label("Category ID")
           .not("category_id" in product && !match ? product.category_id : 0),
       })
-      .options({ abortEarly: false });
+      .options({ abortEarly: false })
+      .required();
 
     return schema.validate(product);
   }
