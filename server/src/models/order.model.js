@@ -1,9 +1,10 @@
 const Joi = require("joi");
 
-const { InternalServerError } = require("../../helpers/errors");
+const { InternalServerError, NotFound } = require("../../helpers/errors");
 const { db } = require("../providers");
 
 const OrderLine = require("./orderline.model");
+const findProduct = require("./product.model").findById;
 
 class Order {
   constructor(order) {
@@ -119,7 +120,28 @@ class Order {
     return retVal;
   }
 
+  /*
+  loop thru each index
+  find productID 
+    validate if
+      real product
+      enough stock
+  */
   static async validate(order) {
+
+    if(Array.isArray(order)){
+      for (let i = 0; i < order.length; i++) {
+        let id = order[i].product_id;
+        let amt = order[i].quantity;
+        if(findProduct(id) == null){
+          throw new NotFound("PRODUCT NOT FOUND");
+        }else if(Order.getQty(id) < amt){
+          throw new NotFound("NOT ENOUGH QUANTITY");
+        }
+      }
+    }else{
+      throw new NotFound("BODY IS NOT ARRAY");
+    }
     const schema = Joi.array()
       .items(
         Joi.object({
@@ -130,6 +152,26 @@ class Order {
       .options({ abortEarly: false });
 
     return schema.validate(order);
+  }
+  
+  static async getQty(id){
+    //SELECT SUM(quantity) FROM stock WHERE product_id = '1';
+    
+    let retVal = null;
+
+    try {
+      const conn = await db.connect();
+      const [data] = await conn.execute("SELECT SUM(quantity) as total FROM stock WHERE product_id = :id", { id });
+      console.log(data);
+      await conn.end();
+
+      retVal = data[0].total;
+    } catch (err) {
+      console.log("[STOCK QUANTITY FIND ERROR]", err.message);
+      throw new InternalServerError(err);
+    }
+
+    return retVal;
   }
 }
 
