@@ -2,6 +2,8 @@ const { boolean } = require("joi");
 const Joi = require("joi");
 const { InternalServerError,NotFound } = require("../../helpers/errors");
 const { db } = require("../providers");
+const findProduct = require("./product.model").findById;
+const findSupplier = require("./supplier.model").findById;
 
 class Stock {
   constructor(stock) {
@@ -18,8 +20,6 @@ class Stock {
   async save() {
     let retVal = null;
 
-    if(Stock.validateProductID(this.product_id)||Stock.validateSupplierID(this.supplier_id)){throw new NotFound("PRODUCTANDORSUPPLIERID_ERROR");}
-    console.log(Stock.validateProductID(this.product_id)||Stock.validateSupplierID(this.supplier_id));
     try {
       const conn = await db.connect();
       const [data] = await conn.execute(
@@ -52,43 +52,6 @@ class Stock {
     };
     
   }
-
-  static async validateProductID(productId){
-    let retVal = false;
-    try {
-      const conn = await db.connect();
-      const [data] = await conn.execute("SELECT * FROM product WHERE product_id = :productId", { productId });
-      console.log(data);
-      await conn.end();
-
-      if (data.length !== 0) {
-        retVal = true;
-      }
-    } catch (error) {
-      console.log("[STOCK PRODUCT ID ERROR]", err.message);
-      throw new InternalServerError(err);
-    }
-    return retVal;
-  }
-
-  static async validateSupplierID(supplierId){
-    let retVal = false;
-    try {
-      const conn = await db.connect();
-      const [data] = await conn.execute("SELECT * FROM supplier WHERE supplier_id = :supplierId", { supplierId });
-      console.log(data);
-      await conn.end();
-
-      if (data.length !== 0) {
-        retVal = true;
-      }
-    } catch (error) {
-      console.log("[STOCK SUPPLIER ID ERROR]", err.message);
-      throw new InternalServerError(err);
-    }
-    return retVal;
-  }
-
   async update(details) {
     let retVal = null;
     const editedStock = { ...this, ...details };
@@ -178,6 +141,8 @@ class Stock {
     };
 
     // If creating then include checking for product_id, and supplier_id
+      //checking
+    if(findProduct(stock.product_id)!=null&&findSupplier(stock.supplier_id)!=null){throw new NotFound("PRODUCTANDORSUPPLIERID_ERROR");}
     if (!id) {
       schema = {
         product_id: Joi.number().greater(0).label("Product ID").required(),
