@@ -39,7 +39,12 @@ function CategorySelect({
     async ({ category_id, ...body }) => await editCategoryById(category_id, body)
   );
 
-  const categoryValidationSchema = Yup.string().label("Category").min(3).max(50);
+  const categoryValidationSchema = Yup.string()
+    .label("Category")
+    .matches(/^[\w\s\&]*$/, "Category must contain letters, digits, and spaces only.")
+    .min(3)
+    .max(50)
+    .required();
 
   async function handleCreateCategory(value) {
     try {

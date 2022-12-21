@@ -107,6 +107,7 @@ function ProductPreview({ productId, showProductAddButton = false, showProductEd
     ),
     [pages.PRODUCT_EDIT_FORM]: (
       <Product.Form
+        title="Product Edit Details"
         name={product?.name}
         description={product?.description}
         categoryId={product?.category_id}
@@ -118,6 +119,7 @@ function ProductPreview({ productId, showProductAddButton = false, showProductEd
     ),
     [pages.PRODUCT_ADD_FORM]: (
       <Product.Form
+        title="Add New Product"
         img={placeholderImg}
         onCancel={() => setPage(pages.DEFAULT)}
         onSubmit={handleProductAdd}
