@@ -15,9 +15,6 @@ class Mailer {
         }
         sendgridMailer
             .send(msg)
-            .then(() => {
-              console.log('Email sent')
-            })
             .catch((error) => {
               console.error(error)
             })
@@ -36,9 +33,6 @@ class Mailer {
         }
         sendgridMailer
             .send(msg)
-            .then(() => {
-              console.log('Email sent')
-            })
             .catch((error) => {
               console.error(error)
             })
@@ -57,9 +51,6 @@ class Mailer {
         }
         sendgridMailer
             .send(msg)
-            .then(() => {
-              console.log('Email sent')
-            })
             .catch((error) => {
               console.error(error)
             })

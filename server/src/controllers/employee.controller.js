@@ -40,6 +40,7 @@ const create = async (req, res) => {
 
   res.status(200).send({
     message: "Account successfully created.",
+    data: req.body
   });
 };
 
