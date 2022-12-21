@@ -48,7 +48,7 @@ function ProductDetail({
           type="button"
           label={isAvailable ? "Hide Listing" : "Show Listing"}
           onClick={onStatusChange}
-          isDisabled={statusChangeDisabled}
+          disabled={statusChangeDisabled}
           secondary
         />
         <Button type="button" label="Edit" onClick={onEdit} />
