@@ -14,6 +14,7 @@ function Select({ label, id, error, value, options, ...props }) {
           menu: () => styles.menu,
           control: () => styles.control,
           singleValue: () => styles.input,
+          input: () => styles.input,
         }}
         value={options ? options.find((option) => option.value === value) : ""}
         options={options}

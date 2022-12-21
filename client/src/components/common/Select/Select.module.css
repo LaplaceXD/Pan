@@ -13,7 +13,8 @@ div.control:hover {
   cursor: pointer;
 }
 
-div.input {
+div.input,
+input.input {
   color: var(--white);
 }
 

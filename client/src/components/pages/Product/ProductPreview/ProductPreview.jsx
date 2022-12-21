@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
+import { useQueryClient } from "react-query";
+import { toast } from "react-toastify";
 
 import empImg from "@assets/imgs/emp-img.jpg";
 import { Product } from "@components/module";
-import { useQuery } from "@hooks";
-import { getProductById } from "@services/product";
+import { useMutation, useQuery } from "@hooks";
+import { editProductById, getProductById } from "@services/product";
 
 import styles from "./ProductPreview.module.css";
 
@@ -13,12 +15,38 @@ const pages = {
 };
 
 function ProductPreview({ productId }) {
+  const queryClient = useQueryClient();
   const [page, setPage] = useState(pages.PRODUCT_DETAIL);
+
+  const editProduct = useMutation(
+    async ({ product_id, ...body }) => await editProductById(product_id, body)
+  );
   const { data: product } = useQuery(["product", productId], ({ signal }) =>
     productId ? getProductById(productId, { signal }) : null
   );
 
   useEffect(() => setPage(pages.PRODUCT_DETAIL), [productId]);
+
+  async function handleEditSubmit(values, setSubmitting) {
+    setSubmitting(true);
+    const { error, isRedirect } = await editProduct.execute({
+      product_id: productId,
+      name: values.name,
+      category_id: values.category,
+      description: values.description,
+      unit_price: values.price,
+    });
+
+    setSubmitting(false);
+    if (isRedirect) return;
+    if (error) return toast.error(error);
+
+    queryClient.invalidateQueries("products");
+    queryClient.invalidateQueries(["product", productId]);
+
+    setPage(pages.PRODUCT_DETAIL);
+    toast.success("Product edited successfully.");
+  }
 
   const pageDetails = {
     [pages.PRODUCT_DETAIL]: (
@@ -37,10 +65,11 @@ function ProductPreview({ productId }) {
       <Product.Form
         name={product?.name}
         description={product?.description}
-        category={product?.category_name}
+        categoryId={product?.category_id}
         img={empImg}
         price={product?.unit_price}
         onCancel={() => setPage(pages.PRODUCT_DETAIL)}
+        onSubmit={handleEditSubmit}
       />
     ),
   };

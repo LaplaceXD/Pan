@@ -2,11 +2,15 @@ import { BoxImage, Button, Field, Select } from "@components/common";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
+import { useQuery } from "@hooks";
+import { getAllCategories } from "@services/category";
 import styles from "./ProductForm.module.css";
 
-function ProductForm({ img, name = "", categoryId = 0, description = "", price = 0, onCancel }) {
+function ProductForm({ img, name = "", categoryId = 0, description = "", price = 0, onCancel, onSubmit }) {
+  const { data: categories } = useQuery("categories", getAllCategories);
+
   const formik = useFormik({
-    initialValues: { name, category: categoryId, description, price },
+    initialValues: { name, category: categoryId, description, price: price },
     validateYupSchema: Yup.object({
       name: Yup.string().label("Product Name").required(),
       category: Yup.number().integer().label("Category").required(),
@@ -14,7 +18,7 @@ function ProductForm({ img, name = "", categoryId = 0, description = "", price =
       price: Yup.number().label("Unit Price").required(),
     }),
     onSubmit: (values) => {
-      console.log(values);
+      onSubmit(values, formik.setSubmitting);
     },
   });
 
@@ -39,6 +43,7 @@ function ProductForm({ img, name = "", categoryId = 0, description = "", price =
         onBlur={formik.handleBlur}
         onChange={(item) => formik.setFieldValue("category", item?.value ?? formik.initialValues.category)}
         onCreateOption={(value) => console.log(value)}
+        options={categories.map(({ category_id, name }) => ({ label: name, value: category_id }))}
         value={formik.values.category}
         isClearable
       />
@@ -69,7 +74,7 @@ function ProductForm({ img, name = "", categoryId = 0, description = "", price =
 
       <div className={styles.buttons}>
         <Button type="button" label="Cancel" secondary onClick={onCancel} />
-        <Button label="Save" />
+        <Button type="submit" label="Save" disabled={formik.isSubmitting} />
       </div>
     </form>
   );
