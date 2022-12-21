@@ -1,20 +1,20 @@
-import { BoxImage, Button, Field } from "@components/common";
+import { BoxImage, Button, Field, Select } from "@components/common";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
 import styles from "./ProductForm.module.css";
 
-function ProductForm({ img, name = "", category = "", description = "", price = 0, onCancel, onSubmit }) {
+function ProductForm({ img, name = "", categoryId = 0, description = "", price = 0, onCancel }) {
   const formik = useFormik({
-    initialValues: { name, category, description, price },
+    initialValues: { name, category: categoryId, description, price },
     validateYupSchema: Yup.object({
       name: Yup.string().label("Product Name").required(),
-      category: Yup.string().label("Category").required(),
+      category: Yup.number().integer().label("Category").required(),
       description: Yup.string().label("Description").required(),
       price: Yup.number().label("Unit Price").required(),
     }),
     onSubmit: (values) => {
-      onSubmit();
+      console.log(values);
     },
   });
 
@@ -32,18 +32,17 @@ function ProductForm({ img, name = "", category = "", description = "", price = 
         value={formik.values.name}
         error={formik.touched.name && formik.errors.name}
       />
-      <Field
-        type="text"
+      <Select
         label="Category"
         id="category"
-        name="category"
-        onChange={formik.handleChange}
-        onBlur={formik.handleBlur}
-        value={formik.values.category}
         error={formik.touched.category && formik.errors.category}
+        onBlur={formik.handleBlur}
+        onChange={(item) => formik.setFieldValue("category", item?.value ?? formik.initialValues.category)}
+        onCreateOption={(value) => console.log(value)}
+        value={formik.values.category}
+        isClearable
       />
       <Field
-        type="textarea"
         label="Description"
         id="description"
         className={styles.description}
