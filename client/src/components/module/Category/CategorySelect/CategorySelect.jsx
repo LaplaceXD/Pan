@@ -12,6 +12,8 @@ import {
   editCategoryById,
   getAllCategories,
 } from "@services/category";
+import format from "@utils/format";
+
 import CategoryOption from "../CategoryOption";
 
 function CategorySelect({
@@ -45,7 +47,7 @@ function CategorySelect({
       const { error, isRedirect, data } = await createCategory.execute({ name: value });
 
       if (isRedirect) return;
-      if (error) return toast.error(error);
+      if (error) return toast.error(format.error(error));
 
       queryClient.invalidateQueries("categories");
       onChange({ value: data.category_id });
@@ -64,7 +66,7 @@ function CategorySelect({
     setSubmitting(false);
 
     if (isRedirect) return;
-    if (error) return toast.error(error);
+    if (error) return toast.error(format.error(error));
 
     queryClient.invalidateQueries("categories");
     queryClient.invalidateQueries("products");
@@ -76,7 +78,7 @@ function CategorySelect({
   async function handleDeleteCategory() {
     const { error, isRedirect } = await deleteCategory.execute(category.value);
     if (isRedirect) return;
-    if (error) return toast.error(error);
+    if (error) return toast.error(format.error(error));
 
     queryClient.invalidateQueries("categories");
     queryClient.invalidateQueries("products");

@@ -8,6 +8,7 @@ import { PreviewLayout } from "@components/template";
 import { useCart, useFilter, useModal, useMutation, useQuery } from "@hooks";
 import { createOrder as createOrderService } from "@services/order";
 import { getAllProducts } from "@services/product";
+import format from "@utils/format";
 
 import styles from "./Home.module.css";
 
@@ -92,7 +93,7 @@ function Home() {
 
     setSubmitting(false);
     if (isRedirect) return;
-    if (error) return toast.error(error);
+    if (error) return toast.error(format.error(error));
 
     cartConfirmModal.close();
     cart.clear();

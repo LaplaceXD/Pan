@@ -12,6 +12,7 @@ import {
   getProductById,
   toggleProductStatusById,
 } from "@services/product";
+import format from "@utils/format";
 
 import styles from "./ProductPreview.module.css";
 
@@ -49,7 +50,7 @@ function ProductPreview({ productId, showProductAddButton = false, showProductEd
 
     setSubmitting(false);
     if (isRedirect) return;
-    if (error) return toast.error(error);
+    if (error) return toast.error(format.error(error));
 
     queryClient.invalidateQueries("products");
     queryClient.invalidateQueries(["product", productId]);
@@ -69,7 +70,7 @@ function ProductPreview({ productId, showProductAddButton = false, showProductEd
 
     setSubmitting(false);
     if (isRedirect) return;
-    if (error) return toast.error(error);
+    if (error) return toast.error(format.error(error));
 
     queryClient.invalidateQueries("products");
     queryClient.invalidateQueries(["product", productId]);
@@ -81,7 +82,7 @@ function ProductPreview({ productId, showProductAddButton = false, showProductEd
   async function handleProductStatusChange() {
     const { error, isRedirect } = await toggleProductStatus.execute(productId);
     if (isRedirect) return;
-    if (error) return toast.error(error);
+    if (error) return toast.error(format.error(error));
 
     queryClient.invalidateQueries("products");
     queryClient.invalidateQueries(["product", productId]);

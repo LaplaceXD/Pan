@@ -43,6 +43,10 @@ function address({ street_no, street_name, building, city, zip_code }) {
   return `${b}${sname}${city} ${zip_code}`;
 }
 
+function error(err) {
+  return typeof err === "object" ? Object.entries(err)[0][1].replaceAll('"', "") : err;
+}
+
 export default {
   currency,
   date,
@@ -51,4 +55,5 @@ export default {
   capitalize,
   decimal,
   address,
+  error,
 };

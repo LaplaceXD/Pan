@@ -5,6 +5,7 @@ import * as Yup from "yup";
 import { Button, PasswordField } from "@components/common";
 import { useMutation } from "@hooks";
 import { changeEmployeePasswordById } from "@services/employee";
+import format from "@utils/format";
 
 import styles from "./ChangePasswordForm.module.css";
 
@@ -48,7 +49,7 @@ function EditForm({ id, onCancel, onSubmit }) {
       formik.setSubmitting(false);
 
       if (isRedirect) return;
-      if (error) return toast.error(typeof error === "object" ? Object.entries(error)[0][1] : error);
+      if (error) return toast.error(format.error(error));
 
       toast.success("Account password changed successfully.");
       onSubmit();

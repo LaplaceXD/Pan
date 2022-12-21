@@ -7,6 +7,7 @@ import * as Yup from "yup";
 import { Button, Field } from "@components/common";
 import { useMutation } from "@hooks";
 import { editEmployeeById } from "@services/employee";
+import format from "@utils/format";
 
 import styles from "./EditForm.module.css";
 
@@ -40,7 +41,7 @@ function EditForm({ id = 0, firstName = "", lastName = "", email = "", contact =
       formik.setSubmitting(false);
 
       if (isRedirect) return;
-      if (error) return toast.error(typeof error === "object" ? Object.entries(error)[0][1] : error);
+      if (error) return toast.error(format.error(error));
 
       queryClient.invalidateQueries(["account", id]);
       toast.success("Account details edited successfully.");
