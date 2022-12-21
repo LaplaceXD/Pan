@@ -14,6 +14,7 @@ function ProductDetail({
   onViewStock,
   onStatusChange,
   onEdit,
+  showProductEditButtons = false,
   statusChangeDisabled = false,
 }) {
   return (
@@ -44,14 +45,18 @@ function ProductDetail({
       </div>
       <div className={styles.buttons}>
         <Button type="button" label="View Stock" secondary onClick={onViewStock} />
-        <Button
-          type="button"
-          label={isAvailable ? "Hide Listing" : "Show Listing"}
-          onClick={onStatusChange}
-          disabled={statusChangeDisabled}
-          secondary
-        />
-        <Button type="button" label="Edit" onClick={onEdit} />
+        {showProductEditButtons ? (
+          <>
+            <Button
+              type="button"
+              label={isAvailable ? "Hide Listing" : "Show Listing"}
+              onClick={onStatusChange}
+              disabled={statusChangeDisabled}
+              secondary
+            />
+            <Button type="button" label="Edit" onClick={onEdit} />
+          </>
+        ) : null}
       </div>
     </>
   );

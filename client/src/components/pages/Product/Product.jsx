@@ -5,12 +5,14 @@ import styles from "./Product.module.css";
 import ProductContent from "./ProductContent";
 import ProductPreview from "./ProductPreview";
 
-function Product({ withPreview = false }) {
+function Product({ showProductEditButtons = false }) {
   const [productId, setProductId] = useState(null);
 
-  return withPreview ? (
+  return (
     <PreviewLayout
-      PreviewComponent={<ProductPreview productId={productId} />}
+      PreviewComponent={
+        <ProductPreview productId={productId} showProductEditButtons={showProductEditButtons} />
+      }
       className={styles.previewContainer}
     >
       <ProductContent
@@ -18,10 +20,6 @@ function Product({ withPreview = false }) {
         onProductClick={(id) => setProductId(productId === id ? null : id)}
       />
     </PreviewLayout>
-  ) : (
-    <main className={styles.mainContainer}>
-      <ProductContent />
-    </main>
   );
 }
 

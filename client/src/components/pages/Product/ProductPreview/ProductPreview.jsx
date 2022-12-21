@@ -14,7 +14,7 @@ const pages = {
   PRODUCT_DETAIL: Symbol(1),
 };
 
-function ProductPreview({ productId }) {
+function ProductPreview({ productId, showProductEditButtons = false }) {
   const queryClient = useQueryClient();
   const [page, setPage] = useState(pages.PRODUCT_DETAIL);
 
@@ -72,6 +72,7 @@ function ProductPreview({ productId }) {
         onEdit={() => setPage(pages.PRODUCT_FORM)}
         onStatusChange={handleStatusChange}
         statusChangeDisabled={toggleProductStatus.isLoading}
+        showProductEditButtons={showProductEditButtons}
       />
     ),
     [pages.PRODUCT_FORM]: (
