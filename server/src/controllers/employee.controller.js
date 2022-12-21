@@ -39,7 +39,7 @@ const create = async (req, res) => {
   Mailer.create({ email: employee.email, password: password })
 
   res.status(200).send({
-    message: "Successfully changed password.",
+    message: "Account successfully created.",
   });
 };
 
