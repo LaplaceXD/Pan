@@ -1,6 +1,7 @@
 .container {
+  flex: 1;
   display: flex;
-  width: 100%;
+  width: 80%;
 }
 
 .preview {
