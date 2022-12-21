@@ -11,3 +11,7 @@ export async function getProductById(productId, { signal }) {
 export async function editProductById(productId, body) {
   return await auth.put("/products/" + productId, body);
 }
+
+export async function toggleProductStatusById(productId) {
+  return await auth.put("/products/" + productId + "/status", {});
+}

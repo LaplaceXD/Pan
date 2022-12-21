@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import empImg from "@assets/imgs/emp-img.jpg";
 import { Product } from "@components/module";
 import { useMutation, useQuery } from "@hooks";
-import { editProductById, getProductById } from "@services/product";
+import { editProductById, getProductById, toggleProductStatusById } from "@services/product";
 
 import styles from "./ProductPreview.module.css";
 
@@ -21,6 +21,7 @@ function ProductPreview({ productId }) {
   const editProduct = useMutation(
     async ({ product_id, ...body }) => await editProductById(product_id, body)
   );
+  const toggleProductStatus = useMutation(toggleProductStatusById);
   const { data: product } = useQuery(["product", productId], ({ signal }) =>
     productId ? getProductById(productId, { signal }) : null
   );
@@ -48,6 +49,16 @@ function ProductPreview({ productId }) {
     toast.success("Product edited successfully.");
   }
 
+  async function handleStatusChange() {
+    const { error, isRedirect } = await toggleProductStatus.execute(productId);
+    if (isRedirect) return;
+    if (error) return toast.error(error);
+
+    queryClient.invalidateQueries("products");
+    queryClient.invalidateQueries(["product", productId]);
+    toast.success("Product status toggled successfully.");
+  }
+
   const pageDetails = {
     [pages.PRODUCT_DETAIL]: (
       <Product.Detail
@@ -59,6 +70,8 @@ function ProductPreview({ productId }) {
         isAvailable={product?.is_available}
         price={product?.unit_price}
         onEdit={() => setPage(pages.PRODUCT_FORM)}
+        onStatusChange={handleStatusChange}
+        statusChangeDisabled={toggleProductStatus.isLoading}
       />
     ),
     [pages.PRODUCT_FORM]: (
