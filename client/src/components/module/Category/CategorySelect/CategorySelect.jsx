@@ -5,6 +5,7 @@ import * as Yup from "yup";
 import { Select } from "@components/common";
 import { useMutation, useQuery } from "@hooks";
 import { createCategory as createCategoryService, getAllCategories } from "@services/category";
+import CategoryOption from "../CategoryOption";
 
 function CategorySelect({
   label,
@@ -40,6 +41,12 @@ function CategorySelect({
     <Select
       label="Category"
       id="category"
+      components={{ Option: CategoryOption }}
+      selectProps={{
+        categories,
+        onOptionDelete: (value) => console.log(value),
+        onOptionEdit: (value) => console.log(value),
+      }}
       onCreateOption={handleCreateOption}
       onChange={onChange}
       options={categories.map(({ category_id, name }) => ({ label: name, value: category_id }))}
