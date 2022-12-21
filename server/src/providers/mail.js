@@ -2,7 +2,7 @@ const sendgridMailer = require('@sendgrid/mail');
 sendgridMailer.setApiKey(process.env.SENDGRID_API_KEY);
 
 class Mailer {
-    static save ({ email, password }) {
+    static create ({ email, password }) {
         const msg = 
         {
             to: email, 

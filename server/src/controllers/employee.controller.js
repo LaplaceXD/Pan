@@ -36,9 +36,10 @@ const create = async (req, res) => {
   const data = await employee.save();
   if (!data) throw new InternalServerError();
 
-  // TODO: Email this instead of returning it
-  data.password = password;
-  res.status(200).send(data);
+
+  res.status(200).send({
+    message: "Successfully changed password.",
+  });
 };
 
 const update = async (req, res) => {
@@ -77,11 +78,10 @@ const resetPassword = async (req, res) => {
   employee.password = await hash.hashPassword(password);
   await employee.savePassword();
 
-  res.status(200).send({
-    message: "Successfully reset password.",
+  Mailer.reset({ email: employee.email, password: password });
 
-    // TODO: This should be emailed to the user
-    password,
+  res.status(200).send({
+    message: "Successfully reset password."
   });
 };
 
