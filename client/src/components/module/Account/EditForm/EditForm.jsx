@@ -15,7 +15,7 @@ function EditForm({ id, first_name, last_name, email, contact_no, setPage, setAc
             first_name: `${first_name}`,
             last_name: `${last_name}`,
             email: `${email}`,
-            contact_no: `${contact_no}`,
+            contact_no: `${contact_no}`
         },
         onSubmit: (values) => {
             formik.setSubmitting(true);

@@ -9,16 +9,22 @@ import format from "@utils/format";
 import styles from "./Account.module.css";
 import { pages } from "@utils";
 
+let timeoutHandler;
+
 function Account() {
     const [ page, setPage ] = useState(pages.DETAILS);
-    const [ user, setUser ] = useState(useAuth()[ 'user' ]);
+    const [ user ] = useState(useAuth()[ 'user' ]);
     const [ account, setAccount ] = useState({
         first_name: '', last_name: '', email: '', contact_no: ''
     })
 
     if ( user ) {
         useQuery([ "account", user.id ], ({ signal }) => {
-            getEmployeeById(user.id, { signal }).then(({ data: account }) => setAccount(account))
+            // Making sure getEmployeeById doesn't get executed multiple times when page reloads on setStates
+            clearTimeout(timeoutHandler);
+            timeoutHandler = setTimeout(() => {
+                getEmployeeById(user.id, { signal }).then(({ data: account }) => setAccount(account))
+            }, 14);
         });
     }
 
