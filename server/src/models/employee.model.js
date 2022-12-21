@@ -66,10 +66,6 @@ class Employee {
     let retVal = null;
     const editedEmployee = { ...this, ...details };
 
-    console.log('this:', this);
-    console.log('details:', details);
-    console.log('editedEmployee:', editedEmployee);
-
     try {
       const conn = await db.connect();
       await conn.execute(
@@ -190,7 +186,7 @@ class Employee {
     let match = "email" in employee ? await Employee.findByEmail(employee.email) : null;
     const isEditing = "id" in params;
     const isEditingOwnAccount = isEditing && parseInt(params.id) === match?.employee_id;
-    const isManagerRole = "role" in auth && auth.role === role.MANAGER;
+    // const isManagerRole = "role" in auth && auth.role === role.MANAGER;
 
     let schema = {
       first_name: Joi.string().label("First Name").min(2).max(300).required().trim(),
@@ -213,12 +209,13 @@ class Employee {
         .trim(),
     };
 
-    if (isManagerRole || !isEditing) {
-      schema = {
-        ...schema,
-        date_employed: Joi.date().label("Date Employed").max("now").iso().required(),
-      };
-    }
+    // ToDo: date_employed is not part of the form, so validation will fail!  commenting it out for now!
+    // if (isManagerRole || !isEditing) {
+    //   schema = {
+    //     ...schema,
+    //     date_employed: Joi.date().label("Date Employed").max("now").iso().required(),
+    //   };
+    // }
 
     schema = Joi.object().keys(schema).options({ abortEarly: false });
     return schema.validate(employee);

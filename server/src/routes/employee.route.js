@@ -26,7 +26,7 @@ router.put(
   "/:id",
   [
     auth,
-    permit({ allow: [roles(role.MANAGER), owner], deny: [sameRoleAndNotOwner(Employee)] })
+    permit({ allow: [roles(role.MANAGER), owner], deny: [sameRoleAndNotOwner(Employee)] }), validate(Employee.validate)
   ],
   employeeController.update
 );
