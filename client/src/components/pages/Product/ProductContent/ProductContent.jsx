@@ -1,4 +1,4 @@
-import empImg from "@assets/imgs/emp-img.jpg";
+import placeholderImg from "@assets/imgs/placeholder-img.jpg";
 import { Header, List, SearchBar } from "@components/common";
 import { Category, Product as ProductModule } from "@components/module";
 import { useFilter, useQuery } from "@hooks";
@@ -62,7 +62,7 @@ function Product({ selectedProductId, onProductClick }) {
           unit_price,
         }) => (
           <ProductModule.Item
-            img={empImg}
+            img={placeholderImg}
             name={name}
             category={category_name}
             description={description}

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { toast } from "react-toastify";
 
-import empImg from "@assets/imgs/emp-img.jpg";
+import placeholderImg from "@assets/imgs/placeholder-img.jpg";
 import { Button, Grid, Header, SearchBar } from "@components/common";
 import { Category, Modal, Order, Product } from "@components/module";
 import { PreviewLayout } from "@components/template";
@@ -143,7 +143,7 @@ function Home() {
         RenderComponent={({ product_id, name, unit_price, available_stock }) => (
           <Product.Card
             key={product_id}
-            img={empImg}
+            img={placeholderImg}
             name={name}
             price={unit_price}
             onClick={() => handleProductClick(product_id)}

@@ -3,7 +3,7 @@ import { BsPlusCircle } from "react-icons/bs";
 import { useQueryClient } from "react-query";
 import { toast } from "react-toastify";
 
-import empImg from "@assets/imgs/emp-img.jpg";
+import placeholderImg from "@assets/imgs/placeholder-img.jpg";
 import { Product } from "@components/module";
 import { useMutation, useQuery } from "@hooks";
 import {
@@ -95,7 +95,7 @@ function ProductPreview({ productId, showProductAddButton = false, showProductEd
         name={product?.name}
         description={product?.description}
         category={product?.category_name}
-        img={empImg}
+        img={placeholderImg}
         stock={product?.available_stock}
         isAvailable={product?.is_available}
         price={product?.unit_price}
@@ -110,14 +110,18 @@ function ProductPreview({ productId, showProductAddButton = false, showProductEd
         name={product?.name}
         description={product?.description}
         categoryId={product?.category_id}
-        img={empImg}
+        img={placeholderImg}
         price={product?.unit_price}
         onCancel={() => setPage(pages.PRODUCT_DETAIL)}
         onSubmit={handleProductEdit}
       />
     ),
     [pages.PRODUCT_ADD_FORM]: (
-      <Product.Form img={empImg} onCancel={() => setPage(pages.DEFAULT)} onSubmit={handleProductAdd} />
+      <Product.Form
+        img={placeholderImg}
+        onCancel={() => setPage(pages.DEFAULT)}
+        onSubmit={handleProductAdd}
+      />
     ),
     [pages.DEFAULT]: showProductAddButton ? (
       <button className={styles.addBtn} onClick={() => setPage(pages.PRODUCT_ADD_FORM)}>
