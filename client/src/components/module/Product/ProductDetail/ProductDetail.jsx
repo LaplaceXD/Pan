@@ -3,7 +3,17 @@ import format from "@utils/format";
 
 import styles from "./ProductDetail.module.css";
 
-function ProductDetail({ img, name, category, description, quantity, price = 0 }) {
+function ProductDetail({
+  img,
+  name,
+  category,
+  description,
+  quantity,
+  price = 0,
+  onViewStock,
+  onHideListing,
+  onEdit,
+}) {
   return (
     <>
       <div className={styles.container}>
@@ -25,9 +35,9 @@ function ProductDetail({ img, name, category, description, quantity, price = 0 }
         </p>
       </div>
       <div className={styles.buttons}>
-        <Button label="View Stock" secondary />
-        <Button label="Hide Listing" secondary />
-        <Button label="Edit" />
+        <Button type="button" label="View Stock" secondary onClick={onViewStock} />
+        <Button type="button" label="Hide Listing" secondary onClick={onHideListing} />
+        <Button type="button" label="Edit" onClick={onEdit} />
       </div>
     </>
   );
