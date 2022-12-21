@@ -48,6 +48,7 @@ function Account() {
           email={account?.email}
           contact={account?.contact_no}
           onCancel={() => setPage(pages.DETAILS)}
+          onSubmit={() => setPage(pages.DETAILS)}
         />
       ),
     },
