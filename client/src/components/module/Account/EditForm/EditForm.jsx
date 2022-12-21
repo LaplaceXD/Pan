@@ -3,33 +3,32 @@ import { Button, Field } from "@components/common";
 import { useFormik } from "formik";
 import { useMutation } from "@hooks";
 import { editEmployee as editEmployeeService } from "@services/employee";
-
+import { toast } from "react-toastify";
 import styles from "./EditForm.module.css";
+import { pages } from "@utils";
 
-function EditForm({ id, firstName, lastName, email, contact, onCancel }) {
+function EditForm({ id, first_name, last_name, email, contact_no, setPage, setAccount }) {
     const editEmployee = useMutation(editEmployeeService);
 
     const formik = useFormik({
         initialValues: {
-            firstName: `${firstName}`,
-            lastName: `${lastName}`,
+            first_name: `${first_name}`,
+            last_name: `${last_name}`,
             email: `${email}`,
-            contact: `${contact}`,
+            contact_no: `${contact_no}`,
         },
-        onSubmit: async (values) => {
-            const { error, isRedirect } = await editEmployee.execute(id);
+        onSubmit: (values) => {
+            formik.setSubmitting(true);
+            editEmployee.execute({ ...values, id }).then(({ error, isRedirect, data: account } ) => {
+                formik.setSubmitting(false);
+                if (isRedirect) return;
+                if (error) return toast.error(error);
 
-            alert(JSON.stringify(values, null, 2));
+                toast.success("Employee updated successfully!");
 
-            console.log(error, isRedirect);
-
-            // setSubmitting(false);
-            // if (isRedirect) return;
-            // if (error) return toast.error(error);
-            //
-            // cartConfirmModal.close();
-            // cart.clear();
-            // toast.success("Order placed.");
+                setAccount(account);
+                setPage(pages.DETAILS);
+            });
         },
     });
 
@@ -38,19 +37,19 @@ function EditForm({ id, firstName, lastName, email, contact, onCancel }) {
       <Field
         label="First Name"
         type="text"
-        id="firstName"
-        name="firstName"
+        id="first_name"
+        name="first_name"
         className={styles.field}
-        value={formik.values.firstName}
+        value={formik.values.first_name}
         onChange={formik.handleChange}
       />
       <Field
         label="Last Name"
         type="text"
-        id="lastName"
-        name="lastName"
+        id="last_name"
+        name="last_name"
         className={styles.field}
-        value={formik.values.lastName}
+        value={formik.values.last_name}
         onChange={formik.handleChange}
       />
       <Field
@@ -66,14 +65,14 @@ function EditForm({ id, firstName, lastName, email, contact, onCancel }) {
         label="Contact Number"
         type="text"
         id="contact"
-        name="contact"
+        name="contact_no"
         className={styles.field}
-        value={formik.values.contact}
+        value={formik.values.contact_no}
         onChange={formik.handleChange}
       />
 
       <div className={styles.buttons}>
-        <Button type="button" label="Cancel" onClick={onCancel} secondary />
+        <Button type="button" label="Cancel" onClick={() => setPage(pages.DETAILS)} secondary />
         <Button type="submit" label="Save" />
       </div>
     </form>

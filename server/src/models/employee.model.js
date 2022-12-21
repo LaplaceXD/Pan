@@ -66,19 +66,23 @@ class Employee {
     let retVal = null;
     const editedEmployee = { ...this, ...details };
 
+    console.log('this:', this);
+    console.log('details:', details);
+    console.log('editedEmployee:', editedEmployee);
+
     try {
       const conn = await db.connect();
       await conn.execute(
-        `UPDATE employee 
+        `UPDATE 
+            employee 
         SET 
-          first_name = :first_name,
-          last_name = :last_name,
-          contact_no = :contact_no,
-          email = :email,
-          date_employed = :date_employed
+            first_name = :first_name,
+            last_name = :last_name,
+            contact_no = :contact_no,
+            email = :email,
+            date_employed = :date_employed
         WHERE
-          employee_id = :employee_id
-        `,
+            employee_id = :employee_id`,
         editedEmployee
       );
 

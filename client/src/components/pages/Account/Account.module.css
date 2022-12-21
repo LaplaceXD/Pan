@@ -31,3 +31,5 @@
   font-weight: var(--font-regular);
   margin: 0.5em 1em;
 }
+
+.loading { color: white; }
