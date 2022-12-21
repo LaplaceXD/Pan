@@ -27,7 +27,7 @@ function CategorySelect({
   const { data: categories } = useQuery("categories", getAllCategories);
   const createCategory = useMutation(createCategoryService);
 
-  const categoryValidationSchema = Yup.string().label("Category").min(3).max(80);
+  const categoryValidationSchema = Yup.string().label("Category").min(3).max(50);
 
   async function handleCreateCategory(value) {
     try {
@@ -45,6 +45,26 @@ function CategorySelect({
     }
   }
 
+  function handleOptionDelete(value) {
+    deleteModal.open();
+    setCategory(value);
+  }
+
+  function handleOptionEdit(value) {
+    editModal.open();
+    setCategory(value);
+  }
+
+  function handleDeleteModalClose() {
+    deleteModal.close();
+    setCategory(null);
+  }
+
+  function handleEditModalClose() {
+    editModal.close();
+    setCategory(null);
+  }
+
   const disabled = deleteModal.isOpen || createCategory.isLoading;
 
   return (
@@ -55,14 +75,8 @@ function CategorySelect({
         components={{ Option: CategoryOption }}
         selectProps={{
           categories,
-          onOptionDelete: (value) => {
-            deleteModal.open();
-            setCategory(value);
-          },
-          onOptionEdit: (value) => {
-            editModal.open();
-            setCategory(value);
-          },
+          onOptionDelete: handleOptionDelete,
+          onOptionEdit: handleOptionEdit,
         }}
         onCreateOption={handleCreateCategory}
         onChange={onChange}
@@ -76,10 +90,7 @@ function CategorySelect({
       <Modal.CategoryDelete
         category={category?.label}
         open={deleteModal.isOpen}
-        onClose={() => {
-          deleteModal.close();
-          setCategory(null);
-        }}
+        onClose={handleDeleteModalClose}
         // onDelete={}
         // disabledDelete={}
       />
@@ -87,10 +98,7 @@ function CategorySelect({
       <Modal.CategoryEdit
         value={category?.label}
         open={editModal.isOpen}
-        onClose={() => {
-          editModal.close();
-          setCategory(null);
-        }}
+        onClose={handleEditModalClose}
         // onSubmit={}
         validationSchema={categoryValidationSchema}
       />
