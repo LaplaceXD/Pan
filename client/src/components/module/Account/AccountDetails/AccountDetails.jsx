@@ -3,7 +3,14 @@ import { Button } from "@components/common";
 import format from "@utils/format";
 import styles from "./AccountDetails.module.css";
 
-function AccountDetails({ name, id, email, contact, onEditClick, onChangePassClick }) {
+function AccountDetails({
+  name = "Account Name",
+  id = 0,
+  email = "email@email.com",
+  contact = "09999999999",
+  onEditClick,
+  onChangePassClick,
+}) {
   return (
     <article className={styles.container}>
       <h2 className={styles.name}>{name}</h2>

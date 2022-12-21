@@ -16,6 +16,10 @@
   margin-bottom: 0;
 }
 
+.field p {
+  grid-column: 2 / span 1;
+}
+
 .buttons {
   display: flex;
   margin-top: 16px;

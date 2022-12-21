@@ -12,7 +12,7 @@ function PasswordField({ label, id, error, className, type, ...props }) {
       <div className={styles.container}>
         <input type={visible ? "text" : "password"} id={id} {...props} />
         <button type="button" onClick={() => setVisible(!visible)}>
-          {visible ? <FiEye size={24} /> : <FiEyeOff size={24} />}
+          {visible ? <FiEye className={styles.icon} size={24} /> : <FiEyeOff className={styles.icon} size={24} />}
         </button>
       </div>
     </Field>
