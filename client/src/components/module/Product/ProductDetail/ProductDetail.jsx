@@ -8,7 +8,8 @@ function ProductDetail({
   name,
   category,
   description,
-  quantity,
+  stock,
+  isAvailable,
   price = 0,
   onViewStock,
   onHideListing,
@@ -27,11 +28,17 @@ function ProductDetail({
         <p className={styles.description}>{description}</p>
         <p className={styles.detail}>
           <span>Quantity in stock:</span>
-          <span>{quantity}</span>
+          <span>{stock}</span>
         </p>
         <p className={styles.detail}>
           <span>Unit Price:</span>
           <span>{format.currency(price)}</span>
+        </p>
+        <p className={styles.detail}>
+          <span>Status</span>
+          <span className={isAvailable && stock > 0 ? styles.available : styles.unavailable}>
+            {isAvailable && stock > 0 ? "Available" : !isAvailable ? "Unavailable" : "Out of Stock"}
+          </span>
         </p>
       </div>
       <div className={styles.buttons}>

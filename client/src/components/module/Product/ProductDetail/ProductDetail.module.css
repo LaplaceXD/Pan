@@ -40,6 +40,14 @@
   font-size: 1.25rem;
 }
 
+.detail span.available {
+  color: var(--tertiary-color);
+}
+
+.detail span.unavailable {
+  color: var(--error-color);
+}
+
 .buttons {
   display: grid;
   gap: 16px;

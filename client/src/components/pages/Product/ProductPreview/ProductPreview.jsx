@@ -27,7 +27,8 @@ function ProductPreview({ productId }) {
         description={product?.description}
         category={product?.category_name}
         img={empImg}
-        quantity={product?.available_stock}
+        stock={product?.available_stock}
+        isAvailable={product?.is_available}
         price={product?.unit_price}
         onEdit={() => setPage(pages.PRODUCT_FORM)}
       />
