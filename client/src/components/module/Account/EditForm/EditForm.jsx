@@ -39,8 +39,6 @@ function EditForm({ id = 0, firstName = "", lastName = "", email = "", contact =
       });
       formik.setSubmitting(false);
 
-      console.log(error);
-
       if (isRedirect) return;
       if (error) return toast.error(typeof error === "object" ? Object.entries(error)[0][1] : error);
 
@@ -61,6 +59,7 @@ function EditForm({ id = 0, firstName = "", lastName = "", email = "", contact =
         value={formik.values.firstName}
         error={formik.touched.firstName && formik.errors.firstName}
         onChange={formik.handleChange}
+        onBlur={formik.handleBlur}
       />
       <Field
         label="Last Name"
@@ -71,6 +70,7 @@ function EditForm({ id = 0, firstName = "", lastName = "", email = "", contact =
         value={formik.values.lastName}
         error={formik.touched.lastName && formik.errors.lastName}
         onChange={formik.handleChange}
+        onBlur={formik.handleBlur}
       />
       <Field
         label="Email address"
@@ -81,6 +81,7 @@ function EditForm({ id = 0, firstName = "", lastName = "", email = "", contact =
         value={formik.values.email}
         error={formik.touched.email && formik.errors.email}
         onChange={formik.handleChange}
+        onBlur={formik.handleBlur}
       />
       <Field
         label="Contact Number"
@@ -91,6 +92,7 @@ function EditForm({ id = 0, firstName = "", lastName = "", email = "", contact =
         value={formik.values.contact}
         error={formik.touched.contact && formik.errors.contact}
         onChange={formik.handleChange}
+        onBlur={formik.handleBlur}
       />
 
       <div className={styles.buttons}>
