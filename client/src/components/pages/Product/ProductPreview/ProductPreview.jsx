@@ -6,7 +6,12 @@ import { toast } from "react-toastify";
 import empImg from "@assets/imgs/emp-img.jpg";
 import { Product } from "@components/module";
 import { useMutation, useQuery } from "@hooks";
-import { editProductById, getProductById, toggleProductStatusById } from "@services/product";
+import {
+  createProduct as createProductService,
+  editProductById,
+  getProductById,
+  toggleProductStatusById,
+} from "@services/product";
 
 import styles from "./ProductPreview.module.css";
 
@@ -21,6 +26,7 @@ function ProductPreview({ productId, showProductAddButton = false, showProductEd
   const queryClient = useQueryClient();
   const [page, setPage] = useState(pages.DEFAULT);
 
+  const createProduct = useMutation(createProductService);
   const editProduct = useMutation(
     async ({ product_id, ...body }) => await editProductById(product_id, body)
   );
@@ -31,7 +37,7 @@ function ProductPreview({ productId, showProductAddButton = false, showProductEd
 
   useEffect(() => setPage(productId ? pages.PRODUCT_DETAIL : pages.DEFAULT), [productId]);
 
-  async function handleEditSubmit(values, setSubmitting) {
+  async function handleProductEdit(values, setSubmitting) {
     setSubmitting(true);
     const { error, isRedirect } = await editProduct.execute({
       product_id: productId,
@@ -52,7 +58,27 @@ function ProductPreview({ productId, showProductAddButton = false, showProductEd
     toast.success("Product edited successfully.");
   }
 
-  async function handleStatusChange() {
+  async function handleProductAdd(values, setSubmitting) {
+    setSubmitting(true);
+    const { error, isRedirect } = await createProduct.execute({
+      name: values.name,
+      category_id: values.category,
+      description: values.description,
+      unit_price: values.price,
+    });
+
+    setSubmitting(false);
+    if (isRedirect) return;
+    if (error) return toast.error(error);
+
+    queryClient.invalidateQueries("products");
+    queryClient.invalidateQueries(["product", productId]);
+
+    setPage(pages.DEFAULT);
+    toast.success("Product added successfully.");
+  }
+
+  async function handleProductStatusChange() {
     const { error, isRedirect } = await toggleProductStatus.execute(productId);
     if (isRedirect) return;
     if (error) return toast.error(error);
@@ -73,7 +99,7 @@ function ProductPreview({ productId, showProductAddButton = false, showProductEd
         isAvailable={product?.is_available}
         price={product?.unit_price}
         onEdit={() => setPage(pages.PRODUCT_EDIT_FORM)}
-        onStatusChange={handleStatusChange}
+        onStatusChange={handleProductStatusChange}
         statusChangeDisabled={toggleProductStatus.isLoading}
         showProductEditButtons={showProductEditButtons}
       />
@@ -86,11 +112,11 @@ function ProductPreview({ productId, showProductAddButton = false, showProductEd
         img={empImg}
         price={product?.unit_price}
         onCancel={() => setPage(pages.PRODUCT_DETAIL)}
-        onSubmit={handleEditSubmit}
+        onSubmit={handleProductEdit}
       />
     ),
     [pages.PRODUCT_ADD_FORM]: (
-      <Product.Form img={empImg} onCancel={() => setPage(pages.DEFAULT)} onSubmit={handleEditSubmit} />
+      <Product.Form img={empImg} onCancel={() => setPage(pages.DEFAULT)} onSubmit={handleProductAdd} />
     ),
     [pages.DEFAULT]: showProductAddButton ? (
       <button className={styles.addBtn} onClick={() => setPage(pages.PRODUCT_ADD_FORM)}>
