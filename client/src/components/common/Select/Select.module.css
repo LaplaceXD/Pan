@@ -1,36 +1,36 @@
-.menu {
+div.menu {
   background: var(--accent-color);
   border-radius: 8px;
 }
 
-.control {
+div.control {
   background: var(--primary-color);
   border: none;
   box-shadow: none;
 }
 
-.control:hover {
+div.control:hover {
   cursor: pointer;
 }
 
-.input {
+div.input {
   color: var(--white);
 }
 
-.option {
+div.option {
   display: flex;
   background: var(--primary-color);
   color: var(--text-color);
 }
 
-.option:hover {
+div.option:hover {
   cursor: pointer;
   color: var(--white);
   filter: brightness(1.2);
 }
 
-.option:active,
-.option.isSelected {
+div.option:active,
+div.option.isSelected {
   background: var(--secondary-color);
   color: var(--primary-color);
   filter: none;
