@@ -1,16 +1,16 @@
 .container {
-    flex: 1;
-    padding: 1.75em;
+  flex: 1;
+  padding: 1.75em;
 }
 
 .content {
-    padding-top: 0.5em;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  padding-top: 0.5em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .item {
-    width: -webkit-fill-available;
-    padding: 1em 7em;
+  width: -webkit-fill-available;
+  padding: 1em 7em;
 }
