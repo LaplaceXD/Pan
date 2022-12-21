@@ -1,0 +1,40 @@
+.container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  color: var(--text-color);
+  padding: 1em 0 2em 0;
+}
+
+.title {
+  font-weight: var(--font-regular);
+  font-size: 1.5rem;
+}
+
+.img {
+  align-self: center;
+  border-radius: 8px;
+}
+
+.description {
+  flex: 1;
+}
+
+.description textarea {
+  height: 100%;
+  background: var(--primary-color);
+  border-radius: 8px;
+  padding: 12px 16px;
+
+  resize: none;
+  font-size: 1rem;
+  color: var(--white);
+}
+
+.buttons {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(2, 1fr);
+}
