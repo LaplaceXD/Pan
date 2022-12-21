@@ -27,7 +27,6 @@
   display: inline-block;
   font-weight: var(--font-regular);
   color: var(--white);
-  float: left;
   margin-bottom: 3em;
 }
 
