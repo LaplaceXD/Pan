@@ -24,6 +24,7 @@ const search = {
 
 function Supplier() {
   const { data } = useQuery("suppliers", getAllSuppliers);
+  console.log(data)
   const suppliers = data?.map(({ supplier_id, name, contact_no, ...address }) => ({
     supplier_id,
     name,

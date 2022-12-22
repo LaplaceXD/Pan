@@ -9,3 +9,4 @@ export { default as Report } from "./Report";
 export { default as Routes } from "./Routes";
 export { default as Supplier } from "./Supplier";
 export { default as UserBanner } from "./UserBanner";
+export { default as Employee } from "./Employee";
