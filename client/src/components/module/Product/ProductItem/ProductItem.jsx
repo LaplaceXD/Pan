@@ -42,7 +42,7 @@ function ProductItem({
           </span>
         </p>
         <p className={styles.sideDetail}>
-          Qty in stock: <span>{stock}</span>
+          Qty in stock: <span>{stock > 0 ? `${stock}` : "0"}</span>
         </p>
         <p className={styles.sideDetail}>
           Unit Price: <span>{format.currency(unitPrice)}</span>

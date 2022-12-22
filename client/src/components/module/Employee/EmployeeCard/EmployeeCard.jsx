@@ -2,12 +2,16 @@ import React from "react";
 import styles from "./EmployeeCard.module.css";
 import format from "@utils/format";
 
-import { BoxImage } from "@components/common";
 import { clsx } from "clsx";
 
-function EmployeeCard({ id, name, contact_no, date, img, onClick, isSelected = false, className }) {
+function EmployeeCard({ id, name, contact_no, date, img, onClick, isSelected = false, className, disabled = false }) {
     return(
-        <li className={clsx(styles.item, isSelected && styles.isSelected)} onClick={onClick}>
+        <li
+            className={clsx(styles.item,
+                disabled && styles.disabled,
+                !disabled && isSelected && styles.isSelected)}
+            onClick={onClick}
+        >
             <div className={styles.img}>
                 <img src={img} className={styles.img}/>
             </div>

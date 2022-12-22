@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./Employee.module.css";
-import placeholderImg from "@assets/imgs/placeholder-img.jpg";
+import empImg from "@assets/imgs/emp-img.jpg";
 import format from "@utils/format";
 
 import { PreviewLayout } from "@components/template";
@@ -23,11 +23,12 @@ function Employee() {
     );
 
     const { data } = useQuery("employees", getAllEmployee);
-    const employees = data?.map(({ employee_id, fullName, first_name, last_name, contact_no, date_employed }) => ({
+    const employees = data?.map(({ employee_id, fullName, first_name, last_name, contact_no, date_employed, email }) => ({
         employee_id: format.id(employee_id),
         fullName : `${first_name} ${last_name}`,
         contact_no,
         date_employed: format.date(date_employed),
+        email,
     }));
 
     console.log(employees)
@@ -45,7 +46,7 @@ function Employee() {
                     employees &&
                     employees.map(employee =>
                         <EmployeeModule.EmployeeCard
-                            img={placeholderImg}
+                            img={empImg}
                             id={employee.employee_id}
                             name={employee.fullName}
                             contact_no={employee.contact_no}
