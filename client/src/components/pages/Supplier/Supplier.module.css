@@ -7,3 +7,8 @@
 .header h1 {
   flex: 1;
 }
+
+.supplierPreview {
+  flex: 1;
+  margin-top: 1.5em;
+}

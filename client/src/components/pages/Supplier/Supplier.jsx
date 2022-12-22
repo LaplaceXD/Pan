@@ -34,8 +34,17 @@ function Supplier({ showSupplierDetail = false }) {
   }));
   const { filter, data: filteredSuppliers } = useFilter(suppliers, { search });
 
-  const supplierList = (
+  const supplierPreview = (
       <>
+        <SupplierModule.Preview className={styles.supplierPreview}/>
+        <Button
+            label="Add New Supplier"
+        />
+      </>
+  );
+
+  return (
+      <PreviewLayout PreviewComponent={supplierPreview} >
         <main className={styles.container}>
           <Header title="Supplier List" className={styles.header}>
             <SearchBar
@@ -43,7 +52,6 @@ function Supplier({ showSupplierDetail = false }) {
                 value={filter.search}
                 onSearch={(e) => filter.handleSearch(e.currentTarget.value)}
             />
-            <UserBanner imgSize={56} />
           </Header>
 
           <List
@@ -56,43 +64,7 @@ function Supplier({ showSupplierDetail = false }) {
               )}
           />
         </main>
-      </>
-  );
-
-  const supplierPreview = (
-      <>
-        <Button
-            label="Add New Supplier"
-        />
-      </>
-  );
-
-  return (
-      <>
-        {showSupplierDetail ? (
-            <PreviewLayout PreviewComponent={supplierPreview} >
-              <main className={styles.container}>
-                <Header title="Supplier List" className={styles.header}>
-                  <SearchBar
-                      className={styles.search}
-                      value={filter.search}
-                      onSearch={(e) => filter.handleSearch(e.currentTarget.value)}
-                  />
-                </Header>
-
-                <List
-                    column
-                    className={styles.supplierItem}
-                    items={filteredSuppliers}
-                    itemKey={(suppliers) => suppliers.supplier_id}
-                    RenderComponent={({ supplier_id, name, contact_no, address }) => (
-                        <SupplierModule.Item id={supplier_id} name={name} contactNumber={contact_no} address={address} />
-                    )}
-                />
-              </main>
-            </PreviewLayout>
-        ) : {supplierList}}
-      </>
+      </PreviewLayout>
   );
 }
 

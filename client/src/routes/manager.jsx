@@ -37,7 +37,7 @@ const managerPages = [
     path: "/suppliers",
     label: "Supplier",
     icon: <FiTruck />,
-    element: <Supplier showSupplierDetail/>,
+    element: <Supplier />,
     navLink: true,
   },
   // {
