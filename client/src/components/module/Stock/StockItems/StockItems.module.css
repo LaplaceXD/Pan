@@ -1,0 +1,6 @@
+.list {
+  flex: 1;
+  gap: 16px;
+  overflow-y: scroll;
+  max-height: 75vh;
+}
