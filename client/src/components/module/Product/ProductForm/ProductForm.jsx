@@ -1,7 +1,8 @@
-import { BoxImage, Button, Field } from "@components/common";
-import { Category } from "@components/module";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+
+import { BoxImage, Button, Field, TextAreaField } from "@components/common";
+import { Category } from "@components/module";
 
 import styles from "./ProductForm.module.css";
 
@@ -69,21 +70,16 @@ function ProductForm({
         value={formik.values.category}
         isDisabled={formik.isSubmitting}
       />
-
-      <Field
+      <TextAreaField
+        className={styles.description}
         label="Description"
         id="description"
-        className={styles.description}
+        name="description"
+        value={formik.values.description}
+        onChange={formik.handleChange}
+        onBlur={formik.handleBlur}
         error={formik.touched.description && formik.errors.description}
-      >
-        <textarea
-          id="description"
-          name="description"
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          value={formik.values.description}
-        />
-      </Field>
+      />
       <Field
         type="text"
         label="Unit Price"
