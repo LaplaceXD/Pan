@@ -34,7 +34,7 @@ function StockItem({
           </p>
         ) : null}
         <p>
-          <BsCalendarDate /> {format.datetime(dateSupplied)}
+          <BsCalendarDate /> {format.date(dateSupplied)}
         </p>
       </article>
       <div className={styles.buttons}>
