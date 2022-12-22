@@ -1,3 +1,8 @@
+.container {
+  flex: 1;
+  height: max-content;
+}
+
 .list {
   flex: 1;
   gap: 16px;
