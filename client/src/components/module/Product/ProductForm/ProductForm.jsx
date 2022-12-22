@@ -25,7 +25,7 @@ function ProductForm({
         .max(100)
         .matches(/^[\w\s\&]*$/, "Product Name must contain letters, digits, and spaces only.")
         .required(),
-      category: Yup.number().integer().label("Category").required(),
+      category: Yup.number().integer().label("Category").min(0).required(),
       description: Yup.string().label("Description").min(2).max(300).required(),
       price: Yup.number().label("Unit Price").min(0.01).required(),
     }),
@@ -81,7 +81,7 @@ function ProductForm({
         error={formik.touched.description && formik.errors.description}
       />
       <Field
-        type="text"
+        type="number"
         label="Unit Price"
         id="price"
         name="price"
