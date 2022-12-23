@@ -9,14 +9,14 @@ import format from "@utils/format";
 
 import styles from "./Account.module.css";
 
-const pages = {
+const views = {
   DETAILS: Symbol(0),
   EDIT: Symbol(1),
   CHANGE_PASSWORD: Symbol(2),
 };
 
 function Account() {
-  const [page, setPage] = useState(pages.DETAILS);
+  const [view, setview] = useState(views.DETAILS);
 
   const { user } = useAuth();
   const { data: account } = useQuery(["account", user.id], ({ signal }) =>
@@ -24,8 +24,8 @@ function Account() {
   );
   const fullName = `${account?.first_name} ${account?.last_name}`;
 
-  const pageDetails = {
-    [pages.DETAILS]: {
+  const viewDetails = {
+    [views.DETAILS]: {
       header: format.capitalize(user.role),
       content: (
         <AccountModule.Details
@@ -33,12 +33,12 @@ function Account() {
           name={account && fullName}
           email={account?.email}
           contact={account?.contact_no}
-          onEditClick={() => setPage(pages.EDIT)}
-          onChangePassClick={() => setPage(pages.CHANGE_PASSWORD)}
+          onEditClick={() => setview(views.EDIT)}
+          onChangePassClick={() => setview(views.CHANGE_PASSWORD)}
         />
       ),
     },
-    [pages.EDIT]: {
+    [views.EDIT]: {
       header: `Edit ${format.capitalize(user.role)} Profile`,
       content: (
         <AccountModule.EditForm
@@ -47,18 +47,18 @@ function Account() {
           lastName={account?.last_name}
           email={account?.email}
           contact={account?.contact_no}
-          onCancel={() => setPage(pages.DETAILS)}
-          onSubmit={() => setPage(pages.DETAILS)}
+          onCancel={() => setview(views.DETAILS)}
+          onSubmit={() => setview(views.DETAILS)}
         />
       ),
     },
-    [pages.CHANGE_PASSWORD]: {
+    [views.CHANGE_PASSWORD]: {
       header: "Change Password",
       content: (
         <AccountModule.ChangePasswordForm
           id={user.id}
-          onCancel={() => setPage(pages.DETAILS)}
-          onSubmit={() => setPage(pages.DETAILS)}
+          onCancel={() => setview(views.DETAILS)}
+          onSubmit={() => setview(views.DETAILS)}
         />
       ),
     },
@@ -68,8 +68,8 @@ function Account() {
     <main className={styles.page}>
       <section className={styles.container}>
         <BoxImage src={empImg} alt={`Name's profile picture.`} size={312} className={styles.img} />
-        {pageDetails[page].content}
-        <h1 className={styles.header}>{pageDetails[page].header}</h1>
+        {viewDetails[view].content}
+        <h1 className={styles.header}>{viewDetails[view].header}</h1>
       </section>
     </main>
   );

@@ -17,7 +17,7 @@ import format from "@utils/format";
 
 import styles from "./ProductPreview.module.css";
 
-const pages = {
+const views = {
   PRODUCT_STOCK: Symbol(4),
   PRODUCT_EDIT_FORM: Symbol(3),
   PRODUCT_ADD_FORM: Symbol(2),
@@ -32,7 +32,7 @@ function ProductPreview({
   showProductEditButton = false,
 }) {
   const queryClient = useQueryClient();
-  const [page, setPage] = useState(pages.DEFAULT);
+  const [view, setview] = useState(views.DEFAULT);
 
   const createProduct = useMutation(createProductService);
   const editProduct = useMutation(
@@ -46,7 +46,7 @@ function ProductPreview({
     return productId ? await getAllStocksByProductId(productId, { signal }) : null;
   });
 
-  useEffect(() => setPage(productId ? pages.PRODUCT_DETAIL : pages.DEFAULT), [productId]);
+  useEffect(() => setview(productId ? views.PRODUCT_DETAIL : views.DEFAULT), [productId]);
 
   async function handleProductEdit(values, setSubmitting) {
     setSubmitting(true);
@@ -67,7 +67,7 @@ function ProductPreview({
       queryClient.invalidateQueries(["product", productId]),
     ]);
 
-    setPage(pages.PRODUCT_DETAIL);
+    setview(views.PRODUCT_DETAIL);
     toast.success("Product edited successfully.");
   }
 
@@ -89,7 +89,7 @@ function ProductPreview({
       queryClient.invalidateQueries(["product", productId]),
     ]);
 
-    setPage(pages.DEFAULT);
+    setview(views.DEFAULT);
     toast.success("Product added successfully.");
   }
 
@@ -105,17 +105,17 @@ function ProductPreview({
     toast.success("Product status toggled successfully.");
   }
 
-  const pageDetails = {
-    [pages.PRODUCT_STOCK]: (
+  const viewDetails = {
+    [views.PRODUCT_STOCK]: (
       <Stock.Preview
         stocks={stocks}
         product={product}
-        onBack={() => setPage(pages.PRODUCT_DETAIL)}
+        onBack={() => setview(views.PRODUCT_DETAIL)}
         showStockDeleteButton={showStockDeleteButton}
         disableProductField
       />
     ),
-    [pages.PRODUCT_DETAIL]: (
+    [views.PRODUCT_DETAIL]: (
       <Product.Detail
         name={product?.name}
         description={product?.description}
@@ -124,14 +124,14 @@ function ProductPreview({
         stock={product?.available_stock}
         isAvailable={product?.is_available}
         price={product?.unit_price}
-        onEdit={() => setPage(pages.PRODUCT_EDIT_FORM)}
-        onViewStock={() => setPage(pages.PRODUCT_STOCK)}
+        onEdit={() => setview(views.PRODUCT_EDIT_FORM)}
+        onViewStock={() => setview(views.PRODUCT_STOCK)}
         onStatusChange={handleProductStatusChange}
         statusChangeDisabled={toggleProductStatus.isLoading}
         showProductEditButton={showProductEditButton}
       />
     ),
-    [pages.PRODUCT_EDIT_FORM]: (
+    [views.PRODUCT_EDIT_FORM]: (
       <Product.Form
         title="Product Edit Details"
         name={product?.name}
@@ -139,27 +139,27 @@ function ProductPreview({
         categoryId={product?.category_id}
         img={placeholderImg}
         price={product?.unit_price}
-        onCancel={() => setPage(pages.PRODUCT_DETAIL)}
+        onCancel={() => setview(views.PRODUCT_DETAIL)}
         onSubmit={handleProductEdit}
       />
     ),
-    [pages.PRODUCT_ADD_FORM]: (
+    [views.PRODUCT_ADD_FORM]: (
       <Product.Form
         title="Add New Product"
         img={placeholderImg}
-        onCancel={() => setPage(pages.DEFAULT)}
+        onCancel={() => setview(views.DEFAULT)}
         onSubmit={handleProductAdd}
       />
     ),
-    [pages.DEFAULT]: showProductAddButton ? (
-      <button className={styles.addBtn} onClick={() => setPage(pages.PRODUCT_ADD_FORM)}>
+    [views.DEFAULT]: showProductAddButton ? (
+      <button className={styles.addBtn} onClick={() => setview(views.PRODUCT_ADD_FORM)}>
         <BsPlusCircle size={128} />
         Add a new Product
       </button>
     ) : null,
   };
 
-  return <div className={styles.container}>{pageDetails[page]}</div>;
+  return <div className={styles.container}>{viewDetails[view]}</div>;
 }
 
 export default ProductPreview;
