@@ -1,3 +1,5 @@
+import { useQueryClient } from "react-query";
+
 import { editProductById, getProductById, toggleProductStatusById } from "@services/product";
 import { getAllStocksByProductId } from "@services/stock";
 
@@ -5,6 +7,8 @@ import useMutation from "@hooks/mutation";
 import useQuery from "@hooks/query";
 
 function useProduct(id) {
+  const queryClient = useQueryClient();
+
   const payload = useQuery(["product", id], async ({ signal }) => {
     return id ? await getProductById(id, { signal }) : null;
   });
@@ -20,7 +24,15 @@ function useProduct(id) {
     stocks,
     update,
     toggleStatus,
-    invalidate: async () => await Promise.all([payload.invalidate(), stocks.invalidate()]),
+    invalidate: async (id) => {
+      if (id) return await Promise.all([payload.invalidate(), stocks.invalidate()]);
+
+      return await Promise.all([
+        queryClient
+          .invalidateQueries(["product", id])
+          .queryClient.invalidateQueries(["product", id, "stocks"]),
+      ]);
+    },
   };
 }
 
