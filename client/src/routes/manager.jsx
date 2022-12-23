@@ -1,7 +1,8 @@
 import { BiNotepad } from "react-icons/bi";
-import { BsBoxSeam } from "react-icons/bs";
+import { BsBoxSeam, BsPeople } from "react-icons/bs";
 import { FiHome, FiTruck } from "react-icons/fi";
 
+import Employee from "@components/pages/Employee";
 import Order from "@components/pages/Order";
 import Product from "@components/pages/Product";
 import Report from "@components/pages/Report";
@@ -40,13 +41,13 @@ const managerPages = [
     element: <Supplier />,
     navLink: true,
   },
-  // {
-  //   path: "/employees",
-  //   label: "Employees",
-  //   icon: <BsPeople />,
-  //   element: <h1>Employees</h1>,
-  //   navLink: true,
-  // },
+  {
+    path: "/employees",
+    label: "Employees",
+    icon: <BsPeople />,
+    element: <Employee />,
+    navLink: true,
+  },
 ];
 
 export default {
