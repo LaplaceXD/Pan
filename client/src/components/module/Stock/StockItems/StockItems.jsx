@@ -10,26 +10,18 @@ function StockItems({ items = [], onItemEdit, onItemDelete, showSupplier = false
         items={items}
         className={styles.list}
         itemKey={(stock) => stock.stock_id}
-        RenderComponent={({
-          stock_id,
-          unit,
-          notes,
-          unit_price,
-          product_name,
-          supplier_name,
-          date_supplied,
-          quantity,
-        }) => (
+        RenderComponent={(stock) => (
           <StockItem
-            unit={unit}
-            quantity={quantity}
-            notes={notes}
-            product={product_name}
-            supplier={supplier_name}
-            dateSupplied={date_supplied}
-            price={unit_price}
-            onEdit={() => onItemEdit(stock_id)}
-            onDelete={() => onItemDelete(stock_id)}
+            key={stock.stock_id}
+            unit={stock.unit}
+            quantity={stock.quantity}
+            notes={stock.notes}
+            product={stock.product_name}
+            supplier={stock.supplier_name}
+            dateSupplied={stock.date_supplied}
+            price={stock.unit_price}
+            onEdit={() => onItemEdit(stock)}
+            onDelete={() => onItemDelete(stock)}
             showNotes
             showSupplier={showSupplier}
             showProduct={showProduct}
