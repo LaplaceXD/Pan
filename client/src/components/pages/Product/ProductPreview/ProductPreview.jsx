@@ -41,7 +41,7 @@ function ProductPreview({
     if (isRedirect) return;
     if (error) return toast.error(format.error(error));
 
-    await Promise.all([productsQuery.payload.invalidate(), productQuery.payload.invalidate()]);
+    await Promise.all([productsQuery.invalidate(), productQuery.invalidate()]);
     setview(views.PRODUCT_DETAIL);
     toast.success("Product edited successfully.");
   }
@@ -54,7 +54,7 @@ function ProductPreview({
     if (isRedirect) return;
     if (error) return toast.error(format.error(error));
 
-    await Promise.all([productsQuery.payload.invalidate(), productQuery.payload.invalidate()]);
+    await Promise.all([productsQuery.invalidate(), productQuery.invalidate()]);
     setview(views.DEFAULT);
     toast.success("Product added successfully.");
   }
@@ -64,7 +64,7 @@ function ProductPreview({
     if (isRedirect) return;
     if (error) return toast.error(format.error(error));
 
-    await Promise.all([productsQuery.payload.invalidate(), productQuery.payload.invalidate()]);
+    await Promise.all([productsQuery.invalidate(), productQuery.invalidate()]);
     toast.success("Product status toggled successfully.");
   }
 
@@ -96,7 +96,7 @@ function ProductPreview({
     ),
     [views.PRODUCT_EDIT_FORM]: (
       <Product.Form
-        title="productQuery Edit Details"
+        title="Product Edit Details"
         name={product?.name}
         description={product?.description}
         categoryId={product?.category_id}
@@ -108,7 +108,7 @@ function ProductPreview({
     ),
     [views.PRODUCT_ADD_FORM]: (
       <Product.Form
-        title="Add New productQuery"
+        title="Add New Product"
         img={placeholderImg}
         onCancel={() => setview(views.DEFAULT)}
         onSubmit={handleProductAdd}
@@ -117,7 +117,7 @@ function ProductPreview({
     [views.DEFAULT]: showProductAddButton ? (
       <button className={styles.addBtn} onClick={() => setview(views.PRODUCT_ADD_FORM)}>
         <BsPlusCircle size={128} />
-        Add a new productQuery
+        Add a new Product
       </button>
     ) : null,
   };

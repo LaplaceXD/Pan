@@ -15,7 +15,13 @@ function useProduct(id) {
   const update = useMutation(async (body) => await editProductById(id, body));
   const toggleStatus = useMutation(toggleProductStatusById);
 
-  return { payload, stocks, update, toggleStatus };
+  return {
+    payload,
+    stocks,
+    update,
+    toggleStatus,
+    invalidate: async () => await Promise.all([payload.invalidate(), stocks.invalidate()]),
+  };
 }
 
 export default useProduct;

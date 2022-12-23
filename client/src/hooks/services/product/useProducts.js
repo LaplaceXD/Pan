@@ -7,7 +7,7 @@ function useProducts() {
   const payload = useQuery("products", getAllProducts);
   const create = useMutation(createProduct);
 
-  return { payload, create };
+  return { payload, create, invalidate: async () => await payload.invalidate() };
 }
 
 export default useProducts;
