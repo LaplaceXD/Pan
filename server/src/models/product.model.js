@@ -177,7 +177,6 @@ class Product {
         description: Joi.string().label("Description").min(2).max(300).required().trim(),
         unit_price: Joi.number().label("Unit Price").precision(2).required(),
         category_id: Joi.number()
-          .min(0)
           .label("Category ID")
           .allow(null)
           .not(!match ? product.category_id ?? "" : "")
