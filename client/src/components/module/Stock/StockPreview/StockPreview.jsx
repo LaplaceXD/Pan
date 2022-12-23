@@ -29,6 +29,7 @@ function StockPreview({
   supplier = null,
   disableSupplierField = false,
   disableProductField = false,
+  showStockDeleteButton = false,
   onBack,
 }) {
   const queryClient = useQueryClient();
@@ -120,6 +121,7 @@ function StockPreview({
             onItemDelete={handleStockItemDelete}
             showSupplier={disableProductField}
             showProduct={disableSupplierField}
+            showStockDeleteButton={showStockDeleteButton}
           />
           <div className={styles.buttons}>
             <Button label="Go Back" onClick={onBack} secondary />
@@ -165,15 +167,18 @@ function StockPreview({
     <div className={styles.container}>
       <h3 className={styles.title}>{viewDetails[view].header}</h3>
       {viewDetails[view].content}
-      <Modal.Confirm
-        title="Delete?"
-        description="Are you sure you want to delete this stock?"
-        open={deleteModal.isOpen}
-        onClose={deleteModal.close}
-        confirmLabel="Delete"
-        confirmDisabled={deleteStock.isLoading}
-        onConfirm={handleStockDelete}
-      />
+
+      {showStockDeleteButton ? (
+        <Modal.Confirm
+          title="Delete?"
+          description="Are you sure you want to delete this stock?"
+          open={deleteModal.isOpen}
+          onClose={deleteModal.close}
+          confirmLabel="Delete"
+          confirmDisabled={deleteStock.isLoading}
+          onConfirm={handleStockDelete}
+        />
+      ) : null}
     </div>
   );
 }

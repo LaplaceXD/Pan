@@ -25,7 +25,12 @@ const pages = {
   DEFAULT: Symbol(0),
 };
 
-function ProductPreview({ productId, showProductAddButton = false, showProductEditButtons = false }) {
+function ProductPreview({
+  productId,
+  showStockDeleteButton = false,
+  showProductAddButton = false,
+  showProductEditButton = false,
+}) {
   const queryClient = useQueryClient();
   const [page, setPage] = useState(pages.DEFAULT);
 
@@ -98,6 +103,7 @@ function ProductPreview({ productId, showProductAddButton = false, showProductEd
         stocks={stocks?.filter(({ product_id }) => product_id === productId)}
         product={product}
         onBack={() => setPage(pages.PRODUCT_DETAIL)}
+        showStockDeleteButton={showStockDeleteButton}
         disableProductField
       />
     ),
@@ -114,7 +120,7 @@ function ProductPreview({ productId, showProductAddButton = false, showProductEd
         onViewStock={() => setPage(pages.PRODUCT_STOCK)}
         onStatusChange={handleProductStatusChange}
         statusChangeDisabled={toggleProductStatus.isLoading}
-        showProductEditButtons={showProductEditButtons}
+        showProductEditButton={showProductEditButton}
       />
     ),
     [pages.PRODUCT_EDIT_FORM]: (

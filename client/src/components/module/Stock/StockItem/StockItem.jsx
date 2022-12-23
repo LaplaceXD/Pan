@@ -16,6 +16,7 @@ function StockItem({
   onDelete,
   showSupplier = false,
   showProduct = false,
+  showStockDeleteButton = false,
 }) {
   return (
     <li className={styles.container}>
@@ -47,15 +48,17 @@ function StockItem({
         >
           <FaEdit size={24} />
         </button>
-        <button
-          type="button"
-          onClick={(e) => {
-            e.stopPropagation();
-            onDelete();
-          }}
-        >
-          <BsTrash size={24} />
-        </button>
+        {showStockDeleteButton ? (
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              onDelete();
+            }}
+          >
+            <BsTrash size={24} />
+          </button>
+        ) : null}
       </div>
       <p className={styles.notes}>{notes}</p>
     </li>

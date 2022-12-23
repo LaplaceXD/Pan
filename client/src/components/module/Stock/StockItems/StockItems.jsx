@@ -2,7 +2,14 @@ import { List } from "@components/common";
 import StockItem from "../StockItem";
 import styles from "./StockItems.module.css";
 
-function StockItems({ items = [], onItemEdit, onItemDelete, showSupplier = false, showProduct = false }) {
+function StockItems({
+  items = [],
+  onItemEdit,
+  onItemDelete,
+  showSupplier = false,
+  showProduct = false,
+  showStockDeleteButton = false,
+}) {
   return (
     <div className={styles.container}>
       <List
@@ -23,6 +30,7 @@ function StockItems({ items = [], onItemEdit, onItemDelete, showSupplier = false
             onEdit={() => onItemEdit(stock)}
             onDelete={() => onItemDelete(stock)}
             showNotes
+            showStockDeleteButton={showStockDeleteButton}
             showSupplier={showSupplier}
             showProduct={showProduct}
           />
