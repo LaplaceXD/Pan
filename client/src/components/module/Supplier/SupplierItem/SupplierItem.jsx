@@ -4,7 +4,7 @@ import styles from "./SupplierItem.module.css";
 function SupplierItem({ id, name, contactNumber, address }) {
   return (
     <li className={styles.container}>
-      <div  className={styles.nameContainer}>
+      <div className={styles.nameContainer}>
         <p className={styles.label}>{format.id(id, "SupplierID")}</p>
         <p className={styles.supplierName}>{name}</p>
       </div>

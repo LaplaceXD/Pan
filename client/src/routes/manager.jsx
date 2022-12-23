@@ -4,8 +4,8 @@ import { FiHome, FiTruck } from "react-icons/fi";
 
 import Order from "@components/pages/Order";
 import Product from "@components/pages/Product";
-import Supplier from "@components/pages/Supplier";
 import Report from "@components/pages/Report";
+import Supplier from "@components/pages/Supplier";
 import { appendPath, getLinkProps, getRouteProps } from "@utils/routes";
 
 const directory = "/m";
