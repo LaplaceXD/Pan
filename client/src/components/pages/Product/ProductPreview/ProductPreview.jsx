@@ -4,7 +4,7 @@ import { useQueryClient } from "react-query";
 import { toast } from "react-toastify";
 
 import placeholderImg from "@assets/imgs/placeholder-img.jpg";
-import { Product } from "@components/module";
+import { Product, Stock } from "@components/module";
 import { useMutation, useQuery } from "@hooks";
 import {
   createProduct as createProductService,
@@ -12,18 +12,25 @@ import {
   getProductById,
   toggleProductStatusById,
 } from "@services/product";
+import { getAllStocks } from "@services/stock";
 import format from "@utils/format";
 
 import styles from "./ProductPreview.module.css";
 
 const pages = {
-  PRODUCT_EDIT_FORM: Symbol(0),
-  PRODUCT_ADD_FORM: Symbol(1),
-  PRODUCT_DETAIL: Symbol(2),
-  DEFAULT: Symbol(3),
+  PRODUCT_STOCK: Symbol(4),
+  PRODUCT_EDIT_FORM: Symbol(3),
+  PRODUCT_ADD_FORM: Symbol(2),
+  PRODUCT_DETAIL: Symbol(1),
+  DEFAULT: Symbol(0),
 };
 
-function ProductPreview({ productId, showProductAddButton = false, showProductEditButtons = false }) {
+function ProductPreview({
+  productId,
+  showStockDeleteButton = false,
+  showProductAddButton = false,
+  showProductEditButton = false,
+}) {
   const queryClient = useQueryClient();
   const [page, setPage] = useState(pages.DEFAULT);
 
@@ -35,6 +42,7 @@ function ProductPreview({ productId, showProductAddButton = false, showProductEd
   const { data: product } = useQuery(["product", productId], ({ signal }) =>
     productId ? getProductById(productId, { signal }) : null
   );
+  const { data: stocks } = useQuery("stocks", getAllStocks);
 
   useEffect(() => setPage(productId ? pages.PRODUCT_DETAIL : pages.DEFAULT), [productId]);
 
@@ -90,6 +98,15 @@ function ProductPreview({ productId, showProductAddButton = false, showProductEd
   }
 
   const pageDetails = {
+    [pages.PRODUCT_STOCK]: (
+      <Stock.Preview
+        stocks={stocks?.filter(({ product_id }) => product_id === productId)}
+        product={product}
+        onBack={() => setPage(pages.PRODUCT_DETAIL)}
+        showStockDeleteButton={showStockDeleteButton}
+        disableProductField
+      />
+    ),
     [pages.PRODUCT_DETAIL]: (
       <Product.Detail
         name={product?.name}
@@ -100,9 +117,10 @@ function ProductPreview({ productId, showProductAddButton = false, showProductEd
         isAvailable={product?.is_available}
         price={product?.unit_price}
         onEdit={() => setPage(pages.PRODUCT_EDIT_FORM)}
+        onViewStock={() => setPage(pages.PRODUCT_STOCK)}
         onStatusChange={handleProductStatusChange}
         statusChangeDisabled={toggleProductStatus.isLoading}
-        showProductEditButtons={showProductEditButtons}
+        showProductEditButton={showProductEditButton}
       />
     ),
     [pages.PRODUCT_EDIT_FORM]: (

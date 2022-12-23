@@ -13,7 +13,7 @@ function Select({ label, id, error, value, options, ...props }) {
           option: (state) => clsx(styles.option, state.isSelected && styles.isSelected),
           menu: () => styles.menu,
           control: () => styles.control,
-          singleValue: () => styles.input,
+          singleValue: (state) => clsx(styles.input, state.isDisabled && styles.isDisabled),
           input: () => styles.input,
         }}
         value={options ? options.find((option) => option.value === value) : ""}

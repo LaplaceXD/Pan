@@ -29,7 +29,7 @@ const managerPages = [
     path: "/products",
     label: "Products",
     icon: <BsBoxSeam />,
-    element: <Product showProductEditButtons showProductAddButton />,
+    element: <Product showStockDeleteButton showProductEditButton showProductAddButton />,
     navLink: true,
   },
   {
