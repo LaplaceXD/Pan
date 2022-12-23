@@ -1,7 +1,7 @@
 import auth from "@utils/auth";
 
-export async function getAllStocks({ signal }) {
-  return await auth.get("/stocks", { signal });
+export async function getAllStocksByProductId(productId, { signal }) {
+  return await auth.get("/stocks?for=product&id=" + productId, { signal });
 }
 
 export async function getStockById(stockId, { signal }) {

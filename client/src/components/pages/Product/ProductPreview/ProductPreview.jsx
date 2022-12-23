@@ -12,7 +12,7 @@ import {
   getProductById,
   toggleProductStatusById,
 } from "@services/product";
-import { getAllStocks } from "@services/stock";
+import { getAllStocksByProductId } from "@services/stock";
 import format from "@utils/format";
 
 import styles from "./ProductPreview.module.css";
@@ -42,7 +42,9 @@ function ProductPreview({
   const { data: product } = useQuery(["product", productId], ({ signal }) =>
     productId ? getProductById(productId, { signal }) : null
   );
-  const { data: stocks } = useQuery("stocks", getAllStocks);
+  const { data: stocks } = useQuery(["product", productId, "stocks"], async ({ signal }) => {
+    return productId ? await getAllStocksByProductId(productId, { signal }) : null;
+  });
 
   useEffect(() => setPage(productId ? pages.PRODUCT_DETAIL : pages.DEFAULT), [productId]);
 
@@ -60,8 +62,10 @@ function ProductPreview({
     if (isRedirect) return;
     if (error) return toast.error(format.error(error));
 
-    queryClient.invalidateQueries("products");
-    queryClient.invalidateQueries(["product", productId]);
+    await Promise.all([
+      queryClient.invalidateQueries("products"),
+      queryClient.invalidateQueries(["product", productId]),
+    ]);
 
     setPage(pages.PRODUCT_DETAIL);
     toast.success("Product edited successfully.");
@@ -80,8 +84,10 @@ function ProductPreview({
     if (isRedirect) return;
     if (error) return toast.error(format.error(error));
 
-    queryClient.invalidateQueries("products");
-    queryClient.invalidateQueries(["product", productId]);
+    await Promise.all([
+      queryClient.invalidateQueries("products"),
+      queryClient.invalidateQueries(["product", productId]),
+    ]);
 
     setPage(pages.DEFAULT);
     toast.success("Product added successfully.");
@@ -92,15 +98,17 @@ function ProductPreview({
     if (isRedirect) return;
     if (error) return toast.error(format.error(error));
 
-    queryClient.invalidateQueries("products");
-    queryClient.invalidateQueries(["product", productId]);
+    await Promise.all([
+      queryClient.invalidateQueries("products"),
+      queryClient.invalidateQueries(["product", productId]),
+    ]);
     toast.success("Product status toggled successfully.");
   }
 
   const pageDetails = {
     [pages.PRODUCT_STOCK]: (
       <Stock.Preview
-        stocks={stocks?.filter(({ product_id }) => product_id === productId)}
+        stocks={stocks}
         product={product}
         onBack={() => setPage(pages.PRODUCT_DETAIL)}
         showStockDeleteButton={showStockDeleteButton}

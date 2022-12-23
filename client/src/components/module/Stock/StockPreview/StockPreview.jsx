@@ -54,7 +54,8 @@ function StockPreview({
 
     await Promise.all([
       queryClient.invalidateQueries("products"),
-      queryClient.invalidateQueries("stocks"),
+      queryClient.invalidateQueries(["product", values.product_id, "stocks"]),
+      queryClient.invalidateQueries(["supplier", values.supplier_id, "stocks"]),
       queryClient.invalidateQueries(["product", values.product_id]),
       queryClient.invalidateQueries(["stock", stockId]),
     ]);
@@ -74,7 +75,8 @@ function StockPreview({
 
     await Promise.all([
       queryClient.invalidateQueries("products"),
-      queryClient.invalidateQueries("stocks"),
+      queryClient.invalidateQueries(["product", values.product_id, "stocks"]),
+      queryClient.invalidateQueries(["supplier", values.supplier_id, "stocks"]),
       queryClient.invalidateQueries(["product", values.product_id]),
     ]);
 
@@ -91,7 +93,8 @@ function StockPreview({
 
     await Promise.all([
       queryClient.invalidateQueries("products"),
-      queryClient.invalidateQueries("stocks"),
+      queryClient.invalidateQueries(["product", product?.product_id, "stocks"]),
+      queryClient.invalidateQueries(["supplier", supplier?.supplier_id, "stocks"]),
       queryClient.invalidateQueries(["product", product?.product_id]),
     ]);
 

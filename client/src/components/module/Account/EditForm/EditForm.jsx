@@ -53,7 +53,7 @@ function EditForm({ id = 0, firstName = "", lastName = "", email = "", contact =
       if (isRedirect) return;
       if (error) return toast.error(format.error(error));
 
-      queryClient.invalidateQueries(["account", id]);
+      await queryClient.invalidateQueries(["account", id]);
       toast.success("Account details edited successfully.");
       onSubmit();
     },

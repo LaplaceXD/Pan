@@ -54,7 +54,7 @@ function CategorySelect({
       if (isRedirect) return;
       if (error) return toast.error(format.error(error));
 
-      queryClient.invalidateQueries("categories");
+      await queryClient.invalidateQueries("categories");
       onChange({ value: data.category_id });
       toast.success("Successfully added category.");
     } catch ({ message }) {
@@ -73,8 +73,11 @@ function CategorySelect({
     if (isRedirect) return;
     if (error) return toast.error(format.error(error));
 
-    queryClient.invalidateQueries("categories");
-    queryClient.invalidateQueries("products");
+    await Promise.all([
+      queryClient.invalidateQueries("categories"),
+      queryClient.invalidateQueries("products"),
+    ]);
+
     editModal.close();
     setCategory(null);
     toast.success("Successfully edited category.");
@@ -85,8 +88,11 @@ function CategorySelect({
     if (isRedirect) return;
     if (error) return toast.error(format.error(error));
 
-    queryClient.invalidateQueries("categories");
-    queryClient.invalidateQueries("products");
+    await Promise.all([
+      queryClient.invalidateQueries("categories"),
+      queryClient.invalidateQueries("products"),
+    ]);
+
     deleteModal.close();
     setCategory(null);
     toast.success("Successfully deleted category.");
