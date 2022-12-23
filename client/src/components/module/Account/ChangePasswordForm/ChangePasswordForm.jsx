@@ -3,16 +3,13 @@ import { toast } from "react-toastify";
 import * as Yup from "yup";
 
 import { Button, PasswordField } from "@components/common";
-import { useMutation } from "@hooks";
-import { changeEmployeePasswordById } from "@services/employee";
+import { useAccount } from "@hooks/services/account";
 import format from "@utils/format";
 
 import styles from "./ChangePasswordForm.module.css";
 
 function EditForm({ id, onCancel, onSubmit }) {
-  const changePassword = useMutation(
-    async ({ employee_id, ...body }) => await changeEmployeePasswordById(employee_id, body)
-  );
+  const accountQuery = useAccount(id);
 
   const formik = useFormik({
     initialValues: { currentPass: "", newPass: "", confirmPass: "" },
@@ -41,8 +38,7 @@ function EditForm({ id, onCancel, onSubmit }) {
     }),
     onSubmit: async (values) => {
       formik.setSubmitting(true);
-      const { error, isRedirect } = await changePassword.execute({
-        employee_id: id,
+      const { error, isRedirect } = await accountQuery.changePassword.execute({
         current_password: values.currentPass,
         new_password: values.newPass,
       });

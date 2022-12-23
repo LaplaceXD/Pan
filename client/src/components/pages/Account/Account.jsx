@@ -3,8 +3,8 @@ import { useState } from "react";
 import empImg from "@assets/imgs/emp-img.jpg";
 import { BoxImage } from "@components/common";
 import { Account as AccountModule } from "@components/module";
-import { useAuth, useQuery } from "@hooks";
-import { getEmployeeById } from "@services/employee";
+import { useAuth } from "@hooks";
+import { useAccount } from "@hooks/services/account";
 import format from "@utils/format";
 
 import styles from "./Account.module.css";
@@ -19,9 +19,9 @@ function Account() {
   const [view, setview] = useState(views.DETAILS);
 
   const { user } = useAuth();
-  const { data: account } = useQuery(["account", user.id], ({ signal }) =>
-    user.id ? getEmployeeById(user.id, { signal }) : null
-  );
+  const {
+    payload: { data: account },
+  } = useAccount(user.id);
   const fullName = `${account?.first_name} ${account?.last_name}`;
 
   const viewDetails = {
