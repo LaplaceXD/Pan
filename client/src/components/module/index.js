@@ -1,5 +1,6 @@
 export { default as Account } from "./Account";
 export { default as Category } from "./Category";
+export { default as Employee } from "./Employee";
 export { default as LoginForm } from "./LoginForm";
 export { default as Modal } from "./Modal";
 export { default as Nav } from "./Nav";
@@ -10,4 +11,3 @@ export { default as Routes } from "./Routes";
 export { default as Stock } from "./Stock";
 export { default as Supplier } from "./Supplier";
 export { default as UserBanner } from "./UserBanner";
-export { default as Employee } from "./Employee";
