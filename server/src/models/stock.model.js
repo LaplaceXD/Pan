@@ -129,31 +129,27 @@ class Stock {
     return retVal;
   }
 
-  static async validate(stock, params = {}) {
-    let schema = {
-      date_supplied: Joi.date().label("Date Supplied").max("now").iso().required(),
-      quantity: Joi.number().min(0).label("Quantity").required(),
-      unit: Joi.string().label("Unit").min(2).max(5).required().trim(),
-      unit_price: Joi.number().label("Unit Price").precision(2).required(),
-      notes: Joi.string().label("Notes").min(2).max(400),
-    };
+  static async validate(stock) {
+    let productMatch = "product_id" in stock ? await Product.findById(stock.product_id) : null;
+    let supplierMatch = "supplier_id" in stock ? await Supplier.findById(stock.supplier_id) : null;
 
-    // If creating then include checking for product_id, and supplier_id
-    if (!("id" in params)) {
-      let productMatch = await Product.findById(stock.product_id);
-      let supplierMatch = await Supplier.findById(stock.supplier_id);
+    let schema = Joi.object()
+      .keys({
+        date_supplied: Joi.date().label("Date Supplied").max("now").iso().required(),
+        quantity: Joi.number().min(0).label("Quantity").required(),
+        unit: Joi.string().label("Unit").min(2).max(5).required().trim(),
+        unit_price: Joi.number().label("Unit Price").precision(2).required(),
+        notes: Joi.string().label("Notes").min(2).max(400),
+        product_id: Joi.number()
+          .label("Product ID")
+          .not(!productMatch ? stock.product_id ?? null : null),
+        supplier_id: Joi.number()
+          .label("Supplier ID")
+          .not(!supplierMatch ? stock.supplier_id ?? null : null),
+      })
+      .options({ abortEarly: false })
+      .required();
 
-      productMatch = !productMatch ? stock.product_id : null;
-      supplierMatch = !supplierMatch ? stock.supplier_id : null;
-
-      schema = {
-        product_id: Joi.number().greater(0).label("Product ID").required().not(productMatch),
-        supplier_id: Joi.number().greater(0).label("Supplier ID").required().not(supplierMatch),
-        ...schema,
-      };
-    }
-
-    schema = Joi.object().keys(schema).options({ abortEarly: false }).required();
     return schema.validate(stock);
   }
 }
