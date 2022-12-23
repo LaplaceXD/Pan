@@ -5,6 +5,7 @@ import { Button, Field, Select, TextAreaField } from "@components/common";
 import { useQuery } from "@hooks";
 import { getAllProducts } from "@services/product";
 import { getAllSuppliers } from "@services/supplier";
+import check from "@utils/check";
 
 import styles from "./StockForm.module.css";
 
@@ -60,6 +61,11 @@ function StockForm({
     enableReinitialize: true,
   });
 
+  function handlePriceChange(e) {
+    const checks = { maxIntLength: 5, maxFracLength: 2 };
+    if (check.number(e.currentTarget.value, checks)) formik.handleChange(e);
+  }
+
   return (
     <form method="POST" className={styles.container} onSubmit={formik.handleSubmit}>
       <fieldset>
@@ -112,7 +118,7 @@ function StockForm({
           label="Unit Price"
           name="price"
           id="price"
-          onChange={formik.handleChange}
+          onChange={handlePriceChange}
           onBlur={formik.handleBlur}
           value={formik.values.price}
           error={formik.touched.price && formik.errors.price}

@@ -3,6 +3,7 @@ import * as Yup from "yup";
 
 import { BoxImage, Button, Field, TextAreaField } from "@components/common";
 import { Category } from "@components/module";
+import check from "@utils/check";
 
 import styles from "./ProductForm.module.css";
 
@@ -36,16 +37,8 @@ function ProductForm({
   });
 
   function handlePriceChange(e) {
-    const INT_MAX_LENGTH = 5;
-    const FRAC_MAX_LENGTH = 2;
-
-    const [int, frac] = e.currentTarget.value.split(".");
-    const intIsWithinMaxLength = int.length <= INT_MAX_LENGTH;
-    const fracIsWithinMaxLength = frac ? frac.length <= FRAC_MAX_LENGTH : true;
-
-    if (intIsWithinMaxLength && fracIsWithinMaxLength) {
-      formik.handleChange(e);
-    }
+    const checks = { maxIntLength: 5, maxFracLength: 2 };
+    if (check.number(e.currentTarget.value, checks)) formik.handleChange(e);
   }
 
   return (
