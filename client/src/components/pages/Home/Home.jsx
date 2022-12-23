@@ -1,13 +1,14 @@
 import { useState } from "react";
 import { toast } from "react-toastify";
 
-import empImg from "@assets/imgs/emp-img.jpg";
+import placeholderImg from "@assets/imgs/placeholder-img.jpg";
 import { Button, Grid, Header, SearchBar } from "@components/common";
 import { Category, Modal, Order, Product } from "@components/module";
 import { PreviewLayout } from "@components/template";
 import { useCart, useFilter, useModal, useMutation, useQuery } from "@hooks";
 import { createOrder as createOrderService } from "@services/order";
 import { getAllProducts } from "@services/product";
+import format from "@utils/format";
 
 import styles from "./Home.module.css";
 
@@ -32,7 +33,10 @@ function Home() {
 
   const createOrder = useMutation(createOrderService);
   const { data: products } = useQuery("products", getAllProducts);
-  const { filter, data: filteredProducts } = useFilter(products, { search, category });
+  const { filter, data: filteredProducts } = useFilter(
+    products?.filter(({ is_available }) => is_available),
+    { search, category }
+  );
 
   const [productId, setProductId] = useState(null);
   const [editingLine, setEditingLine] = useState(false);
@@ -89,7 +93,7 @@ function Home() {
 
     setSubmitting(false);
     if (isRedirect) return;
-    if (error) return toast.error(error);
+    if (error) return toast.error(format.error(error));
 
     cartConfirmModal.close();
     cart.clear();
@@ -136,16 +140,16 @@ function Home() {
         className={styles.productGrid}
         items={filteredProducts}
         itemKey={(product) => product.product_id}
-        RenderComponent={({ product_id, name, unit_price }) => (
+        RenderComponent={({ product_id, name, unit_price, available_stock }) => (
           <Product.Card
             key={product_id}
-            img={empImg}
+            img={placeholderImg}
             name={name}
             price={unit_price}
             onClick={() => handleProductClick(product_id)}
-            disabled={!!cart.get(product_id)}
-            disabledContent="In Cart"
-            disabledColorPrimary
+            disabled={!!cart.get(product_id) || available_stock <= 0}
+            disabledContent={available_stock <= 0 ? "Out of Stock" : "In Cart"}
+            disabledColorPrimary={available_stock > 0}
           />
         )}
       />

@@ -9,7 +9,9 @@ class Category {
     this.category_id = category.category_id || 0;
     this.name = category.name;
     this.image_src = category.image_src || "";
-    this.is_available = category.is_available || availability.AVAILABLE;
+    this.is_available = category.is_available
+      ? category.is_available === true || category.is_available === availability.AVAILABLE
+      : true;
   }
 
   async save() {
@@ -65,13 +67,12 @@ class Category {
 
   async toggleStatus() {
     try {
-      this.is_available =
-        this.is_available === availability.AVAILABLE ? availability.UNAVAILABLE : availability.UNAVAILABLE;
+      const is_available = this.is_available ? availability.UNAVAILABLE : availability.AVAILABLE;
 
       const conn = await db.connect();
       await conn.execute(
         `UPDATE category SET is_available = :is_available WHERE category_id = :category_id`,
-        this
+        { ...this, is_available }
       );
 
       await conn.end();
@@ -86,7 +87,7 @@ class Category {
 
     try {
       const conn = await db.connect();
-      const [data] = await conn.execute(`SELECT * FROM category`);
+      const [data] = await conn.execute(`SELECT * FROM category ORDER BY category_id DESC`);
       await conn.end();
 
       retVal = data.map((d) => new Category(d));
@@ -117,8 +118,16 @@ class Category {
 
   static validate(category) {
     const schema = Joi.object({
-      name: Joi.string().label("Name").min(2).max(100).required(),
-    }).options({ abortEarly: false });
+      name: Joi.string()
+        .label("Name")
+        .regex(/^[\w\s\&]*$/)
+        .message("{{#label}} must contain letters, digits, and spaces only.")
+        .min(2)
+        .max(100)
+        .required(),
+    })
+      .options({ abortEarly: false })
+      .required();
 
     return schema.validate(category);
   }

@@ -20,7 +20,12 @@ function id(id, prefix = "ID", pad = 4) {
 }
 
 function capitalize(item) {
-  return String(item).charAt(0).toUpperCase() + String(item).slice(1).toLowerCase();
+  const components = String(item).split(" ");
+  const capitalizedComponents = components.map((component) => {
+    return component.charAt(0).toUpperCase() + component.slice(1).toLowerCase();
+  });
+
+  return capitalizedComponents.join(" ");
 }
 
 function decimal(num, places = 2) {
@@ -38,6 +43,10 @@ function address({ street_no, street_name, building, city, zip_code }) {
   return `${b}${sname}${city} ${zip_code}`;
 }
 
+function error(err) {
+  return typeof err === "object" ? Object.entries(err)[0][1].replaceAll('"', "") : err;
+}
+
 export default {
   currency,
   date,
@@ -46,4 +55,5 @@ export default {
   capitalize,
   decimal,
   address,
+  error,
 };

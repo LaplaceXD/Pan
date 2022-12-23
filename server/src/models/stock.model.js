@@ -10,11 +10,13 @@ class Stock {
   constructor(stock) {
     this.stock_id = stock.stock_id || 0;
     this.product_id = stock.product_id;
+    this.product_name = stock.product_name || "";
     this.supplier_id = stock.supplier_id;
+    this.supplier_name = stock.supplier_name || "";
     this.date_supplied = stock.date_supplied;
     this.quantity = stock.quantity;
     this.unit = stock.unit;
-    this.unit_price = stock.unit_price;
+    this.unit_price = parseFloat(stock.unit_price);
     this.notes = stock.notes || "";
   }
 
@@ -99,7 +101,16 @@ class Stock {
 
     try {
       const conn = await db.connect();
-      const [data] = await conn.execute(`SELECT * FROM stock`);
+      const [data] = await conn.execute(
+        `SELECT 
+            p.name AS product_name,
+            sp.name AS supplier_name,
+            s.*
+          FROM stock s
+          INNER JOIN product p ON p.product_id = s.product_id
+          INNER JOIN supplier sp ON sp.supplier_id = s.supplier_id
+          ORDER BY s.date_supplied, s.stock_id DESC`
+      );
       await conn.end();
 
       retVal = data.map((d) => new Stock(d));
@@ -116,8 +127,18 @@ class Stock {
 
     try {
       const conn = await db.connect();
-      const [data] = await conn.execute("SELECT * FROM stock WHERE stock_id = :id", { id });
-      console.log(data);
+      const [data] = await conn.execute(
+        `SELECT 
+            p.name AS product_name,
+            sp.name AS supplier_name,
+            s.*
+          FROM stock s
+          INNER JOIN product p ON p.product_id = s.product_id
+          INNER JOIN supplier sp ON sp.supplier_id = s.supplier_id
+          WHERE stock_id = :id
+        `,
+        { id }
+      );
       await conn.end();
 
       if (data.length !== 0) retVal = new Stock(data[0]);
@@ -129,31 +150,27 @@ class Stock {
     return retVal;
   }
 
-  static async validate(stock, params = {}) {
-    let schema = {
-      date_supplied: Joi.date().label("Date Supplied").max("now").iso().required(),
-      quantity: Joi.number().min(0).label("Quantity").required(),
-      unit: Joi.string().label("Unit").min(2).max(5).required().trim(),
-      unit_price: Joi.number().label("Unit Price").precision(2).required(),
-      notes: Joi.string().label("Notes").min(2).max(400),
-    };
+  static async validate(stock) {
+    let productMatch = "product_id" in stock ? await Product.findById(stock.product_id) : null;
+    let supplierMatch = "supplier_id" in stock ? await Supplier.findById(stock.supplier_id) : null;
 
-    // If creating then include checking for product_id, and supplier_id
-    if (!("id" in params)) {
-      let productMatch = await Product.findById(stock.product_id);
-      let supplierMatch = await Supplier.findById(stock.supplier_id);
+    let schema = Joi.object()
+      .keys({
+        date_supplied: Joi.date().label("Date Supplied").max("now").iso().required(),
+        quantity: Joi.number().min(0).label("Quantity").required(),
+        unit: Joi.string().label("Unit").min(2).max(5).required().trim(),
+        unit_price: Joi.number().label("Unit Price").precision(2).required(),
+        notes: Joi.string().label("Notes").min(2).max(400).allow(""),
+        product_id: Joi.number()
+          .label("Product ID")
+          .not(!productMatch ? stock.product_id ?? null : null),
+        supplier_id: Joi.number()
+          .label("Supplier ID")
+          .not(!supplierMatch ? stock.supplier_id ?? null : null),
+      })
+      .options({ abortEarly: false })
+      .required();
 
-      productMatch = !productMatch ? stock.product_id : null;
-      supplierMatch = !supplierMatch ? stock.supplier_id : null;
-
-      schema = {
-        product_id: Joi.number().greater(0).label("Product ID").required().not(productMatch),
-        supplier_id: Joi.number().greater(0).label("Supplier ID").required().not(supplierMatch),
-        ...schema,
-      };
-    }
-
-    schema = Joi.object().keys(schema).options({ abortEarly: false });
     return schema.validate(stock);
   }
 }

@@ -1,0 +1,27 @@
+.container {
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.field {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  align-items: center;
+  column-gap: 24px;
+}
+
+.field label {
+  margin-bottom: 0;
+}
+
+.field p {
+  grid-column: 2 / span 1;
+}
+
+.buttons {
+  display: flex;
+  margin-top: 16px;
+  gap: 16px;
+}

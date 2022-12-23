@@ -13,10 +13,12 @@ class Employee {
     this.password = employee.password || "";
     this.contact_no = employee.contact_no;
     this.email = employee.email;
-    this.date_employed = employee.date_employed;
+    this.date_employed = employee.date_employed || new Date();
     this.image_src = employee.image_src || "";
     this.role = employee.role || role.EMPLOYEE;
-    this.is_active = employee.is_active || status.ACTIVE;
+    this.is_active = employee.is_active
+      ? employee.is_active === true || employee.is_active === status.ACTIVE
+      : true;
   }
 
   async tokenize(jti) {
@@ -114,13 +116,13 @@ class Employee {
   // Deactivates/Activates an account with given employee ID
   async toggleStatus() {
     try {
-      this.is_active = this.is_active === status.ACTIVE ? status.INACTIVE : status.ACTIVE;
+      const is_active = this.is_active ? status.INACTIVE : status.ACTIVE;
 
       const conn = await db.connect();
-      await conn.execute(
-        `UPDATE employee SET is_active = :is_active WHERE employee_id = :employee_id`,
-        this
-      );
+      await conn.execute(`UPDATE employee SET is_active = :is_active WHERE employee_id = :employee_id`, {
+        ...this,
+        is_active,
+      });
 
       await conn.end();
     } catch (err) {
@@ -187,8 +189,22 @@ class Employee {
     const isManagerRole = "role" in auth && auth.role === role.MANAGER;
 
     let schema = {
-      first_name: Joi.string().label("First Name").min(2).max(300).required().trim(),
-      last_name: Joi.string().label("Last Name").min(2).max(300).required().trim(),
+      first_name: Joi.string()
+        .label("First Name")
+        .min(2)
+        .max(300)
+        .regex(/^[A-Za-z\s]*$/)
+        .message("{{#label}} must contain letters and spaces only.")
+        .required()
+        .trim(),
+      last_name: Joi.string()
+        .label("Last Name")
+        .regex(/^[A-Za-z\s]*$/)
+        .message("{{#label}} must contain letters and spaces only.")
+        .min(2)
+        .max(300)
+        .required()
+        .trim(),
       email: Joi.string()
         .label("Email")
         .email()
@@ -210,11 +226,11 @@ class Employee {
     if (isManagerRole || !isEditing) {
       schema = {
         ...schema,
-        date_employed: Joi.date().label("Date Employed").max("now").iso().required(),
+        date_employed: Joi.date().label("Date Employed").max("now").iso(),
       };
     }
 
-    schema = Joi.object().keys(schema).options({ abortEarly: false });
+    schema = Joi.object().keys(schema).options({ abortEarly: false }).required();
     return schema.validate(employee);
   }
 
@@ -236,7 +252,8 @@ class Employee {
           .message("{{#label}} must contain a special character (!@#$%^&*).")
           .required(),
       })
-      .options({ abortEarly: false });
+      .options({ abortEarly: false })
+      .required();
 
     return schema.validate(body);
   }

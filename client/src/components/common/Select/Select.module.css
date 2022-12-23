@@ -1,0 +1,42 @@
+div.menu {
+  background: var(--accent-color);
+  border-radius: 8px;
+}
+
+div.control {
+  background: var(--primary-color);
+  border: none;
+  box-shadow: none;
+}
+
+div.control:hover {
+  cursor: pointer;
+}
+
+div.input,
+input.input {
+  color: var(--white);
+}
+
+div.input.isDisabled {
+  color: gray;
+}
+
+div.option {
+  display: flex;
+  background: var(--primary-color);
+  color: var(--text-color);
+}
+
+div.option:hover {
+  cursor: pointer;
+  color: var(--white);
+  filter: brightness(1.2);
+}
+
+div.option:active,
+div.option.isSelected {
+  background: var(--secondary-color);
+  color: var(--primary-color);
+  filter: none;
+}

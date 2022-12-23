@@ -41,7 +41,10 @@ body {
   background: var(--primary-color);
 }
 
-input {
+input,
+textarea,
+fieldset {
+  font-family: inherit;
   border: none;
 }
 

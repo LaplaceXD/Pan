@@ -16,9 +16,11 @@ class Product {
     this.date_created = product.date_created || new Date();
     this.name = product.name;
     this.description = product.description;
-    this.unit_price = product.unit_price;
+    this.unit_price = parseFloat(product.unit_price);
     this.image_src = product.image_src || "";
-    this.is_available = product.is_available || availability.AVAILABLE;
+    this.is_available = product.is_available
+      ? product.is_available === true || product.is_available === availability.AVAILABLE
+      : true;
     this.available_stock = product.available_stock ? parseInt(product.available_stock) : 0;
   }
 
@@ -79,13 +81,12 @@ class Product {
   // Toggles availability of given product
   async toggleStatus() {
     try {
-      this.is_available =
-        this.is_available === availability.AVAILABLE ? availability.UNAVAILABLE : availability.AVAILABLE;
+      const is_available = this.is_available ? availability.UNAVAILABLE : availability.AVAILABLE;
 
       const conn = await db.connect();
       await conn.execute(
         `UPDATE product SET is_available = :is_available WHERE product_id = :product_id;`,
-        this
+        { ...this, is_available }
       );
       await conn.end();
     } catch (err) {
@@ -101,15 +102,20 @@ class Product {
     try {
       const conn = await db.connect();
       const [data] = await conn.execute(
-        `SELECT 
+        `SELECT
           COALESCE(c.name, "Others") AS category_name,
           p.*,
-          COALESCE(SUM(s.quantity) - SUM(ol.quantity), 0) AS available_stock
+          COALESCE(s.total_stock, 0) - COALESCE(SUM(ol.quantity), 0) AS available_stock
         FROM product p 
-        LEFT JOIN stock s ON s.product_id = p.product_id
+        LEFT JOIN (SELECT 
+                    SUM(quantity) AS total_stock,
+                    product_id
+                  FROM stock
+                  GROUP BY product_id) s ON s.product_id = p.product_id
         LEFT JOIN order_line ol ON ol.product_id = p.product_id
         LEFT JOIN category c ON c.category_id = p.category_id
-        GROUP BY p.product_id`
+        GROUP BY p.product_id
+        ORDER BY p.product_id DESC`
       );
 
       await conn.end();
@@ -128,12 +134,16 @@ class Product {
     try {
       const conn = await db.connect();
       const [data] = await conn.execute(
-        `SELECT 
+        `SELECT
           COALESCE(c.name, "Others") AS category_name,
           p.*,
-          COALESCE(SUM(s.quantity) - SUM(ol.quantity), 0) AS available_stock
+          COALESCE(s.total_stock, 0) - COALESCE(SUM(ol.quantity), 0) AS available_stock
         FROM product p 
-        LEFT JOIN stock s ON s.product_id = p.product_id
+        LEFT JOIN (SELECT 
+                    SUM(quantity) AS total_stock,
+                    product_id
+                  FROM stock
+                  GROUP BY product_id) s ON s.product_id = p.product_id
         LEFT JOIN order_line ol ON ol.product_id = p.product_id
         LEFT JOIN category c ON c.category_id = p.category_id
         WHERE p.product_id = :id
@@ -156,18 +166,24 @@ class Product {
 
     const schema = Joi.object()
       .keys({
-        name: Joi.string().label("Name").min(2).max(300).required().trim(),
+        name: Joi.string()
+          .label("Name")
+          .min(2)
+          .max(300)
+          .regex(/^[\w\s\&]*$/)
+          .message("{{#label}} must contain letters, digits, and spaces only.")
+          .required()
+          .trim(),
         description: Joi.string().label("Description").min(2).max(300).required().trim(),
         unit_price: Joi.number().label("Unit Price").precision(2).required(),
         category_id: Joi.number()
-          .min(0)
           .label("Category ID")
-          .not(!match ? product.category_id : 0)
-          .messages({
-            "any.invalid": "{{#label}} can't have the value " + product.category_id,
-          }),
+          .allow(null)
+          .not(!match ? product.category_id ?? "" : "")
+          .required(),
       })
-      .options({ abortEarly: false });
+      .options({ abortEarly: false })
+      .required();
 
     return schema.validate(product);
   }

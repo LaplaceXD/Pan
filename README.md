@@ -3,7 +3,7 @@
 ![Last Update](https://img.shields.io/github/last-commit/LaplaceXD/Pan?color=blue&label=Last%20Update)
 ![Activity](https://img.shields.io/badge/Activity-InProgress-green)
 
-Pan is an inventory management system made for Pan. This system was made with the use of
+[Pan](https://pan-laplace.vercel.app/) is an inventory management system made for Pan. This system was made with the use of
 [MySQL](https://www.mysql.com/), [React](https://beta.reactjs.org/), [Express](https://expressjs.com/), and
 [Node.js](https://nodejs.org/en/).
 
@@ -41,10 +41,15 @@ npm start
 ```
 
 6. You should be able to login through the login portal using the following credentials.
-
+> Employee
 ```
-email: jonh.buot@gmail.com
-password: 1SecretPassword!
+email: employee@pan.com
+password: pan@employee123!
+```
+> Manager
+```
+email: manager@pan.com
+password: pan@manager123!
 ```
 
 7. ...
@@ -54,10 +59,6 @@ password: 1SecretPassword!
 
 Unfortunately, we are not accepting pull requests, since this is a one-time project. However, feel free to
 fork this project, and improve on it!
-
-## Roadmap
-
-We are planning to deploy this over [Vercel](https://vercel.com/), so stay tuned to that.
 
 ## License
 
