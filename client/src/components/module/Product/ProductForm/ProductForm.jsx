@@ -30,8 +30,7 @@ function ProductForm({
       price: Yup.number().label("Unit Price").min(0.01).required(),
     }),
     onSubmit: ({ category, ...values }) => {
-      if (category !== 0) values["category"] = category;
-      onSubmit(values, formik.setSubmitting);
+      onSubmit({ ...values, category: category !== 0 ? category : null }, formik.setSubmitting);
     },
     enableReinitialize: true,
   });
