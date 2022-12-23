@@ -30,7 +30,7 @@ function ProductDetail({
         <p className={styles.description}>{description}</p>
         <p className={styles.detail}>
           <span>Quantity in stock:</span>
-          <span>{stock}</span>
+          <span>{stock > 0 ? stock : 0}</span>
         </p>
         <p className={styles.detail}>
           <span>Unit Price:</span>

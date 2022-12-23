@@ -1,0 +1,95 @@
+.item {
+  --bg-color: var(--field-color);
+  --header-color: var(--text-color);
+  --value-color: var(--white);
+  display: flex;
+  padding: 1.5em;
+  border-radius: 16px;
+  align-items: center;
+  background: var(--bg-color);
+  color: var(--header-color);
+  transition: filter 250ms ease, background 250ms ease, color 250ms ease;
+  margin-bottom: 20px;
+}
+
+.item,
+.item.disabled:active {
+  --bg-color: var(--accent-color);
+  --primary-font-color: var(--secondary-color);
+  --secondary-font-color: var(--white);
+  --tertiary-font-color: var(--text-color);
+  --unavailable-font-color: var(--error-color);
+  --available-font-color: var(--tertiary-color);
+}
+
+.item:active,
+.item.isSelected {
+  --bg-color: var(--secondary-color);
+  --primary-font-color: var(--primary-color);
+  --secondary-font-color: var(--primary-color);
+  --tertiary-font-color: var(--primary-color);
+  --unavailable-font-color: var(--primary-color);
+  --available-font-color: var(--primary-color);
+}
+
+.item:hover {
+  filter: brightness(1.15);
+  cursor: pointer;
+}
+
+.item:active {
+  transform: translateY(4px);
+}
+
+.item.disabled:hover {
+  filter: none;
+  cursor: auto;
+}
+
+.item.disabled:active {
+  transform: none;
+}
+
+.item.isSelected:hover {
+  filter: none;
+}
+
+.img {
+  border-radius: 16px;
+  overflow: hidden;
+  width: 300px;
+  height: 200px;
+  object-fit: cover;
+  object-position: center;
+  margin-right: 4.5em;
+}
+
+.name {
+  margin-bottom: 0.2em;
+  color: var(--secondary-color);
+  font-weight: var(--font-regular);
+  font-size: 3em;
+}
+
+.label {
+  display: inline-block;
+  width: 200px;
+  margin-right: 3em;
+  color: var(--text-color);
+  font-size: 1em;
+}
+
+.data {
+  display: inline-block;
+  color: var(--white);
+  font-weight: normal;
+  font-size: 1.5em;
+}
+
+.line {
+  display: flex;
+  align-items: center;
+  color: var(--text-color);
+  font-size: 0.9rem;
+  margin-bottom: 0.4em;
+}
