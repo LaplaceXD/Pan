@@ -105,7 +105,7 @@ class Product {
         `SELECT
           COALESCE(c.name, "Others") AS category_name,
           p.*,
-          COALESCE(s.total_stock - SUM(ol.quantity), 0) AS available_stock
+          COALESCE(s.total_stock, 0) - COALESCE(SUM(ol.quantity), 0) AS available_stock
         FROM product p 
         LEFT JOIN (SELECT 
                     SUM(quantity) AS total_stock,
@@ -137,7 +137,7 @@ class Product {
         `SELECT
           COALESCE(c.name, "Others") AS category_name,
           p.*,
-          COALESCE(s.total_stock - SUM(ol.quantity), 0) AS available_stock
+          COALESCE(s.total_stock, 0) - COALESCE(SUM(ol.quantity), 0) AS available_stock
         FROM product p 
         LEFT JOIN (SELECT 
                     SUM(quantity) AS total_stock,
