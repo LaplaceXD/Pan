@@ -160,7 +160,7 @@ class Stock {
         quantity: Joi.number().min(0).label("Quantity").required(),
         unit: Joi.string().label("Unit").min(2).max(5).required().trim(),
         unit_price: Joi.number().label("Unit Price").precision(2).required(),
-        notes: Joi.string().label("Notes").min(2).max(400),
+        notes: Joi.string().label("Notes").min(2).max(400).allow(""),
         product_id: Joi.number()
           .label("Product ID")
           .not(!productMatch ? stock.product_id ?? null : null),
