@@ -179,7 +179,9 @@ class Product {
         category_id: Joi.number()
           .min(0)
           .label("Category ID")
-          .not("category_id" in product && !match ? product.category_id : 0),
+          .allow(null)
+          .not(!match ? product.category_id ?? "" : "")
+          .required(),
       })
       .options({ abortEarly: false })
       .required();
