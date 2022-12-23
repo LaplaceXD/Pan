@@ -7,7 +7,7 @@ const getAll = async (req, res) => {
   const { for: type, id } = req.query;
   let data = null;
 
-  switch (type.toLowerCase()) {
+  switch (type?.toLowerCase()) {
     case "supplier":
       data = await Stock.findAllBySupplierId(id || 0);
       break;
