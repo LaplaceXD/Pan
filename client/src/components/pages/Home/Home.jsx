@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useQueryClient } from "react-query";
 import { toast } from "react-toastify";
 
 import placeholderImg from "@assets/imgs/placeholder-img.jpg";
@@ -30,11 +31,12 @@ const search = {
 function Home() {
   const quantityModal = useModal();
   const cartConfirmModal = useModal();
+  const queryClient = useQueryClient();
 
   const createOrder = useMutation(createOrderService);
   const { data: products } = useQuery("products", getAllProducts);
   const { filter, data: filteredProducts } = useFilter(
-    products?.filter(({ is_available }) => is_available),
+    products?.filter(({ is_available, available_stock }) => is_available && available_stock > 0),
     { search, category }
   );
 
@@ -95,6 +97,7 @@ function Home() {
     if (isRedirect) return;
     if (error) return toast.error(format.error(error));
 
+    await queryClient.invalidateQueries("products");
     cartConfirmModal.close();
     cart.clear();
     toast.success("Order placed.");
@@ -107,7 +110,12 @@ function Home() {
           lines={cart.items}
           className={styles.checkoutSummary}
           onLineClick={({ product_id }) => handleLineClick(product_id)}
-          onItemIncrement={({ product_id }) => cart.increment(product_id)}
+          onItemIncrement={({ product_id }) => {
+            const product = cart.items.find((product) => product.product_id === product_id);
+            const item = cart.get(product_id);
+
+            item?.quantity < product?.available_stock && cart.increment(product_id);
+          }}
           onItemDecrement={({ product_id }) => cart.decrement(product_id)}
           withCounter
         />
@@ -156,7 +164,7 @@ function Home() {
 
       <Modal.CartItem
         value={cart.get(productId)?.quantity ?? 1}
-        max={100}
+        max={products.find(({ product_id }) => product_id === productId)?.available_stock}
         onAdd={handleCartItemAdd}
         onEdit={handleCartItemEdit}
         onSubmit={editingLine ? handleCartItemAdd : handleCartItemEdit}
