@@ -117,7 +117,6 @@ class Stock {
     try {
       const conn = await db.connect();
       const [data] = await conn.execute("SELECT * FROM stock WHERE stock_id = :id", { id });
-      console.log(data);
       await conn.end();
 
       if (data.length !== 0) retVal = new Stock(data[0]);
