@@ -3,8 +3,8 @@ import React from "react";
 import { Button, Header, List, SearchBar } from "@components/common/index.js";
 import { Supplier as SupplierModule } from "@components/module";
 import { PreviewLayout } from "@components/template";
-import { useFilter, useQuery } from "@hooks";
-import { getAllSuppliers } from "@services/supplier.js";
+import { useFilter } from "@hooks";
+import { useSuppliers } from "@hooks/services/supplier";
 
 import format from "@utils/format";
 
@@ -25,7 +25,9 @@ const search = {
 };
 
 function Supplier() {
-  const { data } = useQuery("suppliers", getAllSuppliers);
+  const {
+    payload: { data },
+  } = useSuppliers();
   const suppliers = data?.map(({ supplier_id, name, contact_no, ...address }) => ({
     supplier_id,
     name,
