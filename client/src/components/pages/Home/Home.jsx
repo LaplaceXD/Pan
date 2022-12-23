@@ -131,7 +131,7 @@ function Home() {
 
   return (
     <PreviewLayout PreviewComponent={CheckoutPreview} className={styles.container}>
-      <Header title="Select Category" className={styles.productHeader}>
+      <Header title="Good Day!" className={styles.productHeader}>
         <SearchBar value={filter.search} onSearch={(e) => filter.handleSearch(e.currentTarget.value)} />
       </Header>
 

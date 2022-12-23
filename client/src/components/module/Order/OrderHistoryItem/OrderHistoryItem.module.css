@@ -26,10 +26,6 @@
   --value-color: var(--primary-color);
 }
 
-.item.isSelected {
-  cursor: unset;
-}
-
 .item p {
   display: inline-flex;
   flex-direction: column;
