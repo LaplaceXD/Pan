@@ -10,19 +10,19 @@ const router = express.Router();
 
 router.get(
   "/sales", 
-  // [auth, permit({ allow: [roles(role.MANAGER)] })], 
+  [auth, permit({ allow: [roles(role.MANAGER)] })], 
   reportController.salesReport
 );
 
 router.get(
   "/employee", 
-  // [auth, permit({ allow: [roles(role.MANAGER)] })], 
+  [auth, permit({ allow: [roles(role.MANAGER)] })], 
   reportController.employeeReport
 );
 
 router.get(
   "/inventory", 
-  // [auth, permit({ allow: [roles(role.MANAGER)] })], 
+  [auth, permit({ allow: [roles(role.MANAGER)] })], 
   reportController.stockReport
 );
 
