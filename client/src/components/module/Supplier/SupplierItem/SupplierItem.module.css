@@ -1,8 +1,7 @@
 .container {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
   align-items: stretch;
-  gap: 28px;
 
   padding: 1.5em;
   margin-top: 1em;
@@ -20,11 +19,12 @@
 
 .details {
   display: inline-flex;
+  justify-content: space-between;
 }
 
-.contact-container,
-.address-container {
-  margin-left: 3em;
+.name-container {
+  margin-bottom: 0.5em;
+  flex-direction: column;
 }
 
 .address-container {
@@ -32,10 +32,7 @@
 }
 
 .label {
-  display: inline-flex;
-  gap: 36px;
   align-items: center;
-
   font-size: 0.9rem;
 }
 
@@ -49,7 +46,7 @@
 .supplier-address {
   flex: 1;
   color: var(--white);
-  margin-top: 0.5em;
+  margin-top: 0.2em;
   font-weight: var(--font-regular);
   font-size: 1.25rem;
 }
