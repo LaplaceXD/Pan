@@ -137,7 +137,9 @@ class Employee {
 
     try {
       const conn = await db.connect();
-      const [data] = await conn.query(`SELECT * FROM employee`);
+      const [data] = await conn.query(
+        `SELECT * FROM employee WHERE role = 'employee' ORDER BY date_employed, employee_id DESC`
+      );
       await conn.end();
 
       retVal = data.map((d) => new Employee(d));

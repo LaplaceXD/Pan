@@ -3,10 +3,23 @@ const Stock = require("../models/stock.model");
 
 const STOCK_404 = "Stock not found.";
 
-const getAll = async (_, res) => {
-  const data = await Stock.findAll();
-  if (!data) throw new InternalServerError();
+const getAll = async (req, res) => {
+  const { for: type, id } = req.query;
+  let data = null;
 
+  switch (type.toLowerCase()) {
+    case "supplier":
+      data = await Stock.findAllBySupplierId(id || 0);
+      break;
+    case "product":
+      data = await Stock.findAllByProductId(id || 0);
+      break;
+    default:
+      data = await Stock.findAll();
+      break;
+  }
+
+  if (!data) throw new InternalServerError();
   res.status(200).send(data);
 };
 

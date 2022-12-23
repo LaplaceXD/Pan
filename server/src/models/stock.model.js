@@ -122,6 +122,62 @@ class Stock {
     return retVal;
   }
 
+  static async findAllByProductId(productId) {
+    let retVal = null;
+
+    try {
+      const conn = await db.connect();
+      const [data] = await conn.execute(
+        `SELECT 
+            p.name AS product_name,
+            sp.name AS supplier_name,
+            s.*
+          FROM stock s
+          INNER JOIN product p ON p.product_id = s.product_id
+          INNER JOIN supplier sp ON sp.supplier_id = s.supplier_id
+          WHERE s.product_id = :productId
+          ORDER BY s.date_supplied, s.stock_id DESC`,
+        { productId }
+      );
+      await conn.end();
+
+      retVal = data.map((d) => new Stock(d));
+    } catch (err) {
+      console.log("[STOCK VIEW ERROR]", err.message);
+      throw new InternalServerError(err);
+    }
+
+    return retVal;
+  }
+
+  static async findAllBySupplierId(supplierId) {
+    let retVal = null;
+
+    try {
+      const conn = await db.connect();
+      const [data] = await conn.execute(
+        `SELECT 
+            p.name AS product_name,
+            sp.name AS supplier_name,
+            s.*
+          FROM stock s
+          INNER JOIN product p ON p.product_id = s.product_id
+          INNER JOIN supplier sp ON sp.supplier_id = s.supplier_id
+          WHERE s.supplier_id = :supplierId
+          ORDER BY s.date_supplied, s.stock_id DESC`,
+        { supplierId }
+      );
+      await conn.end();
+
+      retVal = data.map((d) => new Stock(d));
+    } catch (err) {
+      console.log("[STOCK VIEW ERROR]", err.message);
+      throw new InternalServerError(err);
+    }
+
+    return retVal;
+  }
+
   static async findById(id) {
     let retVal = null;
 
