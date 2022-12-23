@@ -9,3 +9,7 @@
   overflow-y: scroll;
   max-height: 75vh;
 }
+
+.list::-webkit-scrollbar-track {
+  background: transparent;
+}
