@@ -27,7 +27,7 @@ REDIS_PORT        = <<your redis port>>
 
 # client/.env should contain the following variables
 
-VITE_SERVER_URL   = http://localhost:3000
+VITE_SERVER_URL   = http://localhost:3000/api/v1
 ```
 
 6.  Run the following scripts in two different terminals.
