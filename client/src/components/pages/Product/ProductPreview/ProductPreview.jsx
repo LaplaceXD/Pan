@@ -51,6 +51,7 @@ function ProductPreview({
     const { error, isRedirect } = await productsQuery.create.execute(values);
     setSubmitting(false);
 
+    console.log(error);
     if (isRedirect) return;
     if (error) return toast.error(format.error(error));
 

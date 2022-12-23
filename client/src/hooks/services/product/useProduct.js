@@ -28,9 +28,8 @@ function useProduct(id) {
       if (id) return await Promise.all([payload.invalidate(), stocks.invalidate()]);
 
       return await Promise.all([
-        queryClient
-          .invalidateQueries(["product", id])
-          .queryClient.invalidateQueries(["product", id, "stocks"]),
+        queryClient.invalidateQueries(["product", id]),
+        queryClient.invalidateQueries(["product", id, "stocks"]),
       ]);
     },
   };
