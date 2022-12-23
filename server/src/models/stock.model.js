@@ -168,6 +168,7 @@ class Stock {
           .label("Supplier ID")
           .not(!supplierMatch ? stock.supplier_id ?? null : null),
       })
+      .label("Payload")
       .options({ abortEarly: false })
       .required();
 
