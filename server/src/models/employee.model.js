@@ -230,7 +230,7 @@ class Employee {
       };
     }
 
-    schema = Joi.object().keys(schema).options({ abortEarly: false }).required();
+    schema = Joi.object().keys(schema).label("Payload").options({ abortEarly: false }).required();
     return schema.validate(employee);
   }
 

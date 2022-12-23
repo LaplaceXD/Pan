@@ -18,6 +18,10 @@ input.input {
   color: var(--white);
 }
 
+div.input.isDisabled {
+  color: gray;
+}
+
 div.option {
   display: flex;
   background: var(--primary-color);

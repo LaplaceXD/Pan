@@ -3,6 +3,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 
 import { Button, Field, Modal } from "@components/common";
+import check from "@utils/check";
 import format from "@utils/format";
 
 import styles from "./NumberInputModal.module.css";
@@ -45,13 +46,8 @@ function NumberInputModal({
   }
 
   function handleChange(e) {
-    const [int, frac] = e.currentTarget.value.split(".");
-    const intIsWithinMaxLength = int.length <= maxLength;
-    const fracIsWithinMaxLength = frac ? frac.length <= maxDecimalLength : true;
-
-    if (intIsWithinMaxLength && fracIsWithinMaxLength) {
-      formik.handleChange(e);
-    }
+    const checks = { maxIntLength: maxLength, maxFracLength: maxDecimalLength };
+    if (check.number(e.currentTarget.value, checks)) formik.handleChange(e);
   }
 
   return (

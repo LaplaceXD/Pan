@@ -105,7 +105,7 @@ class Product {
         `SELECT
           COALESCE(c.name, "Others") AS category_name,
           p.*,
-          COALESCE(s.total_stock - SUM(ol.quantity), 0) AS available_stock
+          COALESCE(s.total_stock, 0) - COALESCE(SUM(ol.quantity), 0) AS available_stock
         FROM product p 
         LEFT JOIN (SELECT 
                     SUM(quantity) AS total_stock,
@@ -137,7 +137,7 @@ class Product {
         `SELECT
           COALESCE(c.name, "Others") AS category_name,
           p.*,
-          COALESCE(s.total_stock - SUM(ol.quantity), 0) AS available_stock
+          COALESCE(s.total_stock, 0) - COALESCE(SUM(ol.quantity), 0) AS available_stock
         FROM product p 
         LEFT JOIN (SELECT 
                     SUM(quantity) AS total_stock,
@@ -177,10 +177,12 @@ class Product {
         description: Joi.string().label("Description").min(2).max(300).required().trim(),
         unit_price: Joi.number().label("Unit Price").precision(2).required(),
         category_id: Joi.number()
-          .min(0)
           .label("Category ID")
-          .not("category_id" in product && !match ? product.category_id : 0),
+          .allow(null)
+          .not(!match ? product.category_id ?? "" : "")
+          .required(),
       })
+      .label("Payload")
       .options({ abortEarly: false })
       .required();
 

@@ -6,5 +6,8 @@
       "access": "15m",
       "refresh": "2h"
     }
+  },
+  "client": {
+    "url": "https://pan-laplace.vercel.app/"
   }
 }

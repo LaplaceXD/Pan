@@ -2,11 +2,11 @@ import { BiNotepad } from "react-icons/bi";
 import { BsBoxSeam, BsPeople } from "react-icons/bs";
 import { FiHome, FiTruck } from "react-icons/fi";
 
+import Employee from "@components/pages/Employee";
 import Order from "@components/pages/Order";
 import Product from "@components/pages/Product";
 import Report from "@components/pages/Report";
-import Employee from "@components/pages/Employee";
-
+import Supplier from "@components/pages/Supplier";
 import { appendPath, getLinkProps, getRouteProps } from "@utils/routes";
 
 const directory = "/m";
@@ -31,21 +31,21 @@ const managerPages = [
     path: "/products",
     label: "Products",
     icon: <BsBoxSeam />,
-    element: <Product showProductEditButtons showProductAddButton />,
+    element: <Product showStockDeleteButton showProductEditButton showProductAddButton />,
     navLink: true,
   },
   {
     path: "/suppliers",
     label: "Supplier",
     icon: <FiTruck />,
-    element: <h1>Suppliers</h1>,
+    element: <Supplier />,
     navLink: true,
   },
   {
     path: "/employees",
     label: "Employees",
     icon: <BsPeople />,
-    element: <Employee/>,
+    element: <Employee />,
     navLink: true,
   },
 ];

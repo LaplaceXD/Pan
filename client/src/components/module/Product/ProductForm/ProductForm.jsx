@@ -1,7 +1,9 @@
-import { BoxImage, Button, Field } from "@components/common";
-import { Category } from "@components/module";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+
+import { BoxImage, Button, Field, TextAreaField } from "@components/common";
+import { Category } from "@components/module";
+import check from "@utils/check";
 
 import styles from "./ProductForm.module.css";
 
@@ -24,28 +26,19 @@ function ProductForm({
         .max(100)
         .matches(/^[\w\s\&]*$/, "Product Name must contain letters, digits, and spaces only.")
         .required(),
-      category: Yup.number().integer().label("Category").required(),
+      category: Yup.number().integer().label("Category").min(0).required(),
       description: Yup.string().label("Description").min(2).max(300).required(),
       price: Yup.number().label("Unit Price").min(0.01).required(),
     }),
     onSubmit: ({ category, ...values }) => {
-      if (category !== 0) values["category"] = category;
-      onSubmit(values, formik.setSubmitting);
+      onSubmit({ ...values, category: category !== 0 ? category : null }, formik.setSubmitting);
     },
     enableReinitialize: true,
   });
 
   function handlePriceChange(e) {
-    const INT_MAX_LENGTH = 5;
-    const FRAC_MAX_LENGTH = 2;
-
-    const [int, frac] = e.currentTarget.value.split(".");
-    const intIsWithinMaxLength = int.length <= INT_MAX_LENGTH;
-    const fracIsWithinMaxLength = frac ? frac.length <= FRAC_MAX_LENGTH : true;
-
-    if (intIsWithinMaxLength && fracIsWithinMaxLength) {
-      formik.handleChange(e);
-    }
+    const checks = { maxIntLength: 5, maxFracLength: 2 };
+    if (check.number(e.currentTarget.value, checks)) formik.handleChange(e);
   }
 
   return (
@@ -69,23 +62,18 @@ function ProductForm({
         value={formik.values.category}
         isDisabled={formik.isSubmitting}
       />
-
-      <Field
+      <TextAreaField
+        className={styles.description}
         label="Description"
         id="description"
-        className={styles.description}
+        name="description"
+        value={formik.values.description}
+        onChange={formik.handleChange}
+        onBlur={formik.handleBlur}
         error={formik.touched.description && formik.errors.description}
-      >
-        <textarea
-          id="description"
-          name="description"
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          value={formik.values.description}
-        />
-      </Field>
+      />
       <Field
-        type="text"
+        type="number"
         label="Unit Price"
         id="price"
         name="price"

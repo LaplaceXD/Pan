@@ -7,6 +7,7 @@ export { default as Order } from "./Order";
 export { default as Product } from "./Product";
 export { default as Report } from "./Report";
 export { default as Routes } from "./Routes";
+export { default as Stock } from "./Stock";
 export { default as Supplier } from "./Supplier";
 export { default as UserBanner } from "./UserBanner";
 export { default as Employee } from "./Employee";

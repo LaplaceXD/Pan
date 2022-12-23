@@ -14,7 +14,7 @@ function ProductDetail({
   onViewStock,
   onStatusChange,
   onEdit,
-  showProductEditButtons = false,
+  showProductEditButton = false,
   statusChangeDisabled = false,
 }) {
   return (
@@ -45,7 +45,7 @@ function ProductDetail({
       </div>
       <div className={styles.buttons}>
         <Button type="button" label="View Stock" secondary onClick={onViewStock} />
-        {showProductEditButtons ? (
+        {showProductEditButton ? (
           <>
             <Button
               type="button"

@@ -15,5 +15,8 @@
   },
   "cors": {
     "origin": "CORS_ORIGIN"
+  },
+  "mail": {
+    "key": "SENDGRID_API_KEY"
   }
 }

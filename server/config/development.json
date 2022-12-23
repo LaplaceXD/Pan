@@ -15,5 +15,8 @@
   },
   "cors": {
     "origin": "http://localhost:5173"
+  },
+  "client": {
+    "url": "http://localhost:5173"
   }
 }

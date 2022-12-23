@@ -126,6 +126,7 @@ class Category {
         .max(100)
         .required(),
     })
+      .label("Payload")
       .options({ abortEarly: false })
       .required();
 
