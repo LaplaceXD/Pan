@@ -36,11 +36,11 @@ const create = async (req, res) => {
   const data = await employee.save();
   if (!data) throw new InternalServerError();
 
-  Mailer.create({ email: employee.email, password: password })
+  Mailer.create({ email: employee.email, password: password });
 
   res.status(200).send({
     message: "Account successfully created.",
-    data: req.body
+    data: req.body,
   });
 };
 
@@ -83,7 +83,7 @@ const resetPassword = async (req, res) => {
   Mailer.reset({ email: employee.email, password: password });
 
   res.status(200).send({
-    message: "Successfully reset password."
+    message: "Successfully reset password.",
   });
 };
 
