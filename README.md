@@ -12,12 +12,14 @@
 1. Clone this project to your local machine.
 2. Import `server/pan_db.sql` into your local MySQL database.
 3. Create a redis instance locally or through [Redis Labs](https://app.redislabs.com/).
-4. Create `.env` files in the `client directory` and `server directory.`
+4. Create a [SendGrid](https://sendgrid.com/) account.
+5. Create `.env` files in the `client directory` and `server directory.`
    > The environment variables should contain the following:
 
 ```
 # server/.env should contain the following variables
 
+SENDGRID_API_KEY  = <<your sendgrid api key here>>
 REDIS_HOST        = <<your redis host here>>
 REDIS_USERNAME    = <<your redis user name>>
 REDIS_PASSWORD    = <<your redis password>>
@@ -28,7 +30,7 @@ REDIS_PORT        = <<your redis port>>
 VITE_SERVER_URL   = http://localhost:3000
 ```
 
-5.  Run the following scripts in two different terminals.
+6.  Run the following scripts in two different terminals.
 
 ```bash
 cd client
@@ -40,7 +42,7 @@ cd server
 npm start
 ```
 
-6. You should be able to login through the login portal using the following credentials.
+7. You should be able to login through the login portal using the following credentials.
 > Employee
 ```
 email: employee@pan.com
@@ -52,8 +54,8 @@ email: manager@pan.com
 password: pan@manager123!
 ```
 
-7. ...
-8. Profit!
+8. ...
+9. Profit!
 
 ## Contributing
 
