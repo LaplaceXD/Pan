@@ -10,7 +10,9 @@ class Stock {
   constructor(stock) {
     this.stock_id = stock.stock_id || 0;
     this.product_id = stock.product_id;
+    this.product_name = stock.product_name || "";
     this.supplier_id = stock.supplier_id;
+    this.supplier_name = stock.supplier_name || "";
     this.date_supplied = stock.date_supplied;
     this.quantity = stock.quantity;
     this.unit = stock.unit;
@@ -99,7 +101,16 @@ class Stock {
 
     try {
       const conn = await db.connect();
-      const [data] = await conn.execute(`SELECT * FROM stock`);
+      const [data] = await conn.execute(
+        `SELECT 
+            p.name AS product_name,
+            sp.name AS supplier_name,
+            s.*
+          FROM stock s
+          INNER JOIN product p ON p.product_id = s.product_id
+          INNER JOIN supplier sp ON sp.supplier_id = s.supplier_id
+          ORDER BY s.date_supplied, s.stock_id DESC`
+      );
       await conn.end();
 
       retVal = data.map((d) => new Stock(d));
@@ -116,7 +127,18 @@ class Stock {
 
     try {
       const conn = await db.connect();
-      const [data] = await conn.execute("SELECT * FROM stock WHERE stock_id = :id", { id });
+      const [data] = await conn.execute(
+        `SELECT 
+            p.name AS product_name,
+            sp.name AS supplier_name,
+            s.*
+          FROM stock s
+          INNER JOIN product p ON p.product_id = s.product_id
+          INNER JOIN supplier sp ON sp.supplier_id = s.supplier_id
+          WHERE stock_id = :id
+        `,
+        { id }
+      );
       await conn.end();
 
       if (data.length !== 0) retVal = new Stock(data[0]);
