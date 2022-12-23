@@ -1,12 +1,11 @@
 import { useState } from "react";
-import { useQueryClient } from "react-query";
 import { toast } from "react-toastify";
 
 import { Button, Header, SearchBar } from "@components/common";
 import { Modal, Order as OrderModule } from "@components/module";
 import { PreviewLayout } from "@components/template";
-import { useFilter, useModal, useMutation, useQuery } from "@hooks";
-import { deleteOrderById, getAllOrders, getOrderById } from "@services/order";
+import { useFilter, useModal } from "@hooks";
+import { useOrder, useOrders } from "@hooks/services/order";
 import format from "@utils/format";
 
 import styles from "./Order.module.css";
@@ -24,23 +23,22 @@ const search = {
 
 function Order({ showDelete = false }) {
   const deleteModal = useModal();
-  const queryClient = useQueryClient();
 
-  const deleteOrder = useMutation(deleteOrderById);
-  const { data: orders } = useQuery("orders", getAllOrders);
-  const { filter, data: filteredOrders } = useFilter(orders, { search });
+  const ordersQuery = useOrders();
+  const { filter, data: filteredOrders } = useFilter(ordersQuery.payload.data, { search });
 
   const [orderId, setOrderId] = useState(null);
-  const { data: order } = useQuery(["order", orderId], ({ signal }) =>
-    orderId ? getOrderById(orderId, { signal }) : null
-  );
+  const orderQuery = useOrder(orderId);
+  const {
+    payload: { data: order },
+  } = orderQuery;
 
   async function handleDeleteOrder() {
-    const { error, isRedirect } = await deleteOrder.execute(orderId);
+    const { error, isRedirect } = await orderQuery.delete.execute();
     if (isRedirect) return;
-    if (error) toast.error(error);
+    if (error) return toast.error(format.error(error));
 
-    await queryClient.invalidateQueries("orders");
+    await ordersQuery.invalidate();
     setOrderId(null);
     deleteModal.close();
     toast.success("Order deleted successfully.");
@@ -88,7 +86,7 @@ function Order({ showDelete = false }) {
           open={deleteModal.isOpen}
           onClose={deleteModal.close}
           confirmLabel="Delete"
-          confirmDisabled={deleteOrder.isLoading}
+          confirmDisabled={orderQuery.delete.isLoading}
           onConfirm={handleDeleteOrder}
         />
       ) : null}
