@@ -1,21 +1,16 @@
 import { useFormik } from "formik";
 import React from "react";
-import { useQueryClient } from "react-query";
 import { toast } from "react-toastify";
 import * as Yup from "yup";
 
 import { Button, Field } from "@components/common";
-import { useMutation } from "@hooks";
-import { editEmployeeById } from "@services/employee";
+import { useAccount } from "@hooks/services/account";
 import format from "@utils/format";
 
 import styles from "./EditForm.module.css";
 
 function EditForm({ id = 0, firstName = "", lastName = "", email = "", contact = "", onCancel, onSubmit }) {
-  const queryClient = useQueryClient();
-  const editEmployee = useMutation(
-    async ({ employee_id, ...body }) => await editEmployeeById(employee_id, body)
-  );
+  const accountQuery = useAccount(id);
 
   const formik = useFormik({
     initialValues: { firstName, lastName, email, contact },
@@ -41,8 +36,7 @@ function EditForm({ id = 0, firstName = "", lastName = "", email = "", contact =
     }),
     onSubmit: async (values) => {
       formik.setSubmitting(true);
-      const { error, isRedirect } = await editEmployee.execute({
-        employee_id: id,
+      const { error, isRedirect } = await accountQuery.update.execute({
         first_name: values.firstName,
         last_name: values.lastName,
         email: values.email,
@@ -53,7 +47,7 @@ function EditForm({ id = 0, firstName = "", lastName = "", email = "", contact =
       if (isRedirect) return;
       if (error) return toast.error(format.error(error));
 
-      await queryClient.invalidateQueries(["account", id]);
+      await accountQuery.invalidate();
       toast.success("Account details edited successfully.");
       onSubmit();
     },

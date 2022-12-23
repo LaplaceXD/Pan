@@ -1,24 +1,20 @@
 import { Options } from "@components/common";
-import { useQuery } from "@hooks";
-import { getAllCategories } from "@services/category";
+
+import { useCategories } from "@hooks/services/category";
 import format from "@utils/format";
 
 function CategoryOptions({ options, ...props }) {
-  let { data: categories } = useQuery("categories", getAllCategories);
+  const {
+    payload: { data: categories },
+  } = useCategories();
 
-  return (
-    <Options
-      options={[
-        { label: "All", value: 0 },
-        ...(categories?.map(({ category_id, name }) => ({
-          label: format.capitalize(name),
-          value: category_id,
-        })) ?? []),
-        { label: "Others", value: null },
-      ]}
-      {...props}
-    />
-  );
+  let opts = categories?.map(({ category_id, name }) => ({
+    label: format.capitalize(name),
+    value: category_id,
+  }));
+
+  opts = opts ? [{ label: "All", value: 0 }, ...opts, { label: "Others", value: null }] : [];
+  return <Options options={opts} {...props} />;
 }
 
 export default CategoryOptions;

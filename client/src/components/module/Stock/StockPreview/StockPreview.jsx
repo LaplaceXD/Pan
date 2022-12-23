@@ -1,16 +1,11 @@
 import { useState } from "react";
-import { useQueryClient } from "react-query";
 import { toast } from "react-toastify";
 
 import { Button } from "@components/common";
 import { Modal } from "@components/module";
-import { useModal, useMutation, useQuery } from "@hooks";
-import {
-  createStock as createStockService,
-  deleteStockById,
-  editStockById,
-  getStockById,
-} from "@services/stock";
+import { useModal } from "@hooks";
+import { useProduct, useProducts } from "@hooks/services/product";
+import { useStock } from "@hooks/services/stock";
 import format from "@utils/format";
 
 import StockForm from "../StockForm";
@@ -32,32 +27,35 @@ function StockPreview({
   showStockDeleteButton = false,
   onBack,
 }) {
-  const queryClient = useQueryClient();
   const deleteModal = useModal();
   const [view, setView] = useState(views.STOCK_ITEMS);
   const [stockId, setStockId] = useState(null);
 
-  const { data: stock } = useQuery(["stock", stockId], async ({ signal }) => {
-    return stockId ? await getStockById(stockId, { signal }) : null;
-  });
-  const editStock = useMutation(async (body) => await editStockById(stockId, body));
-  const createStock = useMutation(createStockService);
-  const deleteStock = useMutation(deleteStockById);
+  const productsQuery = useProducts();
+  const productQuery = useProduct(product?.product_id);
+
+  const stockQuery = useStock(stockId);
+  const {
+    payload: { data: stock },
+  } = stockQuery;
 
   async function handleStockEdit(values, setSubmitting) {
     setSubmitting(true);
-    const { error, isRedirect } = await editStock.execute(values);
+    const { error, isRedirect } = await stockQuery.update.execute(values);
     setSubmitting(false);
 
     if (isRedirect) return;
     if (error) return toast.error(format.error(error));
 
     await Promise.all([
-      queryClient.invalidateQueries("products"),
-      queryClient.invalidateQueries(["product", values.product_id, "stocks"]),
-      queryClient.invalidateQueries(["supplier", values.supplier_id, "stocks"]),
-      queryClient.invalidateQueries(["product", values.product_id]),
-      queryClient.invalidateQueries(["stock", stockId]),
+      productsQuery.invalidate(),
+      // if user changes product_id that query gets invalidated
+      productQuery.invalidate(values.product_id),
+      // the previous product also gets invalidated on change
+      productQuery.invalidate(stock?.product_id),
+      // supplierQuery.invalidate(values.supplier_id)
+      // supplierQuery.invalidate(stock?.supplier_id)
+      stockQuery.invalidate(),
     ]);
 
     setView(views.STOCK_ITEMS);
@@ -67,35 +65,32 @@ function StockPreview({
 
   async function handleStockAdd(values, setSubmitting) {
     setSubmitting(true);
-    const { error, isRedirect } = await createStock.execute(values);
+    const { error, isRedirect } = await stockQuery.create.execute(values);
     setSubmitting(false);
 
     if (isRedirect) return;
     if (error) return toast.error(format.error(error));
 
     await Promise.all([
-      queryClient.invalidateQueries("products"),
-      queryClient.invalidateQueries(["product", values.product_id, "stocks"]),
-      queryClient.invalidateQueries(["supplier", values.supplier_id, "stocks"]),
-      queryClient.invalidateQueries(["product", values.product_id]),
+      productsQuery.invalidate(),
+      productQuery.invalidate(values.product_id),
+      // supplierQuery.invalidate(values.supplier_id)
     ]);
 
     setView(views.STOCK_ITEMS);
-    setStockId(null);
     toast.success("Stock added successfully.");
   }
 
   async function handleStockDelete() {
-    const { error, isRedirect } = await deleteStock.execute(stockId);
+    const { error, isRedirect } = await stockQuery.delete.execute(stockId);
 
     if (isRedirect) return;
     if (error) return toast.error(format.error(error));
 
     await Promise.all([
-      queryClient.invalidateQueries("products"),
-      queryClient.invalidateQueries(["product", product?.product_id, "stocks"]),
-      queryClient.invalidateQueries(["supplier", supplier?.supplier_id, "stocks"]),
-      queryClient.invalidateQueries(["product", product?.product_id]),
+      productsQuery.invalidate(),
+      productQuery.invalidate(stock?.product_id),
+      // supplierQuery.invalidate(stock?.supplier_id)
     ]);
 
     setStockId(null);
@@ -178,7 +173,7 @@ function StockPreview({
           open={deleteModal.isOpen}
           onClose={deleteModal.close}
           confirmLabel="Delete"
-          confirmDisabled={deleteStock.isLoading}
+          confirmDisabled={stockQuery.delete.isLoading}
           onConfirm={handleStockDelete}
         />
       ) : null}

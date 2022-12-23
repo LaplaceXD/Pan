@@ -1,17 +1,12 @@
 import { useState } from "react";
-import { useQueryClient } from "react-query";
 import { toast } from "react-toastify";
 import * as Yup from "yup";
 
 import { Select } from "@components/common";
 import { Modal } from "@components/module";
-import { useModal, useMutation, useQuery } from "@hooks";
-import {
-  createCategory as createCategoryService,
-  deleteCategoryById,
-  editCategoryById,
-  getAllCategories,
-} from "@services/category";
+import { useModal } from "@hooks";
+import { useCategories, useCategory } from "@hooks/services/category";
+import { useProducts } from "@hooks/services/product";
 import format from "@utils/format";
 
 import CategoryOption from "../CategoryOption";
@@ -28,16 +23,14 @@ function CategorySelect({
 }) {
   const deleteModal = useModal();
   const editModal = useModal();
-  const queryClient = useQueryClient();
+  const productsQuery = useProducts();
 
   const [category, setCategory] = useState(null);
-  const { data: categories } = useQuery("categories", getAllCategories);
-
-  const createCategory = useMutation(createCategoryService);
-  const deleteCategory = useMutation(deleteCategoryById);
-  const editCategory = useMutation(
-    async ({ category_id, ...body }) => await editCategoryById(category_id, body)
-  );
+  const categoryQuery = useCategory(category?.value);
+  const categoriesQuery = useCategories();
+  const {
+    payload: { data: categories },
+  } = categoriesQuery;
 
   const categoryValidationSchema = Yup.string()
     .label("Category")
@@ -49,12 +42,13 @@ function CategorySelect({
   async function handleCreateCategory(value) {
     try {
       await categoryValidationSchema.validate(value);
-      const { error, isRedirect, data } = await createCategory.execute({ name: value });
+      console.log(categoriesQuery);
+      const { error, isRedirect, data } = await categoriesQuery.create.execute({ name: value });
 
       if (isRedirect) return;
       if (error) return toast.error(format.error(error));
 
-      await queryClient.invalidateQueries("categories");
+      await categoriesQuery.invalidate();
       onChange({ value: data.category_id });
       toast.success("Successfully added category.");
     } catch ({ message }) {
@@ -64,35 +58,24 @@ function CategorySelect({
 
   async function handleEditCategory(values, setSubmitting) {
     setSubmitting(true);
-    const { error, isRedirect } = await editCategory.execute({
-      name: values.category,
-      category_id: category.value,
-    });
+    const { error, isRedirect } = await categoryQuery.update.execute({ name: values.category });
     setSubmitting(false);
 
     if (isRedirect) return;
     if (error) return toast.error(format.error(error));
 
-    await Promise.all([
-      queryClient.invalidateQueries("categories"),
-      queryClient.invalidateQueries("products"),
-    ]);
-
+    await Promise.all([categoriesQuery.invalidate(), productsQuery.invalidate()]);
     editModal.close();
     setCategory(null);
     toast.success("Successfully edited category.");
   }
 
   async function handleDeleteCategory() {
-    const { error, isRedirect } = await deleteCategory.execute(category.value);
+    const { error, isRedirect } = await categoryQuery.delete.execute();
     if (isRedirect) return;
     if (error) return toast.error(format.error(error));
 
-    await Promise.all([
-      queryClient.invalidateQueries("categories"),
-      queryClient.invalidateQueries("products"),
-    ]);
-
+    await Promise.all([categoriesQuery.invalidate(), productsQuery.invalidate()]);
     deleteModal.close();
     setCategory(null);
     toast.success("Successfully deleted category.");
@@ -118,7 +101,7 @@ function CategorySelect({
     setCategory(null);
   }
 
-  const disabled = deleteModal.isOpen || createCategory.isLoading;
+  const disabled = deleteModal.isOpen || categoriesQuery.create.isLoading;
 
   return (
     <>
@@ -145,7 +128,7 @@ function CategorySelect({
         open={deleteModal.isOpen}
         onClose={handleDeleteModalClose}
         onDelete={handleDeleteCategory}
-        disabledDelete={deleteCategory.isLoading}
+        disabledDelete={categoryQuery.delete.isLoading}
       />
 
       <Modal.CategoryEdit

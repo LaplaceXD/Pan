@@ -1,18 +1,10 @@
 import { useEffect, useState } from "react";
 import { BsPlusCircle } from "react-icons/bs";
-import { useQueryClient } from "react-query";
 import { toast } from "react-toastify";
 
 import placeholderImg from "@assets/imgs/placeholder-img.jpg";
 import { Product, Stock } from "@components/module";
-import { useMutation, useQuery } from "@hooks";
-import {
-  createProduct as createProductService,
-  editProductById,
-  getProductById,
-  toggleProductStatusById,
-} from "@services/product";
-import { getAllStocksByProductId } from "@services/stock";
+import { useProduct, useProducts } from "@hooks/services/product";
 import format from "@utils/format";
 
 import styles from "./ProductPreview.module.css";
@@ -31,77 +23,48 @@ function ProductPreview({
   showProductAddButton = false,
   showProductEditButton = false,
 }) {
-  const queryClient = useQueryClient();
   const [view, setview] = useState(views.DEFAULT);
-
-  const createProduct = useMutation(createProductService);
-  const editProduct = useMutation(
-    async ({ product_id, ...body }) => await editProductById(product_id, body)
-  );
-  const toggleProductStatus = useMutation(toggleProductStatusById);
-  const { data: product } = useQuery(["product", productId], ({ signal }) =>
-    productId ? getProductById(productId, { signal }) : null
-  );
-  const { data: stocks } = useQuery(["product", productId, "stocks"], async ({ signal }) => {
-    return productId ? await getAllStocksByProductId(productId, { signal }) : null;
-  });
+  const productsQuery = useProducts();
+  const productQuery = useProduct(productId);
+  const {
+    stocks: { data: stocks },
+    payload: { data: product },
+  } = productQuery;
 
   useEffect(() => setview(productId ? views.PRODUCT_DETAIL : views.DEFAULT), [productId]);
 
   async function handleProductEdit(values, setSubmitting) {
     setSubmitting(true);
-    const { error, isRedirect } = await editProduct.execute({
-      product_id: productId,
-      name: values.name,
-      category_id: values.category,
-      description: values.description,
-      unit_price: values.price,
-    });
-
+    const { error, isRedirect } = await productQuery.update.execute(values);
     setSubmitting(false);
+
     if (isRedirect) return;
     if (error) return toast.error(format.error(error));
 
-    await Promise.all([
-      queryClient.invalidateQueries("products"),
-      queryClient.invalidateQueries(["product", productId]),
-    ]);
-
+    await Promise.all([productsQuery.invalidate(), productQuery.invalidate()]);
     setview(views.PRODUCT_DETAIL);
     toast.success("Product edited successfully.");
   }
 
   async function handleProductAdd(values, setSubmitting) {
     setSubmitting(true);
-    const { error, isRedirect } = await createProduct.execute({
-      name: values.name,
-      category_id: values.category,
-      description: values.description,
-      unit_price: values.price,
-    });
-
+    const { error, isRedirect } = await productsQuery.create.execute(values);
     setSubmitting(false);
+
     if (isRedirect) return;
     if (error) return toast.error(format.error(error));
 
-    await Promise.all([
-      queryClient.invalidateQueries("products"),
-      queryClient.invalidateQueries(["product", productId]),
-    ]);
-
+    await Promise.all([productsQuery.invalidate(), productQuery.invalidate()]);
     setview(views.DEFAULT);
     toast.success("Product added successfully.");
   }
 
   async function handleProductStatusChange() {
-    const { error, isRedirect } = await toggleProductStatus.execute(productId);
+    const { error, isRedirect } = await productQuery.toggleStatus.execute();
     if (isRedirect) return;
     if (error) return toast.error(format.error(error));
 
-    await Promise.all([
-      queryClient.invalidateQueries("products"),
-      queryClient.invalidateQueries(["product", productId]),
-    ]);
+    await Promise.all([productsQuery.invalidate(), productQuery.invalidate()]);
     toast.success("Product status toggled successfully.");
   }
 
@@ -127,7 +90,7 @@ function ProductPreview({
         onEdit={() => setview(views.PRODUCT_EDIT_FORM)}
         onViewStock={() => setview(views.PRODUCT_STOCK)}
         onStatusChange={handleProductStatusChange}
-        statusChangeDisabled={toggleProductStatus.isLoading}
+        statusChangeDisabled={productQuery.toggleStatus.isLoading}
         showProductEditButton={showProductEditButton}
       />
     ),

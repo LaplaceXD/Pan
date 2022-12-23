@@ -2,9 +2,8 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 
 import { Button, Field, Select, TextAreaField } from "@components/common";
-import { useQuery } from "@hooks";
-import { getAllProducts } from "@services/product";
-import { getAllSuppliers } from "@services/supplier";
+import { useProducts } from "@hooks/services/product";
+import { useSuppliers } from "@hooks/services/supplier";
 import check from "@utils/check";
 
 import styles from "./StockForm.module.css";
@@ -22,8 +21,12 @@ function StockForm({
   onCancel,
   onSubmit,
 }) {
-  const { data: products } = useQuery("products", getAllProducts);
-  const { data: suppliers } = useQuery("suppliers", getAllSuppliers);
+  const {
+    payload: { data: products },
+  } = useProducts();
+  const {
+    payload: { data: suppliers },
+  } = useSuppliers();
 
   const formik = useFormik({
     initialValues: {

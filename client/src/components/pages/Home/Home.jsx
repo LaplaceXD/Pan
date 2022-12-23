@@ -1,14 +1,13 @@
 import { useState } from "react";
-import { useQueryClient } from "react-query";
 import { toast } from "react-toastify";
 
 import placeholderImg from "@assets/imgs/placeholder-img.jpg";
 import { Button, Grid, Header, SearchBar } from "@components/common";
 import { Category, Modal, Order, Product } from "@components/module";
 import { PreviewLayout } from "@components/template";
-import { useCart, useFilter, useModal, useMutation, useQuery } from "@hooks";
-import { createOrder as createOrderService } from "@services/order";
-import { getAllProducts } from "@services/product";
+import { useCart, useFilter, useModal } from "@hooks";
+import { useOrders } from "@hooks/services/order";
+import { useProducts } from "@hooks/services/product";
 import format from "@utils/format";
 
 import styles from "./Home.module.css";
@@ -31,17 +30,17 @@ const search = {
 function Home() {
   const quantityModal = useModal();
   const cartConfirmModal = useModal();
-  const queryClient = useQueryClient();
 
-  const createOrder = useMutation(createOrderService);
-  const { data: products } = useQuery("products", getAllProducts);
-  const { filter, data: filteredProducts } = useFilter(
-    products?.filter(({ is_available, available_stock }) => is_available && available_stock > 0),
-    { search, category }
+  const productsQuery = useProducts();
+  const products = productsQuery.payload.data;
+  const availableProducts = products?.filter(
+    (product) => product.is_available && product.available_stock > 0
   );
+  const { filter, data: filteredProducts } = useFilter(availableProducts, { search, category });
 
   const [productId, setProductId] = useState(null);
   const [editingLine, setEditingLine] = useState(false);
+  const ordersQuery = useOrders();
   const cart = useCart(products);
 
   function handleProductClick(id) {
@@ -88,19 +87,17 @@ function Home() {
 
   async function handleCartSubmit(_, setSubmitting) {
     setSubmitting(true);
-
-    const { error, isRedirect } = await createOrder.execute(
-      cart.items.map(({ product_id, quantity }) => ({ product_id, quantity }))
-    );
-
+    const payload = cart.items.map(({ product_id, quantity }) => ({ product_id, quantity }));
+    const { error, isRedirect } = await ordersQuery.create.execute(payload);
     setSubmitting(false);
+
     if (isRedirect) return;
     if (error) return toast.error(format.error(error));
 
-    await queryClient.invalidateQueries("products");
+    await productsQuery.invalidate();
     cartConfirmModal.close();
     cart.clear();
-    toast.success("Order placed.");
+    toast.success("Order successfully placed.");
   }
 
   const CheckoutPreview = (
@@ -164,7 +161,7 @@ function Home() {
 
       <Modal.CartItem
         value={cart.get(productId)?.quantity ?? 1}
-        max={products.find(({ product_id }) => product_id === productId)?.available_stock}
+        max={products?.find(({ product_id }) => product_id === productId)?.available_stock}
         onAdd={handleCartItemAdd}
         onEdit={handleCartItemEdit}
         onSubmit={editingLine ? handleCartItemAdd : handleCartItemEdit}

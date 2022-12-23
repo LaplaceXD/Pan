@@ -1,4 +1,4 @@
-import { useQuery as useReactQuery } from "react-query";
+import { useQuery as useReactQuery, useQueryClient } from "react-query";
 import { redirect } from "react-router-dom";
 import { toast } from "react-toastify";
 
@@ -6,6 +6,7 @@ import { useAuth } from "@hooks";
 
 function useQuery(key, query, { checkAuth = true, ...options } = { checkAuth: true }) {
   const auth = useAuth();
+  const queryClient = useQueryClient();
   const queryDetails = useReactQuery(
     key,
     async ({ ...params }) => {
@@ -36,7 +37,7 @@ function useQuery(key, query, { checkAuth = true, ...options } = { checkAuth: tr
     }
   }
 
-  return queryDetails;
+  return { ...queryDetails, invalidate: () => queryClient.invalidateQueries(key) };
 }
 
 export default useQuery;
