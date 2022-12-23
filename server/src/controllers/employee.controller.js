@@ -1,10 +1,8 @@
 const crypto = require("crypto");
 
 const { InternalServerError, NotFound, BadRequest } = require("../../helpers/errors");
-const { hash } = require("../providers");
+const { hash, mail } = require("../providers");
 const Employee = require("../models/employee.model");
-
-const Mailer = require("../providers/mail");
 
 function generatePassword() {
   return crypto.randomBytes(8).toString("base64").replaceAll("=", "");
@@ -36,12 +34,9 @@ const create = async (req, res) => {
   const data = await employee.save();
   if (!data) throw new InternalServerError();
 
-  Mailer.create({ email: employee.email, password: password });
-
-  res.status(200).send({
-    message: "Account successfully created.",
-    data: req.body,
-  });
+  await mail.send(employee.email, { name: employee.first_name, password }, mail.template.ACCOUNT_CREATED);
+  const { password: pass, ...filteredData } = data;
+  res.status(200).send(filteredData);
 };
 
 const update = async (req, res) => {
@@ -65,11 +60,7 @@ const changePassword = async (req, res) => {
   employee.password = await hash.hashPassword(req.body.new_password);
   await employee.savePassword();
 
-  Mailer.change({ email: employee.email, password: req.body.new_password });
-
-  res.status(200).send({
-    message: "Successfully changed password.",
-  });
+  res.status(200).send({ message: "Successfully changed password." });
 };
 
 const resetPassword = async (req, res) => {
@@ -80,11 +71,8 @@ const resetPassword = async (req, res) => {
   employee.password = await hash.hashPassword(password);
   await employee.savePassword();
 
-  Mailer.reset({ email: employee.email, password: password });
-
-  res.status(200).send({
-    message: "Successfully reset password.",
-  });
+  await mail.send(employee.email, { name: employee.first_name, password }, mail.template.CHANGED_PASSWORD);
+  res.status(200).send({ message: "Successfully reset password." });
 };
 
 const toggleStatus = async (req, res) => {
