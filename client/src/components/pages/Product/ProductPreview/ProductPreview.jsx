@@ -35,12 +35,7 @@ function ProductPreview({
 
   async function handleProductEdit(values, setSubmitting) {
     setSubmitting(true);
-    const { error, isRedirect } = await productQuery.update.execute({
-      name: values.name,
-      category_id: values.category,
-      description: values.description,
-      unit_price: values.price,
-    });
+    const { error, isRedirect } = await productQuery.update.execute(values);
     setSubmitting(false);
 
     if (isRedirect) return;
@@ -53,12 +48,7 @@ function ProductPreview({
 
   async function handleProductAdd(values, setSubmitting) {
     setSubmitting(true);
-    const { error, isRedirect } = await productsQuery.create.execute({
-      name: values.name,
-      category_id: values.category,
-      description: values.description,
-      unit_price: values.price,
-    });
+    const { error, isRedirect } = await productsQuery.create.execute(values);
     setSubmitting(false);
 
     if (isRedirect) return;
