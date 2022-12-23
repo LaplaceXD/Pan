@@ -15,7 +15,7 @@ function StockForm({
   unit = "",
   price = 0,
   notes = "",
-  dateSupplied,
+  dateSupplied = "",
   disableProductField = false,
   disableSupplierField = false,
   onCancel,
@@ -25,10 +25,18 @@ function StockForm({
   const { data: suppliers } = useQuery("suppliers", getAllSuppliers);
 
   const formik = useFormik({
-    initialValues: { product: productId, supplier: supplierId, quantity, unit, price, notes, dateSupplied },
+    initialValues: {
+      product: productId,
+      supplier: supplierId,
+      quantity,
+      unit,
+      price,
+      notes,
+      dateSupplied,
+    },
     validationSchema: Yup.object({
-      product: Yup.number().integer().label("Product").min(1).required(),
-      supplier: Yup.number().integer().label("Supplier").min(1).required(),
+      product: Yup.number().integer().label("Product").min(1, "Product is required.").required(),
+      supplier: Yup.number().integer().label("Supplier").min(1, "Supplier is required.").required(),
       unit: Yup.string().label("Unit").min(2).max(5).required(),
       quantity: Yup.number().integer().label("Quantity").min(1).required(),
       price: Yup.number().label("Unit Price").min(0.01).required(),
