@@ -1,0 +1,15 @@
+.container {
+  flex: 1;
+  height: max-content;
+}
+
+.list {
+  flex: 1;
+  gap: 16px;
+  overflow-y: scroll;
+  max-height: 75vh;
+}
+
+.list::-webkit-scrollbar-track {
+  background: transparent;
+}

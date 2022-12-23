@@ -42,7 +42,8 @@ body {
 }
 
 input,
-textarea {
+textarea,
+fieldset {
   font-family: inherit;
   border: none;
 }

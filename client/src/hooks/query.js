@@ -21,7 +21,11 @@ function useQuery(key, query, { checkAuth = true, ...options } = { checkAuth: tr
 
       return null;
     },
-    options
+    {
+      // minutes * seconds * milliseconds
+      cacheTime: options?.cacheTime ?? 5 * 60 * 1000,
+      staleTime: options?.staleTime ?? 2 * 60 * 1000,
+    }
   );
 
   async function redirectIfUnauthorized(status) {

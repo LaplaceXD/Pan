@@ -5,7 +5,11 @@ import styles from "./Product.module.css";
 import ProductContent from "./ProductContent";
 import ProductPreview from "./ProductPreview";
 
-function Product({ showProductAddButton = false, showProductEditButtons = false }) {
+function Product({
+  showStockDeleteButton = false,
+  showProductAddButton = false,
+  showProductEditButton = false,
+}) {
   const [productId, setProductId] = useState(null);
 
   return (
@@ -13,8 +17,9 @@ function Product({ showProductAddButton = false, showProductEditButtons = false 
       PreviewComponent={
         <ProductPreview
           productId={productId}
+          showStockDeleteButton={showStockDeleteButton}
           showProductAddButton={showProductAddButton}
-          showProductEditButtons={showProductEditButtons}
+          showProductEditButton={showProductEditButton}
         />
       }
       className={styles.previewContainer}

@@ -39,7 +39,7 @@ app.use("/api/v1/suppliers", supplierRoutes);
 app.use("/api/v1/products", productRoutes);
 app.use("/api/v1/orders", orderRoutes);
 app.use("/api/v1/categories", categoryRoutes);
-app.use("/api/v1/stock", stockRoutes);
+app.use("/api/v1/stocks", stockRoutes);
 
 app.use("*", (_, res) => {
   res.status(404).send({ message: "Resource not found!" });

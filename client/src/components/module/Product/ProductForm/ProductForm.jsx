@@ -1,7 +1,8 @@
-import { BoxImage, Button, Field } from "@components/common";
-import { Category } from "@components/module";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+
+import { BoxImage, Button, Field, TextAreaField } from "@components/common";
+import { Category } from "@components/module";
 
 import styles from "./ProductForm.module.css";
 
@@ -24,13 +25,12 @@ function ProductForm({
         .max(100)
         .matches(/^[\w\s\&]*$/, "Product Name must contain letters, digits, and spaces only.")
         .required(),
-      category: Yup.number().integer().label("Category").required(),
+      category: Yup.number().integer().label("Category").min(0).required(),
       description: Yup.string().label("Description").min(2).max(300).required(),
       price: Yup.number().label("Unit Price").min(0.01).required(),
     }),
     onSubmit: ({ category, ...values }) => {
-      if (category !== 0) values["category"] = category;
-      onSubmit(values, formik.setSubmitting);
+      onSubmit({ ...values, category: category !== 0 ? category : null }, formik.setSubmitting);
     },
     enableReinitialize: true,
   });
@@ -69,23 +69,18 @@ function ProductForm({
         value={formik.values.category}
         isDisabled={formik.isSubmitting}
       />
-
-      <Field
+      <TextAreaField
+        className={styles.description}
         label="Description"
         id="description"
-        className={styles.description}
+        name="description"
+        value={formik.values.description}
+        onChange={formik.handleChange}
+        onBlur={formik.handleBlur}
         error={formik.touched.description && formik.errors.description}
-      >
-        <textarea
-          id="description"
-          name="description"
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          value={formik.values.description}
-        />
-      </Field>
+      />
       <Field
-        type="text"
+        type="number"
         label="Unit Price"
         id="price"
         name="price"
