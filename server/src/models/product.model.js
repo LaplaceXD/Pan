@@ -182,6 +182,7 @@ class Product {
           .not(!match ? product.category_id ?? "" : "")
           .required(),
       })
+      .label("Payload")
       .options({ abortEarly: false })
       .required();
 

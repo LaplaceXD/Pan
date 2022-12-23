@@ -198,6 +198,7 @@ class Supplier {
         .message("{{#label}} must contain digits only."),
       email: Joi.string().label("Email").email().required(),
     })
+      .label("Payload")
       .options({ abortEarly: false })
       .required();
 

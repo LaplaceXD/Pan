@@ -4,6 +4,7 @@ const { InternalServerError } = require("../../helpers/errors");
 const { db } = require("../providers");
 
 const OrderLine = require("./orderline.model");
+const Product = require("./product.model");
 
 class Order {
   constructor(order) {
@@ -120,15 +121,35 @@ class Order {
   }
 
   static async validate(order) {
+    let values = await Promise.all(order.map(({ product_id }) => Product.findById(product_id)));
+    values = values.filter(Boolean);
+
     const schema = Joi.array()
       .items(
         Joi.object({
-          product_id: Joi.number().label("Product ID").min(1).required(),
-          quantity: Joi.number().label("Quantity").min(1).required(),
+          product_id: Joi.number()
+            .label("Product ID")
+            .custom((value, helpers) => {
+              const exists = values.find((product) => product.product_id === value);
+              return exists ? value : helpers.message("{{#label}} contains an invalid value");
+            })
+            .required(),
+          quantity: Joi.number()
+            .label("Quantity")
+            .min(1)
+            .custom((value, { state, message }) => {
+              const product = values.find(({ product_id }) => product_id === state.ancestors[0].product_id);
+              return product.available_stock >= value
+                ? value
+                : message(`"Product ID" ${product.product_id} exceeds available stock.`);
+            })
+            .required(),
         })
       )
-      .options({ abortEarly: false })
-      .required();
+      .min(1)
+      .label("Payload")
+      .required()
+      .options({ abortEarly: false });
 
     return schema.validate(order);
   }
