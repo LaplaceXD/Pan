@@ -15,8 +15,8 @@ function StockItems({ items = [], onItemEdit, onItemDelete, showSupplier = false
           unit,
           notes,
           unit_price,
-          product_id,
-          supplier_id,
+          product_name,
+          supplier_name,
           date_supplied,
           quantity,
         }) => (
@@ -24,8 +24,8 @@ function StockItems({ items = [], onItemEdit, onItemDelete, showSupplier = false
             unit={unit}
             quantity={quantity}
             notes={notes}
-            product={product_id}
-            supplier={supplier_id}
+            product={product_name}
+            supplier={supplier_name}
             dateSupplied={date_supplied}
             price={unit_price}
             onEdit={() => onItemEdit(stock_id)}
