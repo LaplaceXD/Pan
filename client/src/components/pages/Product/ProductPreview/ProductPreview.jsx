@@ -60,7 +60,7 @@ function ProductPreview({
   }
 
   async function handleProductStatusChange() {
-    const { error, isRedirect } = await productQuery.toggleStatus.execute(productId);
+    const { error, isRedirect } = await productQuery.toggleStatus.execute();
     if (isRedirect) return;
     if (error) return toast.error(format.error(error));
 
