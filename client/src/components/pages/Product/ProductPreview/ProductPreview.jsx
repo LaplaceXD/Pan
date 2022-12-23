@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { BsPlusCircle } from "react-icons/bs";
 import { toast } from "react-toastify";
 
 import placeholderImg from "@assets/imgs/placeholder-img.jpg";
+import { FillButton } from "@components/common";
 import { Product, Stock } from "@components/module";
 import { useProduct, useProducts } from "@hooks/services/product";
 import format from "@utils/format";
@@ -116,10 +116,11 @@ function ProductPreview({
       />
     ),
     [views.DEFAULT]: showProductAddButton ? (
-      <button className={styles.addBtn} onClick={() => setview(views.PRODUCT_ADD_FORM)}>
-        <BsPlusCircle size={128} />
-        Add a new Product
-      </button>
+      <FillButton
+        className={styles.addBtn}
+        label="Add new Product"
+        onClick={() => setview(views.PRODUCT_ADD_FORM)}
+      />
     ) : null,
   };
 

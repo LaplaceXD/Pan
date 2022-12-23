@@ -6,23 +6,5 @@
 
 .add-btn {
   flex: 1;
-  background: transparent;
-  box-shadow: inset 0 0 0 2px var(--tertiary-color);
-  border-radius: 16px;
-
-  font-size: 1.1rem;
-  color: var(--tertiary-color);
-
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 16px;
   margin-top: 16px;
-
-  transition: filter 250ms ease;
-}
-
-.add-btn:hover {
-  filter: brightness(1.3);
 }

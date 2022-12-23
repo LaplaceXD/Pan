@@ -1,0 +1,21 @@
+.btn {
+  background: transparent;
+  box-shadow: inset 0 0 0 2px var(--tertiary-color);
+  border-radius: 16px;
+
+  font-size: 1.1rem;
+  color: var(--tertiary-color);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  height: 100%;
+
+  transition: filter 250ms ease;
+}
+
+.btn:hover {
+  filter: brightness(1.3);
+}
