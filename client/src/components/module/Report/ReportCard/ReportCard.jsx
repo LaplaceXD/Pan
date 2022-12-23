@@ -1,5 +1,4 @@
 import banner from "@assets/imgs/login_banner.jpg";
-import React from "react";
 import styles from "./ReportCard.module.css";
 
 import { Button } from "@components/common";

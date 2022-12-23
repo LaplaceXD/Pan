@@ -1,14 +1,12 @@
-import React from "react";
-
-import { Button, Header, List, SearchBar } from "@components/common/index.js";
+import { Header, List, SearchBar } from "@components/common/index.js";
 import { Supplier as SupplierModule } from "@components/module";
 import { PreviewLayout } from "@components/template";
 import { useFilter } from "@hooks";
 import { useSuppliers } from "@hooks/services/supplier";
-
 import format from "@utils/format";
 
 import styles from "./Supplier.module.css";
+import SupplierPreview from "./SupplierPreview";
 
 const search = {
   value: "",
@@ -36,15 +34,10 @@ function Supplier() {
   }));
   const { filter, data: filteredSuppliers } = useFilter(suppliers, { search });
 
-  const supplierPreview = (
-    <>
-      <SupplierModule.Preview className={styles.supplierPreview} />
-      <Button label="Add New Supplier" />
-    </>
-  );
+  const PreviewComponent = <SupplierPreview />;
 
   return (
-    <PreviewLayout PreviewComponent={supplierPreview} className={styles.container}>
+    <PreviewLayout PreviewComponent={PreviewComponent} className={styles.container}>
       <Header title="Supplier List" className={styles.header}>
         <SearchBar
           className={styles.search}
