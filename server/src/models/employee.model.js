@@ -138,7 +138,7 @@ class Employee {
     try {
       const conn = await db.connect();
       const [data] = await conn.query(
-        `SELECT * FROM employee WHERE role = 'employee' ORDER BY date_employed, employee_id DESC`
+        `SELECT * FROM employee WHERE role = 'employee' ORDER BY date_employed DESC, employee_id DESC`
       );
       await conn.end();
 
