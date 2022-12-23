@@ -25,7 +25,7 @@ function useProduct(id) {
     update,
     toggleStatus,
     invalidate: async (id) => {
-      if (id) return await Promise.all([payload.invalidate(), stocks.invalidate()]);
+      if (!id) return await Promise.all([payload.invalidate(), stocks.invalidate()]);
 
       return await Promise.all([
         queryClient.invalidateQueries(["product", id]),
