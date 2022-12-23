@@ -1,6 +1,6 @@
 import auth from "@utils/auth";
 
-export async function getAllEmployee({ signal }) {
+export async function getAllEmployees({ signal }) {
   return await auth.get("/employees", { signal });
 }
 export async function getEmployeeById(userId, { signal }) {

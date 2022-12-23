@@ -7,7 +7,7 @@ import { Button, Header, SearchBar } from "@components/common";
 import { Employee as EmployeeModule } from "@components/module";
 import { PreviewLayout } from "@components/template";
 import { useQuery } from "@hooks";
-import { getAllEmployee } from "@services/employee.js";
+import { getAllEmployees } from "@services/employee.js";
 
 function Employee() {
   const EmployeePreview = (
@@ -17,7 +17,7 @@ function Employee() {
     </>
   );
 
-  const { data } = useQuery("employees", getAllEmployee);
+  const { data } = useQuery("employees", getAllEmployees);
   const employees = data?.map(
     ({ employee_id, first_name, last_name, contact_no, date_employed, email }) => ({
       employee_id: format.id(employee_id),
