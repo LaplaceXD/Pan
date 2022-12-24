@@ -110,6 +110,13 @@ function StockPreview({
     deleteModal.open();
   }
 
+  function handleStockAddClick() {
+    if (product && !product.is_available) return toast.error("Can't add stock to an unavailable product.");
+    if (supplier && !supplier.is_active) return toast.error("Can't add stock to an inactive supplier.");
+
+    setView(views.STOCK_ADD);
+  }
+
   const viewDetails = {
     [views.STOCK_ITEMS]: {
       header: "Product Stock",
@@ -125,7 +132,7 @@ function StockPreview({
           />
           <div className={styles.buttons}>
             <Button label="Go Back" onClick={onBack} secondary />
-            <Button label="Add Stock" onClick={() => setView(views.STOCK_ADD)} />
+            <Button label="Add Stock" onClick={handleStockAddClick} />
           </div>
         </>
       ),
