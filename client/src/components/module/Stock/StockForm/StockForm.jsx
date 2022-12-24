@@ -21,12 +21,16 @@ function StockForm({
   onCancel,
   onSubmit,
 }) {
-  const {
+  let {
     payload: { data: products },
   } = useProducts();
-  const {
+  let {
     payload: { data: suppliers },
   } = useSuppliers();
+
+  // only show active ones for the selectable fields
+  if (!disableProductField) products = products?.filter(({ is_available }) => is_available);
+  if (!disableSupplierField) suppliers = suppliers?.filter(({ is_active }) => is_active);
 
   const formik = useFormik({
     initialValues: {
