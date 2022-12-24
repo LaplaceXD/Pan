@@ -23,6 +23,7 @@ const { error } = require("./src/middleware");
 const app = express();
 const server = http.createServer(app);
 
+app.options("*", cors({ ...config.get("cors") }));
 app.use(cors({ ...config.get("cors") }));
 app.use(helmet());
 app.use(compression());
