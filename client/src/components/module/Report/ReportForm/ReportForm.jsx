@@ -23,9 +23,9 @@ function ReportForm({ className, onDownload }) {
         const [year, month] = format.date(new Date(), true).split("-");
 
         // get first day of the previous month
-        formatted.start = format.date(new Date(year, month - 1, 1), true);
+        formatted.start = format.date(new Date(year, month - 2, 1), true);
         // get last day of the previous month
-        formatted.end = format.date(new Date(year, month, 0), true);
+        formatted.end = format.date(new Date(year, month - 1, 0), true);
       }
 
       onDownload(formatted, formik.setSubmitting);
