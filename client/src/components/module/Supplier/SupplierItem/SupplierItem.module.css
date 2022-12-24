@@ -1,4 +1,9 @@
 .container {
+  --bg-color: var(--accent-color);
+  --font-color: var(--text-color);
+  --heading-color: var(--secondary-color);
+  --value-color: var(--white);
+
   display: flex;
   flex-direction: column;
   align-items: stretch;
@@ -8,13 +13,24 @@
   width: 100%;
   border-radius: 16px;
 
-  background: var(--accent-color);
-  color: var(--text-color);
+  background: var(--bg-color);
+  color: var(--font-color);
+
+  transition: filter 125ms ease, background 250ms ease, color 250ms ease;
 }
 
 .container:hover {
   filter: brightness(1.15);
   cursor: pointer;
+}
+
+.container:active,
+.container.isSelected {
+  filter: none;
+  --bg-color: var(--secondary-color);
+  --font-color: var(--primary-color);
+  --heading-color: var(--primary-color);
+  --value-color: var(--primary-color);
 }
 
 .details {
@@ -37,7 +53,7 @@
 }
 
 .supplier-name {
-  color: var(--secondary-color);
+  color: var(--heading-color);
   font-weight: var(--font-regular);
   font-size: 2rem;
 }
@@ -45,7 +61,7 @@
 .supplier-contact,
 .supplier-address {
   flex: 1;
-  color: var(--white);
+  color: var(--value-color);
   margin-top: 0.2em;
   font-weight: var(--font-regular);
   font-size: 1.25rem;

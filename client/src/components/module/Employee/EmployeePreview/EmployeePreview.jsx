@@ -1,5 +1,4 @@
 import { clsx } from "clsx";
-import React from "react";
 import styles from "./EmployeePreview.module.css";
 
 function EmployeePreview({ className, title = "Employee Details", children }) {

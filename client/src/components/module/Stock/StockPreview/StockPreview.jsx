@@ -6,6 +6,7 @@ import { Modal } from "@components/module";
 import { useModal } from "@hooks";
 import { useProduct, useProducts } from "@hooks/services/product";
 import { useStock } from "@hooks/services/stock";
+import { useSupplier } from "@hooks/services/supplier";
 import format from "@utils/format";
 
 import StockForm from "../StockForm";
@@ -32,6 +33,7 @@ function StockPreview({
   const [stockId, setStockId] = useState(null);
 
   const productsQuery = useProducts();
+  const supplierQuery = useSupplier(supplier?.supplier_id);
   const productQuery = useProduct(product?.product_id);
 
   const stockQuery = useStock(stockId);
@@ -53,8 +55,8 @@ function StockPreview({
       productQuery.invalidate(values.product_id),
       // the previous product also gets invalidated on change
       productQuery.invalidate(stock?.product_id),
-      // supplierQuery.invalidate(values.supplier_id)
-      // supplierQuery.invalidate(stock?.supplier_id)
+      supplierQuery.invalidate(values.supplier_id),
+      supplierQuery.invalidate(stock?.supplier_id),
       stockQuery.invalidate(),
     ]);
 
@@ -74,7 +76,7 @@ function StockPreview({
     await Promise.all([
       productsQuery.invalidate(),
       productQuery.invalidate(values.product_id),
-      // supplierQuery.invalidate(values.supplier_id)
+      supplierQuery.invalidate(values.supplier_id),
     ]);
 
     setView(views.STOCK_ITEMS);
@@ -90,7 +92,7 @@ function StockPreview({
     await Promise.all([
       productsQuery.invalidate(),
       productQuery.invalidate(stock?.product_id),
-      // supplierQuery.invalidate(stock?.supplier_id)
+      supplierQuery.invalidate(stock?.supplier_id),
     ]);
 
     setStockId(null);
@@ -153,7 +155,7 @@ function StockPreview({
           onCancel={() => setView(views.STOCK_ITEMS)}
           onSubmit={handleStockAdd}
           productId={product?.product_id}
-          supplier={supplier?.supplier_id}
+          supplierId={supplier?.supplier_id}
           disableProductField={disableProductField}
           disableSupplierField={disableSupplierField}
         />

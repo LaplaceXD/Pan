@@ -1,9 +1,11 @@
+import { clsx } from "clsx";
+
 import format from "@utils/format";
 import styles from "./SupplierItem.module.css";
 
-function SupplierItem({ id, name, contactNumber, address }) {
+function SupplierItem({ id, name, contactNumber, address, isSelected, onClick }) {
   return (
-    <li className={styles.container}>
+    <li className={clsx(styles.container, isSelected && styles.isSelected)} onClick={onClick}>
       <div className={styles.nameContainer}>
         <p className={styles.label}>{format.id(id, "SupplierID")}</p>
         <p className={styles.supplierName}>{name}</p>

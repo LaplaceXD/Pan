@@ -1,4 +1,3 @@
-import React from "react";
 import styles from "./ReportItem.module.css";
 
 import { Button } from "@components/common";

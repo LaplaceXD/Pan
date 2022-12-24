@@ -1,14 +1,14 @@
-import React from "react";
+import { useState } from "react";
 
-import { Button, Header, List, SearchBar } from "@components/common/index.js";
+import { Header, List, SearchBar } from "@components/common/index.js";
 import { Supplier as SupplierModule } from "@components/module";
 import { PreviewLayout } from "@components/template";
 import { useFilter } from "@hooks";
 import { useSuppliers } from "@hooks/services/supplier";
-
 import format from "@utils/format";
 
 import styles from "./Supplier.module.css";
+import SupplierPreview from "./SupplierPreview";
 
 const search = {
   value: "",
@@ -24,7 +24,11 @@ const search = {
   },
 };
 
-function Supplier() {
+function Supplier({
+  showStockDeleteButton = false,
+  showSupplierAddButton = false,
+  showSupplierEditButton = false,
+}) {
   const {
     payload: { data },
   } = useSuppliers();
@@ -36,15 +40,19 @@ function Supplier() {
   }));
   const { filter, data: filteredSuppliers } = useFilter(suppliers, { search });
 
-  const supplierPreview = (
-    <>
-      <SupplierModule.Preview className={styles.supplierPreview} />
-      <Button label="Add New Supplier" />
-    </>
+  const [supplierId, setSupplierId] = useState(null);
+
+  const PreviewComponent = (
+    <SupplierPreview
+      supplierId={supplierId}
+      showStockDeleteButton={showStockDeleteButton}
+      showSupplierAddButton={showSupplierAddButton}
+      showSupplierEditButton={showSupplierEditButton}
+    />
   );
 
   return (
-    <PreviewLayout PreviewComponent={supplierPreview} className={styles.container}>
+    <PreviewLayout PreviewComponent={PreviewComponent} className={styles.container}>
       <Header title="Supplier List" className={styles.header}>
         <SearchBar
           className={styles.search}
@@ -59,7 +67,14 @@ function Supplier() {
         items={filteredSuppliers}
         itemKey={(suppliers) => suppliers.supplier_id}
         RenderComponent={({ supplier_id, name, contact_no, address }) => (
-          <SupplierModule.Item id={supplier_id} name={name} contactNumber={contact_no} address={address} />
+          <SupplierModule.Item
+            id={supplier_id}
+            name={name}
+            contactNumber={contact_no}
+            address={address}
+            onClick={() => setSupplierId(supplierId === supplier_id ? null : supplier_id)}
+            isSelected={supplier_id === supplierId}
+          />
         )}
       />
     </PreviewLayout>

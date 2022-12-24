@@ -1,4 +1,3 @@
-import React from "react";
 import styles from "./SupplierPreview.module.css";
 
 import { clsx } from "clsx";
