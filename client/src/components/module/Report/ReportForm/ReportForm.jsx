@@ -15,6 +15,17 @@ function ReportForm({ className, onDownload }) {
       end: Yup.date().label("End Date"),
     }),
     onSubmit: (values) => {
+      // if there is no chosen values for start and end date
+      // return the report for the month instead
+      if (values.start === "" || values.end === "") {
+        const [year, month] = format.date(new Date(), true).split("-");
+
+        // get first day of the previous month
+        values.start = format.date(new Date(year, month - 1, 1), true);
+        // get last day of the previous month
+        values.end = format.date(new Date(year, month, 0), true);
+      }
+
       onDownload(values, formik.setSubmitting);
     },
   });
@@ -46,7 +57,13 @@ function ReportForm({ className, onDownload }) {
         onChange={formik.handleChange}
       />
 
-      <Button type="submit" label="Download Latest Report" disabled={formik.isSubmitting} />
+      <Button
+        type="submit"
+        label={`Download ${
+          formik.values.start !== "" || formik.values.end !== "" ? "Custom" : "Latest"
+        } Report`}
+        disabled={formik.isSubmitting}
+      />
     </form>
   );
 }
