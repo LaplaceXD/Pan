@@ -1,7 +1,7 @@
 import banner from "@assets/imgs/login_banner.jpg";
-import styles from "./ReportCard.module.css";
 
-import { Button } from "@components/common";
+import ReportForm from "../ReportForm";
+import styles from "./ReportCard.module.css";
 
 function ReportCard({ title }) {
   return (
@@ -9,10 +9,7 @@ function ReportCard({ title }) {
       <img src={banner} alt="Bread." className={styles.img} />
       <div className={styles.content}>
         <h1 className={styles.title}>{title}</h1>
-        <div className={styles.footer}>
-          <Button label="Download Latest Report" className={styles.btn} />
-          <Button label="View Past Report" className={styles.btn} secondary />
-        </div>
+        <ReportForm className={styles.form} />
       </div>
     </div>
   );
