@@ -1,16 +1,12 @@
 const Joi = require("joi");
 
 const { InternalServerError } = require("../../helpers/errors");
-const { availability } = require("../constants/category");
 const { db } = require("../providers");
 
 class Category {
   constructor(category) {
     this.category_id = category.category_id || 0;
     this.name = category.name;
-    this.is_available = category.is_available
-      ? category.is_available === true || category.is_available === availability.AVAILABLE
-      : true;
   }
 
   async save() {
