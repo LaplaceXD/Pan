@@ -18,8 +18,6 @@ class Report {
     const bottomProducts = await Report.retrieveProductPerformance({ startDate, endDate, limit: 5 });
     const allProducts = await Report.retrieveProductPerformance({ startDate, endDate });
 
-    console.log(topProducts);
-
     const columns = [
       { label: "Product", value: "name" },
       { label: "Quantity Sold", value: "total_sales" },

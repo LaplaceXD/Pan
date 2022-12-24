@@ -111,7 +111,7 @@ class Stock {
           FROM stock s
           INNER JOIN product p ON p.product_id = s.product_id
           INNER JOIN supplier sp ON sp.supplier_id = s.supplier_id
-          ORDER BY s.date_supplied, s.stock_id DESC`
+          ORDER BY s.date_supplied DESC, s.stock_id DESC`
       );
       await conn.end();
 
@@ -166,7 +166,7 @@ class Stock {
           INNER JOIN product p ON p.product_id = s.product_id
           INNER JOIN supplier sp ON sp.supplier_id = s.supplier_id
           WHERE s.supplier_id = :supplierId
-          ORDER BY s.date_supplied, s.stock_id DESC`,
+          ORDER BY s.date_supplied DESC, s.stock_id DESC`,
         { supplierId }
       );
       await conn.end();
@@ -208,9 +208,15 @@ class Stock {
     return retVal;
   }
 
-  static async validate(stock) {
+  static async validate(stock, params = {}) {
+    const isEditing = "id" in params;
     let productMatch = "product_id" in stock ? await Product.findById(stock.product_id) : null;
     let supplierMatch = "supplier_id" in stock ? await Supplier.findById(stock.supplier_id) : null;
+
+    if (!isEditing) {
+      productMatch = productMatch?.is_available ? productMatch : null;
+      supplierMatch = supplierMatch?.is_active ? supplierMatch : null;
+    }
 
     let schema = Joi.object()
       .keys({
@@ -221,10 +227,12 @@ class Stock {
         notes: Joi.string().label("Notes").min(2).max(400).allow(""),
         product_id: Joi.number()
           .label("Product ID")
-          .not(!productMatch ? stock.product_id ?? null : null),
+          .not(!productMatch ? stock.product_id ?? null : null)
+          .required(),
         supplier_id: Joi.number()
           .label("Supplier ID")
-          .not(!supplierMatch ? stock.supplier_id ?? null : null),
+          .not(!supplierMatch ? stock.supplier_id ?? null : null)
+          .required(),
       })
       .label("Payload")
       .options({ abortEarly: false })

@@ -116,7 +116,7 @@ function SupplierPreview({
     [views.SUPPLIER_ADD_FORM]: (
       <Supplier.Form
         title="Supplier Add Form"
-        onCancel={() => setView(views.SUPPLIER_DETAIL)}
+        onCancel={() => setView(views.DEFAULT)}
         onSubmit={handleSupplierAdd}
       />
     ),

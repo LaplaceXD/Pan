@@ -76,7 +76,7 @@ function SupplierForm({
         street_no: values.streetNumber,
       };
 
-      if (streetName === "") formatted.street_no = "";
+      if (values.streetName === "") formatted.street_no = "";
       onSubmit(formatted, formik.setSubmitting);
     },
     enableReinitialize: true,
@@ -112,7 +112,7 @@ function SupplierForm({
           label="Street Number"
           id="streetNumber"
           name="streetNumber"
-          onChange={formik.handleChang}
+          onChange={formik.handleChange}
           onBlur={formik.handleBlur}
           value={formik.values.streetNumber}
           error={formik.touched.streetNumber && formik.errors.streetNumber}
