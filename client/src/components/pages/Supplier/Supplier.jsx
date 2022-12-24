@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 import { Header, List, SearchBar } from "@components/common/index.js";
 import { Supplier as SupplierModule } from "@components/module";
 import { PreviewLayout } from "@components/template";
@@ -22,7 +24,11 @@ const search = {
   },
 };
 
-function Supplier() {
+function Supplier({
+  showStockDeleteButton = false,
+  showSupplierAddButton = false,
+  showSupplierEditButton = false,
+}) {
   const {
     payload: { data },
   } = useSuppliers();
@@ -34,7 +40,16 @@ function Supplier() {
   }));
   const { filter, data: filteredSuppliers } = useFilter(suppliers, { search });
 
-  const PreviewComponent = <SupplierPreview />;
+  const [supplierId, setSupplierId] = useState(null);
+
+  const PreviewComponent = (
+    <SupplierPreview
+      supplierId={supplierId}
+      showStockDeleteButton={showStockDeleteButton}
+      showSupplierAddButton={showSupplierAddButton}
+      showSupplierEditButton={showSupplierEditButton}
+    />
+  );
 
   return (
     <PreviewLayout PreviewComponent={PreviewComponent} className={styles.container}>
@@ -52,7 +67,14 @@ function Supplier() {
         items={filteredSuppliers}
         itemKey={(suppliers) => suppliers.supplier_id}
         RenderComponent={({ supplier_id, name, contact_no, address }) => (
-          <SupplierModule.Item id={supplier_id} name={name} contactNumber={contact_no} address={address} />
+          <SupplierModule.Item
+            id={supplier_id}
+            name={name}
+            contactNumber={contact_no}
+            address={address}
+            onClick={() => setSupplierId(supplierId === supplier_id ? null : supplier_id)}
+            isSelected={supplier_id === supplierId}
+          />
         )}
       />
     </PreviewLayout>
