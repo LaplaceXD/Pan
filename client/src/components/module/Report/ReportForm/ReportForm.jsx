@@ -14,12 +14,14 @@ function ReportForm({ className, onDownload }) {
       start: Yup.date().label("Start Date"),
       end: Yup.date().label("End Date"),
     }),
-    onSubmit: (values) => {
-      const formatted = { ...values };
+    onSubmit: ({ start, end }) => {
+      let formatted = {};
+      if (start !== "") formatted.start = start;
+      if (end !== "") formatted.end = end;
 
       // if there is no chosen values for start and end date
       // return the report for the month instead
-      if (values.start === "" || values.end === "") {
+      if (!formatted.start && !formatted.end) {
         const [year, month] = format.date(new Date(), true).split("-");
 
         // get first day of the previous month
