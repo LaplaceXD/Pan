@@ -10,6 +10,7 @@ function StockItem({
   unit = "unit",
   price = 0,
   supplier = "supplier",
+  product = "product",
   dateSupplied = new Date(),
   notes = "",
   onEdit,
@@ -26,7 +27,7 @@ function StockItem({
         </h4>
         {showProduct ? (
           <p>
-            <MdProductionQuantityLimits /> {product_id}
+            <MdProductionQuantityLimits /> {product}
           </p>
         ) : null}
         {showSupplier ? (
