@@ -65,6 +65,8 @@ class Stock {
       await conn.execute(
         `UPDATE stock 
         SET 
+          supplier_id    =   :supplier_id,
+          product_id     =   :product_id,
           date_supplied  =   :date_supplied,
           quantity       =   :quantity,
           unit           =   :unit,
