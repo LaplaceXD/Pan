@@ -1,208 +1,172 @@
-const Joi = require("joi");
-let xlsx = require("json-as-xlsx")
-
 const { InternalServerError } = require("../../helpers/errors");
-
 const { db } = require("../providers");
-const { availability } = require("../constants/product");
 
-const Category = require("../models/categories.model");
+class Report {
+  static defaults = {
+    START_DATE: "1970-01-01",
+    END_DATE: new Date().toISOString().split("T")[0],
+    LIMIT: 5,
+  };
 
-class Report{
+  static async productReport(startDate, endDate) {
+    const topProducts = await Report.retrieveProductPerformance({
+      startDate,
+      endDate,
+      limit: 5,
+      desc: true,
+    });
+    const bottomProducts = await Report.retrieveProductPerformance({ startDate, endDate, limit: 5 });
+    const allProducts = await Report.retrieveProductPerformance({ startDate, endDate });
 
-  static async productReport(startDate, endDate){
+    console.log(topProducts);
 
-    let query1 = null;
-    let query2 = null;
-    let query3 = null;
-    //3 queries for top selling, least selling, all product info
+    const columns = [
+      { label: "Product", value: "name" },
+      { label: "Quantity Sold", value: "total_sales" },
+      { label: "Total Revenue", value: "total_revenue" },
+    ];
 
-    try {
-      const conn = await db.connect();
-      const [data] = await conn.execute(
-        `SELECT p.name, SUM(ol.quantity) AS total_sales, SUM(ol.quantity * p.unit_price) AS total_revenue 
-        FROM product p 
-        JOIN order_line ol ON p.product_id = ol.product_id 
-        JOIN ${'`order`'} o ON ol.order_id = o.order_id 
-        WHERE o.date_placed BETWEEN :startDate AND :endDate 
-        GROUP BY p.product_id 
-        ORDER BY total_sales 
-        DESC LIMIT 5;`, 
-        { startDate, endDate }
-      );
-      
-      await conn.end();
-
-      query1 = data;
-    } catch (err) {
-      console.log("[TOP SELLING PRODUCT QUERY ERROR]", err.message);
-      throw new InternalServerError(err);
-    }
-
-    try {
-      const conn = await db.connect();
-      const [data] = await conn.execute(
-        `SELECT p.name, SUM(ol.quantity) AS total_sales, SUM(ol.quantity * p.unit_price) AS total_revenue 
-        FROM product p 
-        JOIN order_line ol ON p.product_id = ol.product_id 
-        JOIN ${'`order`'} o ON ol.order_id = o.order_id 
-        WHERE o.date_placed BETWEEN :startDate AND :endDate 
-        GROUP BY p.product_id 
-        ORDER BY total_sales 
-        ASC LIMIT 5;`, 
-        { startDate, endDate }
-      );
-      await conn.end();
-
-      query2 = data;
-    } catch (err) {
-      console.log("[LEAST SELLING PRODUCT QUERY ERROR]", err.message);
-      throw new InternalServerError(err);
-    }
-
-    try {
-      const conn = await db.connect();
-      const [data] = await conn.execute("SELECT p.name, SUM(ol.quantity) AS total_sales, SUM(ol.quantity * p.unit_price) AS total_revenue FROM product p JOIN order_line ol ON p.product_id = ol.product_id JOIN `order` o ON ol.order_id = o.order_id GROUP BY p.product_id ORDER BY total_sales DESC;");
-      await conn.end();
-
-      query3 = data;
-      console.log(query3);
-    } catch (err) {
-      console.log("[ALL PRODUCT QUERY ERROR]", err.message);
-      throw new InternalServerError(err);
-    }
-
-    let data = [
-      {
-        sheet: "Top Selling Products",
-        columns: [
-          { label: "Product", value: "name" }, 
-          { label: "Quantity Sold", value: "total_sales" }, 
-          { label: "Total Revenue", value: "total_revenue" },
-        ],
-        content: query1
-      },
-      {
-        sheet: "Least Selling Products",
-        columns: [
-          { label: "Product", value: "name" }, 
-          { label: "Quantity Sold", value: "total_sales" }, 
-          { label: "Total Revenue", value: "total_revenue" }, 
-        ],
-        content: query2
-      },
-      {
-        sheet: "Products Statistics",
-        columns: [
-          { label: "Product", value: "name" },
-          { label: "Quantity Sold", value: "total_sales" }, 
-          { label: "Total Revenue", value: "total_revenue" },
-        ],
-        content: query3
-      },
-    ]
-    
-    const settings = {
-      writeOptions: {
-        type: "buffer",
-        bookType: "xlsx",
-      },
-    }
-
-
-    return xlsx(data, settings);
+    return [
+      { sheet: "Top Selling Products", columns, content: topProducts },
+      { sheet: "Least Selling Products", columns, content: bottomProducts },
+      { sheet: "Product Statistucs", columns, content: allProducts },
+    ];
   }
-  static async emplyReport(){
 
-    let query1 = null;
+  static async employeeReport(startDate, endDate) {
+    let content = [];
 
     try {
       const conn = await db.connect();
-      const [data] = await conn.execute("SELECT first_name, last_name, contact_no, email, date_employed, role FROM employee");
-      
+      const [data] = await conn.execute(
+        `SELECT 
+          first_name, 
+          last_name, 
+          contact_no, 
+          email, 
+          date_employed, 
+          role 
+        FROM employee 
+        WHERE date_employed BETWEEN :startDate AND :endDate
+        ORDER BY date_employed DESC`,
+        {
+          startDate: startDate || Report.defaults.START_DATE,
+          endDate: endDate || Report.defaults.END_DATE,
+        }
+      );
       await conn.end();
-
-      query1 = data;
+      content = data;
     } catch (err) {
-      console.log("[EMPLOYEE FETCH ERROR]", err.message);
+      console.log("[EMPLOYEE QUERY ERROR]", err.message);
       throw new InternalServerError(err);
     }
 
-    let data = [
+    return [
       {
         sheet: "Employee List",
         columns: [
-          { label: "First Name", value: "first_name" }, 
-          { label: "Last Name", value: "last_name" }, 
+          { label: "First Name", value: "first_name" },
+          { label: "Last Name", value: "last_name" },
           { label: "Contact Number", value: "contact_no" },
-          { label: "Email", value: "email" }, 
+          { label: "Email", value: "email" },
           { label: "Date Employed", value: "date_employed" },
           { label: "Role", value: "role" },
         ],
-        content: query1
-      }
-    ]
-    
-    const settings = {
-      writeOptions: {
-        type: "buffer",
-        bookType: "xlsx",
+        content,
       },
-    }
-    return xlsx(data, settings);
+    ];
   }
-  static async inventoryReport(){
 
-    let query1 = null;
+  static async inventoryReport(startDate, endDate) {
+    let content = null;
 
     try {
       const conn = await db.connect();
       const [data] = await conn.execute(
-        `SELECT product.name AS product_name, 
-        COUNT(stock.product_id) AS times_stocked, 
-        SUM(order_line.quantity) AS quantity_used, 
-        SUM(stock.quantity) - SUM(order_line.quantity) AS quantity_unused, 
-        SUM(order_line.quantity * stock.unit_price) AS cost_of_goods_sold, 
-        SUM(order_line.quantity * order_line.selling_price) - SUM(order_line.quantity * stock.unit_price) AS gross_profit 
-        FROM product 
-        JOIN stock ON product.product_id = stock.product_id 
-        JOIN order_line ON product.product_id = order_line.product_id 
-        GROUP BY product.product_id, product.name;`
+        `SELECT 
+          p.name AS product_name, 
+          s.times_stocked, 
+          SUM(ol.quantity) AS quantity_used, 
+          s.total_stock - SUM(ol.quantity) AS quantity_unused, 
+          SUM(ol.quantity * s.average_price) AS cost_of_goods_sold,
+          SUM(ol.quantity * ol.selling_price) AS gross_profit,
+          SUM(ol.quantity * ol.selling_price) - s.total_price AS net_profit 
+        FROM product p
+        LEFT JOIN (SELECT
+                    COUNT(product_id) AS times_stocked, 
+                    SUM(quantity) AS total_stock,
+                    AVG(unit_price) AS average_price,
+                    SUM(quantity * unit_price) AS total_price,
+                    product_id
+                  FROM stock
+                  WHERE date_supplied BETWEEN :startDate AND :endDate
+                  GROUP BY product_id) s ON s.product_id = p.product_id
+        LEFT JOIN order_line ol ON p.product_id = ol.product_id
+        GROUP BY p.product_id
+        ORDER BY gross_profit DESC, times_stocked DESC, product_name ASC`,
+        {
+          startDate: startDate || Report.defaults.START_DATE,
+          endDate: endDate || Report.defaults.END_DATE,
+        }
       );
-      
-      await conn.end();
 
-      query1 = data;
+      await conn.end();
+      content = data;
     } catch (err) {
       console.log("[INVENTORY REPORT]", err.message);
       throw new InternalServerError(err);
     }
 
-
-    let data = [
+    return [
       {
         sheet: "Top Selling Products",
         columns: [
-          { label: "Product	Name", value: "product_name" }, 
-          { label: "Number of Times Stocked", value: "times_stocked" }, 
+          { label: "Product	Name", value: "product_name" },
+          { label: "Number of Times Stocked", value: "times_stocked" },
           { label: "Quantity Used", value: "quantity_used" },
-          { label: "Quantity Unused", value: "quantity_unused" }, 
-          { label: "Cost of Goods Sold", value: "cost_of_goods_sold" }, 
+          { label: "Quantity Unused", value: "quantity_unused" },
+          { label: "Cost of Goods Sold", value: "cost_of_goods_sold" },
           { label: "Gross Profit", value: "gross_profit" },
+          { label: "Net Profit", value: "net_profit" },
         ],
-        content: query1
+        content,
       },
-    ]
-    
-    const settings = {
-      writeOptions: {
-        type: "buffer",
-        bookType: "xlsx",
-      },
+    ];
+  }
+
+  static async retrieveProductPerformance({ startDate, endDate, limit, desc = false }) {
+    let retVal = [];
+
+    try {
+      const conn = await db.connect();
+      const [data] = await conn.execute(
+        `SELECT 
+          p.name, 
+          SUM(ol.quantity) AS total_sales,
+          SUM(ol.quantity * ol.selling_price) AS total_revenue 
+        FROM product p 
+        INNER JOIN order_line ol ON p.product_id = ol.product_id 
+        INNER JOIN ${"`order`"} o ON ol.order_id = o.order_id 
+        WHERE o.date_placed BETWEEN :startDate AND :endDate 
+        GROUP BY p.product_id 
+        ORDER BY total_sales ${desc ? "DESC" : "ASC"}
+        ${limit ? "LIMIT :limit" : ""}`,
+        {
+          startDate: startDate || Report.defaults.START_DATE,
+          endDate: endDate || Report.defaults.END_DATE,
+          limit: limit || Report.defaults.LIMIT,
+        }
+      );
+
+      await conn.end();
+
+      retVal = data;
+    } catch (err) {
+      console.log("[PRODUCT PERFORMANCE QUERY ERROR]", err.message);
+      throw new InternalServerError(err);
     }
 
-
-    return xlsx(data, settings);
+    return retVal;
   }
 }
 
