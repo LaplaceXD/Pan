@@ -111,7 +111,7 @@ class Stock {
           FROM stock s
           INNER JOIN product p ON p.product_id = s.product_id
           INNER JOIN supplier sp ON sp.supplier_id = s.supplier_id
-          ORDER BY s.date_supplied, s.stock_id DESC`
+          ORDER BY s.date_supplied DESC, s.stock_id DESC`
       );
       await conn.end();
 
@@ -166,7 +166,7 @@ class Stock {
           INNER JOIN product p ON p.product_id = s.product_id
           INNER JOIN supplier sp ON sp.supplier_id = s.supplier_id
           WHERE s.supplier_id = :supplierId
-          ORDER BY s.date_supplied, s.stock_id DESC`,
+          ORDER BY s.date_supplied DESC, s.stock_id DESC`,
         { supplierId }
       );
       await conn.end();
