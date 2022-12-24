@@ -17,5 +17,5 @@ export async function editSupplierById(supplierId, body) {
 }
 
 export async function toggleSupplierStatusById(supplierId) {
-  return await auth.put("/suppliers/" + supplierId, {});
+  return await auth.put("/suppliers/" + supplierId + "/status", {});
 }
