@@ -3,14 +3,14 @@
 ![Last Update](https://img.shields.io/github/last-commit/LaplaceXD/Pan?color=blue&label=Last%20Update)
 ![Activity](https://img.shields.io/badge/Activity-InProgress-green)
 
-[Pan](https://pan-laplace.vercel.app/) is an inventory management system made for Pan. This system was made with the use of
-[MySQL](https://www.mysql.com/), [React](https://beta.reactjs.org/), [Express](https://expressjs.com/), and
-[Node.js](https://nodejs.org/en/).
+[Pan](https://pan-laplace.vercel.app/) is an inventory management system made for Pan. This system was made
+with the use of [MySQL](https://www.mysql.com/), [React](https://beta.reactjs.org/),
+[Express](https://expressjs.com/), and [Node.js](https://nodejs.org/en/).
 
 ## Setup
 
 1. Clone this project to your local machine.
-2. Import `server/pan_db.sql` into your local MySQL database.
+2. Import `pan_db.sql` into your local MySQL database.
 3. Create a redis instance locally or through [Redis Labs](https://app.redislabs.com/).
 4. Create a [SendGrid](https://sendgrid.com/) account.
 5. Create `.env` files in the `client directory` and `server directory.`
@@ -43,12 +43,15 @@ npm start
 ```
 
 7. You should be able to login through the login portal using the following credentials.
-> Employee
+   > Employee
+
 ```
 email: employee@pan.com
 password: pan@employee123!
 ```
+
 > Manager
+
 ```
 email: manager@pan.com
 password: pan@manager123!
