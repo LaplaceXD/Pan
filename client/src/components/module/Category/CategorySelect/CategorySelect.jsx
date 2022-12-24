@@ -131,7 +131,7 @@ function CategorySelect({
         open={deleteModal.isOpen}
         onClose={handleDeleteModalClose}
         onDelete={handleDeleteCategory}
-        disabledDelete={categoryQuery.delete.isLoading}
+        deleteDisabled={categoryQuery.delete.isLoading}
       />
 
       <Modal.CategoryEdit
