@@ -118,7 +118,7 @@ function CategorySelect({
         value={value}
         onCreateOption={handleCreateCategory}
         onChange={onChange}
-        options={categories.map(({ category_id, name }) => ({ label: name, value: category_id }))}
+        options={categories?.map(({ category_id, name }) => ({ label: name, value: category_id }))}
         isLoading={disabled}
         isDisabled={disabled || isDisabled}
         isClearable
