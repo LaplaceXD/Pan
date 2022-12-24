@@ -23,7 +23,7 @@ function StockItem({
     <li className={styles.container}>
       <article className={styles.content}>
         <h4 className={styles.header}>
-          {quantity} {unit} <span className={styles.price}>@ {price} each</span>
+          {quantity} {unit} <span className={styles.price}>@ {format.currency(price)} each</span>
         </h4>
         {showProduct ? (
           <p>
