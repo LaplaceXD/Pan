@@ -17,7 +17,7 @@ const salesReport = async (req, res) => {
 
   res.writeHead(200, {
     "Content-Type": "application/vnd.ms-excel",
-    "Content-disposition": `attachment; filename=${fileName}.xlsx`,
+    "Content-Disposition": `attachment; filename=${fileName}.xlsx`,
   });
   res.end(report);
 };
@@ -30,7 +30,7 @@ const employeeReport = async (req, res) => {
 
   res.writeHead(200, {
     "Content-Type": "application/vnd.ms-excel",
-    "Content-disposition": `attachment; filename=${fileName}.xlsx`,
+    "Content-Disposition": `attachment; filename=${fileName}.xlsx`,
   });
   res.end(report);
 };
@@ -43,7 +43,7 @@ const inventoryReport = async (req, res) => {
 
   res.writeHead(200, {
     "Content-Type": "application/vnd.ms-excel",
-    "Content-disposition": `attachment; filename=${fileName}.xlsx`,
+    "Content-Disposition": `attachment; filename=${fileName}.xlsx`,
   });
   res.end(report);
 };
