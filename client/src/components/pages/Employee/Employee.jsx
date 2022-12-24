@@ -2,9 +2,8 @@ import empImg from "@assets/imgs/emp-img.jpg";
 import format from "@utils/format";
 import styles from "./Employee.module.css";
 
-import { Button, Header, List, SearchBar } from "@components/common";
-import { Employee as EmployeeModule } from "@components/module";
-import { PreviewLayout } from "@components/template";
+import { Button, Header, List } from "@components/common";
+import { Employee as EmployeeModule, UserBanner } from "@components/module";
 import { useEmployees } from "@hooks/services/employee";
 
 function Employee() {
@@ -29,9 +28,10 @@ function Employee() {
   );
 
   return (
-    <PreviewLayout PreviewComponent={EmployeePreview} className={styles.container}>
+    <main className={styles.container}>
       <Header title="Employee List" className={styles.header}>
-        <SearchBar className={styles.search} />
+        {/* <SearchBar className={styles.search} /> */}
+        <UserBanner imgSize={56} />
       </Header>
       <List
         className={styles.employeeList}
@@ -48,7 +48,7 @@ function Employee() {
           />
         )}
       />
-    </PreviewLayout>
+    </main>
   );
 }
 

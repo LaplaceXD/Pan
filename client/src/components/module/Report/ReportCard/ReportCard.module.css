@@ -38,3 +38,52 @@
 .footer {
   text-align: right;
 }
+
+.btn {
+  --btn-bg: var(--secondary-color);
+  --btn-font-color: var(--primary-color);
+
+  text-decoration: none;
+  width: 100%;
+
+  background: var(--btn-bg);
+  color: var(--btn-font-color);
+
+  padding: 12px 16px;
+  font-size: 1.1rem;
+  font-weight: var(--font-medium);
+  border-radius: 8px;
+
+  transition: all 125ms ease-in;
+}
+
+.btn:disabled {
+  --btn-bg: var(--primary-color) !important;
+  --btn-font-color: var(--gray) !important;
+  cursor: unset;
+}
+
+.btn:disabled:hover {
+  filter: unset;
+}
+
+.btn:disabled:active {
+  transform: translateY(0);
+}
+
+.btn:hover {
+  filter: brightness(1.1);
+}
+
+.btn:active {
+  transform: translateY(2px);
+}
+
+.btn.secondary {
+  --btn-bg: var(--text-color);
+}
+
+.btn.error {
+  --btn-bg: var(--error-color);
+  --btn-font-color: var(--primary-color);
+}

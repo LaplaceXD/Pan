@@ -3,6 +3,8 @@ import styles from "./Report.module.css";
 import { Header } from "@components/common";
 import { Report as ReportModule, UserBanner } from "@components/module";
 
+const baseUrl = import.meta.env.VITE_SERVER_URL;
+
 function Report() {
   return (
     <div className={styles.container}>
@@ -11,12 +13,9 @@ function Report() {
       </Header>
       <div className={styles.content}>
         <div className={styles.cards}>
-          <ReportModule.ReportCard title={"Inventory Report"} />
-          <ReportModule.ReportCard title={"Sales Report"} />
-          <ReportModule.ReportCard title={"Transaction List"} />
-        </div>
-        <div className={styles.item}>
-          <ReportModule.ReportItem title={"Employee Details"} />
+          <ReportModule.ReportCard title="Inventory Report" href={`${baseUrl}/reports/inventory`} />
+          <ReportModule.ReportCard title="Sales Report" href={`${baseUrl}/reports/sales`} />
+          <ReportModule.ReportCard title="Employee Details" href={`${baseUrl}/reports/employee`} />
         </div>
       </div>
     </div>
