@@ -30,7 +30,6 @@ CREATE TABLE
     IF NOT EXISTS `category` (
         category_id INT NOT NULL AUTO_INCREMENT,
         name VARCHAR(100) NOT NULL,
-        is_available ENUM ('0', '1') NOT NULL DEFAULT '1',
         CONSTRAINT PK_Category PRIMARY KEY (category_id)
     );
 
@@ -94,34 +93,27 @@ CREATE TABLE
 INSERT INTO
     `category` (
         `category_id`,
-        `name`,
-        `is_available`
+        `name`
     )
 VALUES
     (
         '1',
-        'Bread',
-        '1'
+        'Bread'
     ), (
         '2',
-        'Cakes',
-        '1'
+        'Cakes'
     ), (
         '3',
-        'Pies',
-        '1'
+        'Pies'
     ), (
         '4',
-        'Muffins',
-        '1'
+        'Muffins'
     ), (
         '5',
-        'Cookies',
-        '1'
+        'Cookies'
     ), (
         '6',
-        'Doughnuts',
-        '1'
+        'Doughnuts'
     );
 
 -- SAMPLE DATA FOR EMPLOYEE TABLE -- 

@@ -25,10 +25,4 @@ router.put(
 
 router.delete("/:id", [auth, permit({ allow: [roles(role.MANAGER)] })], categoryController.remove);
 
-router.put(
-  "/:id/status",
-  [auth, permit({ allow: [roles(role.MANAGER)] })],
-  categoryController.toggleStatus
-);
-
 module.exports = router;

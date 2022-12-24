@@ -64,23 +64,6 @@ class Category {
     }
   }
 
-  async toggleStatus() {
-    try {
-      const is_available = this.is_available ? availability.UNAVAILABLE : availability.AVAILABLE;
-
-      const conn = await db.connect();
-      await conn.execute(
-        `UPDATE category SET is_available = :is_available WHERE category_id = :category_id`,
-        { ...this, is_available }
-      );
-
-      await conn.end();
-    } catch (err) {
-      console.log("[CATEGORY ERROR]", err.message);
-      throw new InternalServerError();
-    }
-  }
-
   static async findAll() {
     let retVal = null;
 
