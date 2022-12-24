@@ -24,6 +24,7 @@
     "helmet": "^6.0.0",
     "ioredis": "^5.2.4",
     "joi": "^17.7.0",
+    "json-as-xlsx": "^2.5.3",
     "jsonwebtoken": "^8.5.1",
     "mysql2": "^2.3.3",
     "uuid": "^9.0.0"
