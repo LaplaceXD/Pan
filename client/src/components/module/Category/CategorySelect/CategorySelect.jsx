@@ -19,6 +19,7 @@ function CategorySelect({
   isClearable,
   onChange,
   isDisabled,
+  value,
   ...props
 }) {
   const deleteModal = useModal();
@@ -42,7 +43,6 @@ function CategorySelect({
   async function handleCreateCategory(value) {
     try {
       await categoryValidationSchema.validate(value);
-      console.log(categoriesQuery);
       const { error, isRedirect, data } = await categoriesQuery.create.execute({ name: value });
 
       if (isRedirect) return;
@@ -77,6 +77,7 @@ function CategorySelect({
 
     await Promise.all([categoriesQuery.invalidate(), productsQuery.invalidate()]);
     deleteModal.close();
+    if (category.value === value) onChange({ value: 0 });
     setCategory(null);
     toast.success("Successfully deleted category.");
   }
@@ -114,12 +115,14 @@ function CategorySelect({
           onOptionDelete: handleOptionDelete,
           onOptionEdit: handleOptionEdit,
         }}
+        value={value}
         onCreateOption={handleCreateCategory}
         onChange={onChange}
         options={categories.map(({ category_id, name }) => ({ label: name, value: category_id }))}
         isLoading={disabled}
         isDisabled={disabled || isDisabled}
         isClearable
+        isCreatable
         {...props}
       />
 
