@@ -15,18 +15,20 @@ function ReportForm({ className, onDownload }) {
       end: Yup.date().label("End Date"),
     }),
     onSubmit: (values) => {
+      const formatted = { ...values };
+
       // if there is no chosen values for start and end date
       // return the report for the month instead
       if (values.start === "" || values.end === "") {
         const [year, month] = format.date(new Date(), true).split("-");
 
         // get first day of the previous month
-        values.start = format.date(new Date(year, month - 1, 1), true);
+        formatted.start = format.date(new Date(year, month - 1, 1), true);
         // get last day of the previous month
-        values.end = format.date(new Date(year, month, 0), true);
+        formatted.end = format.date(new Date(year, month, 0), true);
       }
 
-      onDownload(values, formik.setSubmitting);
+      onDownload(formatted, formik.setSubmitting);
     },
   });
 
