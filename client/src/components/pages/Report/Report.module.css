@@ -1,16 +1,18 @@
 .container {
   flex: 1;
+  overflow-y: scroll;
   padding: 1.75em;
 }
 
 .content {
-  padding-top: 0.5em;
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: center;
+
+  padding: 5em;
 }
 
-.item {
-  width: -webkit-fill-available;
-  padding: 1em 7em;
+.fill {
+  width: 100%;
 }

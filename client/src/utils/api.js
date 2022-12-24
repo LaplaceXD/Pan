@@ -1,5 +1,5 @@
 const SERVER_BASE_URL = import.meta.env.VITE_SERVER_URL;
-const DEFAULT_OPTIONS = { token: null, signal: null };
+const DEFAULT_OPTIONS = { token: null, signal: null, parsed: true };
 
 async function parsedResponse(res) {
   let data = null;
@@ -16,7 +16,7 @@ async function parsedResponse(res) {
   };
 }
 
-async function get(path, { token = null, signal = null } = DEFAULT_OPTIONS) {
+async function get(path, { token = null, signal = null, parsed = true } = DEFAULT_OPTIONS) {
   let headers = {};
   if (token) headers = { ...headers, Authorization: `Bearer ${token}` };
 
@@ -25,10 +25,10 @@ async function get(path, { token = null, signal = null } = DEFAULT_OPTIONS) {
     headers,
   });
 
-  return parsedResponse(res);
+  return parsed ? parsedResponse(res) : res;
 }
 
-async function post(path, body, { token = null, signal = null } = DEFAULT_OPTIONS) {
+async function post(path, body, { token = null, signal = null, parsed = true } = DEFAULT_OPTIONS) {
   let headers = { "Content-Type": "application/json" };
   if (token) headers = { ...headers, Authorization: `Bearer ${token}` };
 
@@ -39,10 +39,10 @@ async function post(path, body, { token = null, signal = null } = DEFAULT_OPTION
     body: JSON.stringify(typeof body === "function" ? body() : body),
   });
 
-  return parsedResponse(res);
+  return parsed ? parsedResponse(res) : res;
 }
 
-async function put(path, body, { token = null, signal = null } = DEFAULT_OPTIONS) {
+async function put(path, body, { token = null, signal = null, parsed = true } = DEFAULT_OPTIONS) {
   let headers = { "Content-Type": "application/json" };
   if (token) headers = { ...headers, Authorization: `Bearer ${token}` };
 
@@ -53,10 +53,10 @@ async function put(path, body, { token = null, signal = null } = DEFAULT_OPTIONS
     body: JSON.stringify(typeof body === "function" ? body() : body),
   });
 
-  return parsedResponse(res);
+  return parsed ? parsedResponse(res) : res;
 }
 
-async function del(path, { token = null, signal = null } = DEFAULT_OPTIONS) {
+async function del(path, { token = null, signal = null, parsed = true } = DEFAULT_OPTIONS) {
   let headers = {};
   if (token) headers = { ...headers, Authorization: `Bearer ${token}` };
 
@@ -66,7 +66,7 @@ async function del(path, { token = null, signal = null } = DEFAULT_OPTIONS) {
     headers,
   });
 
-  return parsedResponse(res);
+  return parsed ? parsedResponse(res) : res;
 }
 
 export default {

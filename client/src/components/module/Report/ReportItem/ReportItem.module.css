@@ -3,9 +3,7 @@
   margin-top: 2em;
   border-radius: 16px;
   background: var(--accent-color);
-}
 
-.content {
   display: flex;
   justify-content: space-between;
 }
@@ -16,6 +14,19 @@
   color: var(--white);
 }
 
-.btn {
-  width: 300px;
+.form {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.form > div {
+  flex-direction: row;
+  align-items: center;
+  gap: 16px;
+}
+
+.form label {
+  white-space: nowrap;
+  margin-bottom: 0;
 }
