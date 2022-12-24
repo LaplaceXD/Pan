@@ -1,5 +1,4 @@
 import { useFormik } from "formik";
-import React from "react";
 import { toast } from "react-toastify";
 import * as Yup from "yup";
 
@@ -79,7 +78,7 @@ function EditForm({ id = 0, firstName = "", lastName = "", email = "", contact =
       />
       <Field
         label="Email address"
-        type="text"
+        type="email"
         id="email"
         name="email"
         className={styles.field}

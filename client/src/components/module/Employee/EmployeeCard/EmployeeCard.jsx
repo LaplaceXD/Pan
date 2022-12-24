@@ -1,4 +1,3 @@
-import React from "react";
 import styles from "./EmployeeCard.module.css";
 
 import { clsx } from "clsx";

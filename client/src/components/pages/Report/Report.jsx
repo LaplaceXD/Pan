@@ -1,4 +1,3 @@
-import React from "react";
 import styles from "./Report.module.css";
 
 import { Header } from "@components/common";

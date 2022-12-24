@@ -36,7 +36,7 @@ function ProductForm({
           name: values.name,
           description: values.description,
           unit_price: values.price,
-          category: category !== 0 ? category : null,
+          category_id: category !== 0 ? category : null,
         },
         formik.setSubmitting
       );

@@ -9,7 +9,7 @@
 
   background: var(--bg-color);
   color: var(--tertiary-font-color);
-  transition: filter 125ms ease-in, transform 125ms ease-in;
+  transition: filter 125ms ease-in, transform 125ms ease-in, background 250ms ease, color 250ms ease;
 }
 
 .container,

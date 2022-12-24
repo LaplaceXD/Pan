@@ -47,7 +47,7 @@ function LoginForm({ ...props }) {
     <form method="POST" onSubmit={formik.handleSubmit} {...props}>
       <Field
         label="Email"
-        type="text"
+        type="email"
         id="email"
         name="email"
         onChange={formik.handleChange}

@@ -65,6 +65,8 @@ class Stock {
       await conn.execute(
         `UPDATE stock 
         SET 
+          supplier_id    =   :supplier_id,
+          product_id     =   :product_id,
           date_supplied  =   :date_supplied,
           quantity       =   :quantity,
           unit           =   :unit,
@@ -136,7 +138,7 @@ class Stock {
           INNER JOIN product p ON p.product_id = s.product_id
           INNER JOIN supplier sp ON sp.supplier_id = s.supplier_id
           WHERE s.product_id = :productId
-          ORDER BY s.date_supplied, s.stock_id DESC`,
+          ORDER BY s.date_supplied DESC, s.stock_id DESC`,
         { productId }
       );
       await conn.end();

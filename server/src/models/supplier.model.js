@@ -54,7 +54,6 @@ class Supplier {
 
       this.supplier_id = data.insertId;
       retVal = this;
-      console.log(this);
     } catch (err) {
       console.log("[SUPPLIER ERROR]", err.message);
       throw new InternalServerError();
@@ -121,7 +120,7 @@ class Supplier {
 
     try {
       const conn = await db.connect();
-      const [data] = await conn.query(`SELECT * FROM supplier`);
+      const [data] = await conn.query(`SELECT * FROM supplier ORDER BY supplier_id DESC`);
       await conn.end();
 
       retVal = data.map((d) => new Supplier(d));

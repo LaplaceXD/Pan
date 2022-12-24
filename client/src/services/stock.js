@@ -4,6 +4,10 @@ export async function getAllStocksByProductId(productId, { signal }) {
   return await auth.get("/stocks?for=product&id=" + productId, { signal });
 }
 
+export async function getAllStocksBySupplierId(supplierId, { signal }) {
+  return await auth.get("/stocks?for=supplier&id=" + supplierId, { signal });
+}
+
 export async function getStockById(stockId, { signal }) {
   return await auth.get("/stocks/" + stockId, { signal });
 }

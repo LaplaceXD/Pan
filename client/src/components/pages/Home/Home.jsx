@@ -94,7 +94,7 @@ function Home() {
     if (isRedirect) return;
     if (error) return toast.error(format.error(error));
 
-    await productsQuery.invalidate();
+    await Promise.all([productsQuery.invalidate(), ordersQuery.invalidate()]);
     cartConfirmModal.close();
     cart.clear();
     toast.success("Order successfully placed.");

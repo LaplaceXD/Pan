@@ -16,7 +16,7 @@ const views = {
 };
 
 function Account() {
-  const [view, setview] = useState(views.DETAILS);
+  const [view, setView] = useState(views.DETAILS);
 
   const { user } = useAuth();
   const {
@@ -33,8 +33,8 @@ function Account() {
           name={account && fullName}
           email={account?.email}
           contact={account?.contact_no}
-          onEditClick={() => setview(views.EDIT)}
-          onChangePassClick={() => setview(views.CHANGE_PASSWORD)}
+          onEditClick={() => setView(views.EDIT)}
+          onChangePassClick={() => setView(views.CHANGE_PASSWORD)}
         />
       ),
     },
@@ -47,8 +47,8 @@ function Account() {
           lastName={account?.last_name}
           email={account?.email}
           contact={account?.contact_no}
-          onCancel={() => setview(views.DETAILS)}
-          onSubmit={() => setview(views.DETAILS)}
+          onCancel={() => setView(views.DETAILS)}
+          onSubmit={() => setView(views.DETAILS)}
         />
       ),
     },
@@ -57,8 +57,8 @@ function Account() {
       content: (
         <AccountModule.ChangePasswordForm
           id={user.id}
-          onCancel={() => setview(views.DETAILS)}
-          onSubmit={() => setview(views.DETAILS)}
+          onCancel={() => setView(views.DETAILS)}
+          onSubmit={() => setView(views.DETAILS)}
         />
       ),
     },
