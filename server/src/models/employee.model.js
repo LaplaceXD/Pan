@@ -14,7 +14,6 @@ class Employee {
     this.contact_no = employee.contact_no;
     this.email = employee.email;
     this.date_employed = employee.date_employed || new Date();
-    this.image_src = employee.image_src || "";
     this.role = employee.role || role.EMPLOYEE;
     this.is_active = employee.is_active
       ? employee.is_active === true || employee.is_active === status.ACTIVE

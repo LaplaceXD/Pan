@@ -17,7 +17,6 @@ class Product {
     this.name = product.name;
     this.description = product.description;
     this.unit_price = parseFloat(product.unit_price);
-    this.image_src = product.image_src || "";
     this.is_available = product.is_available
       ? product.is_available === true || product.is_available === availability.AVAILABLE
       : true;

@@ -8,7 +8,6 @@ class Category {
   constructor(category) {
     this.category_id = category.category_id || 0;
     this.name = category.name;
-    this.image_src = category.image_src || "";
     this.is_available = category.is_available
       ? category.is_available === true || category.is_available === availability.AVAILABLE
       : true;

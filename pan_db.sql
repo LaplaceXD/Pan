@@ -11,7 +11,6 @@ CREATE TABLE
         contact_no VARCHAR(11) NOT NULL,
         email VARCHAR(300) NOT NULL,
         date_employed DATE NOT NULL,
-        image_src VARCHAR(128) NOT NULL DEFAULT '',
         role ENUM ('manager', 'employee') NOT NULL DEFAULT 'employee',
         is_active ENUM ('0', '1') NOT NULL DEFAULT '1',
         CONSTRAINT PK_Employee PRIMARY KEY (employee_id),
@@ -31,7 +30,6 @@ CREATE TABLE
     IF NOT EXISTS `category` (
         category_id INT NOT NULL AUTO_INCREMENT,
         name VARCHAR(100) NOT NULL,
-        image_src VARCHAR(128) NOT NULL DEFAULT '',
         is_available ENUM ('0', '1') NOT NULL DEFAULT '1',
         CONSTRAINT PK_Category PRIMARY KEY (category_id)
     );
@@ -45,7 +43,6 @@ CREATE TABLE
         name VARCHAR(100) NOT NULL,
         description TEXT,
         unit_price DECIMAL(7, 2) NOT NULL,
-        image_src VARCHAR(128) NOT NULL DEFAULT '',
         is_available ENUM ('0', '1') NOT NULL DEFAULT '1',
         CONSTRAINT PK_Product PRIMARY KEY (product_id),
         CONSTRAINT FK_Product_Category FOREIGN KEY (category_id) REFERENCES category (category_id) ON DELETE SET NULL,
@@ -98,39 +95,32 @@ INSERT INTO
     `category` (
         `category_id`,
         `name`,
-        `image_src`,
         `is_available`
     )
 VALUES
     (
         '1',
         'Bread',
-        '../../images/category/bread.jpg',
         '1'
     ), (
         '2',
         'Cakes',
-        '../../images/category/cakes.jpg',
         '1'
     ), (
         '3',
         'Pies',
-        '../../images/category/pies.jpg',
         '1'
     ), (
         '4',
         'Muffins',
-        '../../images/category/muffins.jpg',
         '1'
     ), (
         '5',
         'Cookies',
-        '../../images/category/cookies.jpg',
         '1'
     ), (
         '6',
         'Doughnuts',
-        '../../images/category/doughnuts.jpg',
         '1'
     );
 
@@ -144,7 +134,6 @@ INSERT INTO
         `contact_no`,
         `email`,
         `date_employed`,
-        `image_src`,
         `role`,
         `is_active`
     )
@@ -157,7 +146,6 @@ VALUES
         '09345678910',
         'jonh.buot@gmail.com',
         CURRENT_DATE(),
-        '../../images/employee/jonhbuot.jpg',
         'manager',
         '1'
     ), (
@@ -168,7 +156,6 @@ VALUES
         '09987654321',
         'nathan.arriesgado@gmail.com',
         CURRENT_DATE(),
-        '../../images/employee/nathanarriesgado.jpg',
         'employee',
         '1'
     ), (
@@ -179,7 +166,6 @@ VALUES
         '09223344556',
         'erwin.antepuesto@gmail.com',
         CURRENT_DATE(),
-        '../../images/employee/nathanarriesgado.jpg',
         'employee',
         '1'
     ), (
@@ -190,7 +176,6 @@ VALUES
         '09263748596',
         'sherly.jao@gmail.com',
         CURRENT_DATE(),
-        '../../images/employee/nathanarriesgado.jpg',
         'employee',
         '1'
     ), (
@@ -201,7 +186,6 @@ VALUES
         '09823782938',
         'manager@pan.com',
         CURRENT_DATE(),
-        '',
         'manager',
         '1'
     ), (
@@ -212,7 +196,6 @@ VALUES
         '09278197382',
         'employee@pan.com',
         CURRENT_DATE(),
-        '',
         'employee',
         '1'
     );
@@ -235,7 +218,6 @@ INSERT INTO
         `name`,
         `description`,
         `unit_price`,
-        `image_src`,
         `is_available`
     )
 VALUES
@@ -247,7 +229,6 @@ VALUES
         'Pain au Chocolat',
         'Almost like a crispy, buttery, airy, and simply irresistibly delicious French Croissant, but filled with chocolate!',
         '9.99',
-        '../../images/product/painauchocolat.jpg',
         '1'
     ), (
         2,
@@ -257,7 +238,6 @@ VALUES
         'French Toast',
         'A dish of sliced bread soaked in beaten eggs and often milk or cream, then pan fried.',
         '7.99',
-        '../../images/product/frenchtoast.jpg',
         '1'
     ), (
         3,
@@ -267,7 +247,6 @@ VALUES
         'Raspberry Pie',
         'A type of pie with a raspberry filling',
         '19.99',
-        '../../images/product/raspberrypie.jpg',
         '1'
     ), (
         4,
@@ -277,7 +256,6 @@ VALUES
         'Macademia Nut Cookie',
         'White chocolate cookies with brown sugar, almonds, and macademia nuts.',
         '2.99',
-        '../../images/product/macademiacookie.jpg',
         '1'
     );
 
