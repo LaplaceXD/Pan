@@ -1,10 +1,13 @@
 const { xlsx } = require("../providers");
 const Report = require("../models/report.model");
 
-function getFileName(fileName, startDate, endDate) {
-  let datePart = "";
-  if (startDate || endDate) datePart = " [" + [startDate, endDate].filter(Boolean).join("-") + "]";
+function encloseWithBrackets(str) {
+  return !str ? null : str.padStart(str.length + 1, "[").padEnd(str.length + 2, "]");
+}
 
+function getFileName(fileName, startDate, endDate) {
+  let datePart = [startDate, endDate].map(encloseWithBrackets).filter(Boolean).join("");
+  datePart = datePart !== "" ? " " + datePart : datePart;
   return `${fileName}${datePart}`;
 }
 
