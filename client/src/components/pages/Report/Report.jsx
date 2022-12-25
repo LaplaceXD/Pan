@@ -24,7 +24,7 @@ function Report() {
         <ReportModule.ReportItem
           className={styles.fill}
           title="Employee Details"
-          onDownload={handle(downloadEmployeeReport)}
+          onDownload={downloadEmployeeReport}
         />
       </div>
     </div>

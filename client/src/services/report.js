@@ -13,8 +13,8 @@ export async function downloadSalesReport(month) {
   downloadXLSXfromBuffer(buffer, parseFilenameFromResponse(res));
 }
 
-export async function downloadEmployeeReport(month) {
-  const res = await auth.get("/reports/employee" + createMonthParam(month), { parsed: false });
+export async function downloadEmployeeReport() {
+  const res = await auth.get("/reports/employee", { parsed: false });
   const buffer = await res.arrayBuffer();
   downloadXLSXfromBuffer(buffer, parseFilenameFromResponse(res));
 }

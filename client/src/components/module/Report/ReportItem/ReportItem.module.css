@@ -13,19 +13,3 @@
   font-weight: var(--font-regular);
   color: var(--white);
 }
-
-.form {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-
-.form > div {
-  flex-direction: row;
-  align-items: center;
-  gap: 16px;
-}
-
-.form label {
-  margin-bottom: 0;
-}
