@@ -228,7 +228,7 @@ VALUES
     ('1', '2023-4-1'),
     ('1', '2023-4-1'),
     ('2', '2023-4-10'),
-    ('2', '2023-4-10')
+    ('2', '2023-4-10');
 
 -- SAMPLE DATA FOR PRODUCT TABLE --
 INSERT INTO
@@ -251,7 +251,7 @@ VALUES
         'Pain au Chocolat',
         'Almost like a crispy, buttery, airy, and simply irresistibly delicious French Croissant, but filled with chocolate!',
         '9.99',
-        '1'
+        '0'
     ), (
         2,
         '1',
@@ -269,7 +269,7 @@ VALUES
         'Raspberry Pie',
         'A type of pie with a raspberry filling',
         '19.99',
-        '1'
+        '0'
     ), (
         4,
         '5',
@@ -278,6 +278,51 @@ VALUES
         'Macademia Nut Cookie',
         'White chocolate cookies with brown sugar, almonds, and macademia nuts.',
         '2.99',
+        '1'
+    ), (
+        5,
+        '2',
+        '3',
+        current_timestamp(),
+        'Cheese Cake',
+        'Soft spongy yellow goodness in a box.',
+        '49.99',
+        '1'
+    ), (
+        6,
+        '2',
+        '1',
+        current_timestamp(),
+        'Chocolate Cake',
+        'A classic delight with an incredibly filling belgian chocolate center!',
+        '49.99',
+        '1'
+    ), (
+        7,
+        '4',
+        '4',
+        current_timestamp(),
+        'Chocolate Chip Muffin',
+        'Light and Fluffy, the right texture, and all the right taste. Packed into a simple and elegant design!',
+        '14.99',
+        '1'
+    ), (
+        8,
+        '6',
+        '5',
+        current_timestamp(),
+        'Glazed Doughnuts',
+        'Classic golden baked doughnuts covered in sweet glaze for your satisfaction.',
+        '8.99',
+        '0'
+    ), ( 
+        9,
+        NULL,
+        '2',
+        current_timestamp(),
+        'Snowy Surprise',
+        'A mysterious treat prepared by our employees. Available only in Christmas season.',
+        '19.99',
         '1'
     );
 
