@@ -10,7 +10,7 @@ import { useOrders } from "@hooks/services/order";
 import { useProducts } from "@hooks/services/product";
 import format from "@utils/format";
 
-import styles from "./Home.module.css";
+import styles from "./Cashier.module.css";
 
 const category = {
   value: 0,
@@ -27,7 +27,7 @@ const search = {
   },
 };
 
-function Home() {
+function Cashier() {
   const quantityModal = useModal();
   const cartConfirmModal = useModal();
 
@@ -145,6 +145,8 @@ function Home() {
         className={styles.productGrid}
         items={filteredProducts}
         itemKey={(product) => product.product_id}
+        isLoading={productsQuery.payload.isLoading}
+        emptyLabel="There are no available products to show."
         RenderComponent={({ product_id, name, unit_price, available_stock }) => (
           <Product.Card
             key={product_id}
@@ -181,4 +183,4 @@ function Home() {
   );
 }
 
-export default Home;
+export default Cashier;

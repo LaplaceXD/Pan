@@ -2,7 +2,7 @@ import { BiNotepad } from "react-icons/bi";
 import { BsBoxSeam } from "react-icons/bs";
 import { FiHome, FiTruck } from "react-icons/fi";
 
-import Home from "@components/pages/Home";
+import Cashier from "@components/pages/Cashier";
 import Order from "@components/pages/Order";
 import Product from "@components/pages/Product";
 import Supplier from "@components/pages/Supplier";
@@ -15,7 +15,7 @@ const employeePages = [
     path: "",
     label: "Home",
     icon: <FiHome />,
-    element: <Home />,
+    element: <Cashier />,
     index: true,
     navLink: true,
   },

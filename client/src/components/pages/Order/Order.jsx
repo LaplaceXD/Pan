@@ -48,7 +48,13 @@ function Order({ showDelete = false }) {
     <>
       <OrderModule.Details total={order?.total} className={styles.orderPreview}>
         <OrderModule.Header order={order} className={styles.orderHeader} />
-        <OrderModule.Lines lines={order?.details} className={styles.orderSummary} disabledLines showCount />
+        <OrderModule.Lines
+          lines={order?.details}
+          className={styles.orderSummary}
+          isLoading={orderQuery.payload.isLoading}
+          disabledLines
+          showCount
+        />
       </OrderModule.Details>
 
       {showDelete ? (
@@ -77,6 +83,7 @@ function Order({ showDelete = false }) {
         history={filteredOrders}
         itemIsSelected={(id) => id === orderId}
         onItemSelect={(id) => setOrderId(id === orderId ? null : id)}
+        isLoading={ordersQuery.payload.isLoading}
       />
 
       {showDelete ? (

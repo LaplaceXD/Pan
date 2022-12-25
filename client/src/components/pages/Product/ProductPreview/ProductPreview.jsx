@@ -75,6 +75,7 @@ function ProductPreview({
         product={product}
         onBack={() => setView(views.PRODUCT_DETAIL)}
         showStockDeleteButton={showStockDeleteButton}
+        isLoading={productQuery.stocks.isLoading}
         disableProductField
       />
     ),
