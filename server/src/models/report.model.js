@@ -8,7 +8,7 @@ class Report {
     LIMIT: 5,
   };
 
-  static async productReport(startDate, endDate) {
+  static async getSalesReportData(startDate, endDate) {
     const topProducts = await Report.retrieveProductPerformance({
       startDate,
       endDate,
@@ -31,7 +31,7 @@ class Report {
     ];
   }
 
-  static async employeeReport(startDate, endDate) {
+  static async getEmployeeReportData() {
     let content = [];
 
     try {
@@ -45,12 +45,7 @@ class Report {
           date_employed, 
           role 
         FROM employee 
-        WHERE date_employed BETWEEN :startDate AND :endDate
-        ORDER BY date_employed DESC`,
-        {
-          startDate: startDate || Report.defaults.START_DATE,
-          endDate: endDate || Report.defaults.END_DATE,
-        }
+        ORDER BY date_employed DESC`
       );
       await conn.end();
       content = data;
@@ -75,7 +70,7 @@ class Report {
     ];
   }
 
-  static async inventoryReport(startDate, endDate) {
+  static async getInventoryReportData(startDate, endDate) {
     let content = null;
 
     try {
