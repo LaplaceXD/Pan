@@ -138,7 +138,7 @@ VALUES
         '09345678910',
         'jonh.buot@gmail.com',
         CURRENT_DATE(),
-        'manager',
+        'employee',
         '1'
     ), (
         2,
@@ -194,11 +194,41 @@ VALUES
 
 -- SAMPLE DATA FOR ORDER TABLE -- 
 INSERT INTO
-    `order` (`order_id`, `employee_id`, `date_placed`)
+    `order` (`employee_id`, `date_placed`)
 VALUES
-    (1, '2', current_timestamp()),
-    (2, '3', current_timestamp()),
-    (3, '4', current_timestamp());
+    ('4', '2022-8-2'),
+    ('3', '2022-8-4'),
+    ('3', '2022-8-5'),
+    ('2', '2022-8-5'),
+    ('1', '2022-8-6'),
+    ('4', '2022-8-8'),
+    ('3', '2022-8-12'),
+    ('1', '2022-8-14'),
+    ('2', '2022-9-22'),
+    ('2', '2022-9-11'),
+    ('4', '2022-9-11'),
+    ('4', '2022-9-19'),
+    ('4', '2022-9-26'),
+    ('4', '2022-10-1'),
+    ('2', '2022-10-2'),
+    ('1', '2022-10-2'),
+    ('1', '2022-10-10'),
+    ('3', '2022-10-11'),
+    ('3', '2022-10-20'),
+    ('3', '2022-11-4'),
+    ('3', '2022-11-12'),
+    ('2', '2022-11-16'),
+    ('1', '2022-11-17'),
+    ('1', '2022-11-17'),
+    ('1', '2022-11-29'),
+    ('4', '2022-11-30'),
+    ('3', '2022-12-2'),
+    ('1', '2022-12-12'),
+    ('1', '2022-12-15'),
+    ('1', '2022-12-22'),
+    ('1', '2022-12-22'),
+    ('2', '2022-12-24'),
+    ('2', '2022-12-26');
 
 -- SAMPLE DATA FOR PRODUCT TABLE --
 INSERT INTO
@@ -221,7 +251,7 @@ VALUES
         'Pain au Chocolat',
         'Almost like a crispy, buttery, airy, and simply irresistibly delicious French Croissant, but filled with chocolate!',
         '9.99',
-        '1'
+        '0'
     ), (
         2,
         '1',
@@ -239,7 +269,7 @@ VALUES
         'Raspberry Pie',
         'A type of pie with a raspberry filling',
         '19.99',
-        '1'
+        '0'
     ), (
         4,
         '5',
@@ -249,16 +279,90 @@ VALUES
         'White chocolate cookies with brown sugar, almonds, and macademia nuts.',
         '2.99',
         '1'
+    ), (
+        5,
+        '2',
+        '3',
+        current_timestamp(),
+        'Cheese Cake',
+        'Soft spongy yellow goodness in a box.',
+        '49.99',
+        '1'
+    ), (
+        6,
+        '2',
+        '1',
+        current_timestamp(),
+        'Chocolate Cake',
+        'A classic delight with an incredibly filling belgian chocolate center!',
+        '49.99',
+        '1'
+    ), (
+        7,
+        '4',
+        '4',
+        current_timestamp(),
+        'Chocolate Chip Muffin',
+        'Light and Fluffy, the right texture, and all the right taste. Packed into a simple and elegant design!',
+        '14.99',
+        '1'
+    ), (
+        8,
+        '6',
+        '5',
+        current_timestamp(),
+        'Glazed Doughnuts',
+        'Classic golden baked doughnuts covered in sweet glaze for your satisfaction.',
+        '8.99',
+        '0'
+    ), ( 
+        9,
+        NULL,
+        '2',
+        current_timestamp(),
+        'Snowy Surprise',
+        'A mysterious treat prepared by our employees. Available only in Christmas season.',
+        '19.99',
+        '1'
     );
 
+-- SAMPLE DATA FOR ORDERLINE TABLE -- 
 -- SAMPLE DATA FOR ORDERLINE TABLE -- 
 INSERT INTO
     `order_line` (`order_id`, `product_id`, `quantity`, `selling_price`)
 VALUES
-    ('1', '4', '4', '2.99'),
-    ('2', '1', '2', '9.99'),
-    ('2', '2', '2', '7.99'),
-    ('3', '3', '1', '19.99');
+    ('1', '1', '4', '39.96'),
+    ('1', '9', '2', '39.98'),
+    ('2', '5', '2', '99.98'),
+    ('3', '7', '1', '14.99'),
+    ('3', '9', '2', '39.98'),
+    ('3', '1', '2', '19.98'),
+    ('4', '9', '1', '19.99'),
+    ('5', '4', '6', '17.94'),
+    ('6', '5', '1', '49.99'),
+    ('7', '5', '2', '99.98'),
+    ('7', '6', '1', '49.99'),
+    ('8', '1', '1', '9.99'),
+    ('9', '1', '4', '39.96'),
+    ('10', '2', '2', '15.98'),
+    ('11', '2', '1', '7.99'),
+    ('11', '3', '2', '39.98'),
+    ('12', '4', '4', '11.96'),
+    ('13', '7', '2', '29.98'),
+    ('14', '1', '2', '19.98'),
+    ('15', '1', '8', '79.92'),
+    ('16', '6', '1', '49.99'),
+    ('17', '8', '2', '53.94'),
+    ('18', '8', '12', '107.88'),
+    ('19', '8', '2', '17.98'),
+    ('20', '4', '1', '2.99'),
+    ('21', '6', '2', '99.98'),
+    ('22', '2', '1', '31.96'),
+    ('23', '5', '1', '49.99'),
+    ('24', '5', '1', '49.99'),
+    ('24', '6', '2', '99.98'),
+    ('25', '1', '2', '19.98'),
+    ('25', '3', '1', '19.99');
 
 -- SAMPLE DATA FOR SUPPLIER TABLE --
 INSERT INTO
