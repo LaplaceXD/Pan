@@ -2,11 +2,7 @@
   padding: 1.75em;
 }
 
-.employeePreview {
-  flex: 1;
-  margin-top: 1.5em;
-}
-
-.employeeList {
-  margin-top: 32px;
+.list {
+  gap: 24px;
+  margin-top: 2em;
 }

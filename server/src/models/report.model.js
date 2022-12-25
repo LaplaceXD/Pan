@@ -8,7 +8,7 @@ class Report {
     LIMIT: 5,
   };
 
-  static async productReport(startDate, endDate) {
+  static async getSalesReportData(startDate, endDate) {
     const topProducts = await Report.retrieveProductPerformance({
       startDate,
       endDate,
@@ -20,8 +20,8 @@ class Report {
 
     const columns = [
       { label: "Product", value: "name" },
-      { label: "Quantity Sold", value: "total_sales" },
-      { label: "Total Revenue", value: "total_revenue" },
+      { label: "Quantity Sold", value: "total_sales", format: '###,###,###.# "items"' },
+      { label: "Total Revenue", value: "total_revenue", format: "₱###,###,###.00" },
     ];
 
     return [
@@ -31,7 +31,7 @@ class Report {
     ];
   }
 
-  static async employeeReport(startDate, endDate) {
+  static async getEmployeeReportData() {
     let content = [];
 
     try {
@@ -45,12 +45,7 @@ class Report {
           date_employed, 
           role 
         FROM employee 
-        WHERE date_employed BETWEEN :startDate AND :endDate
-        ORDER BY date_employed DESC`,
-        {
-          startDate: startDate || Report.defaults.START_DATE,
-          endDate: endDate || Report.defaults.END_DATE,
-        }
+        ORDER BY date_employed DESC`
       );
       await conn.end();
       content = data;
@@ -65,9 +60,9 @@ class Report {
         columns: [
           { label: "First Name", value: "first_name" },
           { label: "Last Name", value: "last_name" },
-          { label: "Contact Number", value: "contact_no" },
+          { label: "Contact Number", value: "contact_no", format: '"+63"###########' },
           { label: "Email", value: "email" },
-          { label: "Date Employed", value: "date_employed" },
+          { label: "Date Employed", value: "date_employed", format: "d-mmm-yy" },
           { label: "Role", value: "role" },
         ],
         content,
@@ -75,7 +70,7 @@ class Report {
     ];
   }
 
-  static async inventoryReport(startDate, endDate) {
+  static async getInventoryReportData(startDate, endDate) {
     let content = null;
 
     try {
@@ -121,11 +116,11 @@ class Report {
         columns: [
           { label: "Product	Name", value: "product_name" },
           { label: "Number of Times Stocked", value: "times_stocked" },
-          { label: "Quantity Used", value: "quantity_used" },
-          { label: "Quantity Unused", value: "quantity_unused" },
-          { label: "Cost of Goods Sold", value: "cost_of_goods_sold" },
-          { label: "Gross Profit", value: "gross_profit" },
-          { label: "Net Profit", value: "net_profit" },
+          { label: "Quantity Used", value: "quantity_used", format: '###,###,###.# "items"' },
+          { label: "Quantity Unused", value: "quantity_unused", format: '###,###,###.# "items"' },
+          { label: "Cost of Goods Sold", value: "cost_of_goods_sold", format: "₱###,###,###.00" },
+          { label: "Gross Profit", value: "gross_profit", format: "₱###,###,###.00" },
+          { label: "Net Profit", value: "net_profit", format: "₱###,###,###.00" },
         ],
         content,
       },

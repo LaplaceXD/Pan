@@ -1,7 +1,9 @@
-import EmployeeCard from "./EmployeeCard";
-import EmployeePreview from "./EmployeePreview";
+import Detail from "./EmployeeDetail";
+import Form from "./EmployeeForm";
+import Item from "./EmployeeItem";
 
 export default {
-  EmployeePreview,
-  EmployeeCard,
+  Item,
+  Detail,
+  Form,
 };

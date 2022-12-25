@@ -1,54 +1,57 @@
 const { xlsx } = require("../providers");
 const Report = require("../models/report.model");
+const date = require("../../helpers/date");
 
-function encloseWithBrackets(str) {
-  return !str ? null : str.padStart(str.length + 1, "[").padEnd(str.length + 2, "]");
-}
-
-function getFileName(fileName, startDate, endDate) {
-  let datePart = [startDate, endDate].map(encloseWithBrackets).filter(Boolean).join("");
-  datePart = datePart !== "" ? " " + datePart : datePart;
-  return `${fileName}${datePart}`;
+function getHeaders(fileName) {
+  return {
+    "Content-Type": "application/vnd.ms-excel",
+    "Content-Disposition": `attachment; filename=${fileName}.xlsx`,
+  };
 }
 
 const salesReport = async (req, res) => {
-  const { start_date, end_date } = req.query;
+  const month = date.getMonthOrDefault(req.query);
+  const { startDate, endDate } = date.getStartAndEndDates(month);
 
-  const data = await Report.productReport(start_date, end_date);
-  const fileName = getFileName("Sales Report", start_date, end_date);
-  const report = xlsx.generateExcelReport(data);
+  const data = await Report.getSalesReportData(startDate, endDate);
+  const fileName = `Sales Report [${month}]`;
 
-  res.writeHead(200, {
-    "Content-Type": "application/vnd.ms-excel",
-    "Content-Disposition": `attachment; filename=${fileName}.xlsx`,
-  });
-  res.end(report);
+  if (req.query?.type && req.query?.type === "xlsx") {
+    const report = xlsx.generateExcelReport(data);
+    res.writeHead(200, getHeaders(fileName));
+    res.end(report);
+  } else {
+    res.status(200).send({ fileName, sheets: data });
+  }
 };
+
 const employeeReport = async (req, res) => {
-  const { start_date, end_date } = req.query;
+  const data = await Report.getEmployeeReportData();
+  const fileName = "Employee Report";
 
-  const data = await Report.employeeReport(start_date, end_date);
-  const fileName = getFileName("Employee Report", start_date, end_date);
-  const report = xlsx.generateExcelReport(data);
-
-  res.writeHead(200, {
-    "Content-Type": "application/vnd.ms-excel",
-    "Content-Disposition": `attachment; filename=${fileName}.xlsx`,
-  });
-  res.end(report);
+  if (req.query?.type && req.query?.type === "xlsx") {
+    const report = xlsx.generateExcelReport(data);
+    res.writeHead(200, getHeaders(fileName));
+    res.end(report);
+  } else {
+    res.status(200).send({ fileName, sheets: data });
+  }
 };
+
 const inventoryReport = async (req, res) => {
-  const { start_date, end_date } = req.query;
+  const month = date.getMonthOrDefault(req.query);
+  const { startDate, endDate } = date.getStartAndEndDates(month);
 
-  const data = await Report.inventoryReport(start_date, end_date);
-  const fileName = getFileName("Inventory Report", start_date, end_date);
-  const report = xlsx.generateExcelReport(data);
+  const data = await Report.getInventoryReportData(startDate, endDate);
+  const fileName = `Inventory Report [${month}]`;
 
-  res.writeHead(200, {
-    "Content-Type": "application/vnd.ms-excel",
-    "Content-Disposition": `attachment; filename=${fileName}.xlsx`,
-  });
-  res.end(report);
+  if (req.query?.type && req.query?.type === "xlsx") {
+    const report = xlsx.generateExcelReport(data);
+    res.writeHead(200, getHeaders(fileName));
+    res.end(report);
+  } else {
+    res.status(200).send({ fileName, sheets: data });
+  }
 };
 
 module.exports = {

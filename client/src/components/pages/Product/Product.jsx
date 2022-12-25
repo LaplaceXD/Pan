@@ -38,7 +38,7 @@ function Product({
 }) {
   const [productId, setProductId] = useState(null);
   const {
-    payload: { data: products },
+    payload: { data: products, isLoading },
   } = useProducts();
   const { data: filteredProducts, filter } = useFilter(products, { search, category });
 
@@ -72,6 +72,8 @@ function Product({
         className={styles.productList}
         items={filteredProducts}
         itemKey={(product) => product.product_id}
+        isLoading={isLoading}
+        emptyLabel="There are no products to list."
         RenderComponent={({
           product_id,
           name,

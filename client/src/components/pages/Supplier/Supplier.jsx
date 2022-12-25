@@ -30,7 +30,7 @@ function Supplier({
   showSupplierEditButton = false,
 }) {
   const {
-    payload: { data },
+    payload: { data, isLoading },
   } = useSuppliers();
   const suppliers = data?.map(({ supplier_id, name, contact_no, ...address }) => ({
     supplier_id,
@@ -66,6 +66,8 @@ function Supplier({
         className={styles.supplierItem}
         items={filteredSuppliers}
         itemKey={(suppliers) => suppliers.supplier_id}
+        isLoading={isLoading}
+        emptyLabel="There are no suppliers to list."
         RenderComponent={({ supplier_id, name, contact_no, address }) => (
           <SupplierModule.Item
             id={supplier_id}

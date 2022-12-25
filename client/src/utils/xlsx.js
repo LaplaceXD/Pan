@@ -1,6 +1,7 @@
-import { read, writeFile } from "xlsx";
+import xlsx from "json-as-xlsx";
 
-export function downloadXLSXfromBuffer(buffer, fileName) {
-  const workbook = read(new Uint8Array(buffer), { type: "array" });
-  writeFile(workbook, fileName);
+export function downloadXLSXFromData(data, fileName) {
+  const settings = { fileName };
+
+  xlsx(data, settings);
 }

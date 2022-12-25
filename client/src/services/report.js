@@ -1,38 +1,30 @@
 import auth from "@utils/auth";
-import { downloadXLSXfromBuffer } from "@utils/xlsx";
+import { downloadXLSXFromData } from "@utils/xlsx";
 
-export async function downloadInventoryReport({ start, end } = {}) {
-  const res = await auth.get("/reports/inventory" + createDateSearchParams(start, end), { parsed: false });
-  const buffer = await res.arrayBuffer();
-  downloadXLSXfromBuffer(buffer, parseFilenameFromResponse(res));
-}
-
-export async function downloadSalesReport({ start, end } = {}) {
-  const res = await auth.get("/reports/sales" + createDateSearchParams(start, end), { parsed: false });
-  const buffer = await res.arrayBuffer();
-  downloadXLSXfromBuffer(buffer, parseFilenameFromResponse(res));
-}
-
-export async function downloadEmployeeReport({ start, end } = {}) {
-  const res = await auth.get("/reports/employee" + createDateSearchParams(start, end), { parsed: false });
-  const buffer = await res.arrayBuffer();
-  downloadXLSXfromBuffer(buffer, parseFilenameFromResponse(res));
-}
-
-function parseFilenameFromResponse(res) {
-  const contentDisposition = res.headers.get("Content-Disposition");
-  const fileNameRegex = /filename=(?<fileName>.*)$/;
-
+export async function downloadInventoryReport(month) {
   const {
-    groups: { fileName },
-  } = fileNameRegex.exec(contentDisposition);
-  return fileName;
+    data: { fileName, sheets },
+  } = await auth.get("/reports/inventory" + createMonthParam(month));
+
+  downloadXLSXFromData(sheets, fileName);
 }
 
-function createDateSearchParams(start, end) {
-  const startDate = start ? ["start_date", start] : null;
-  const endDate = end ? ["end_date", end] : null;
+export async function downloadSalesReport(month) {
+  const {
+    data: { fileName, sheets },
+  } = await auth.get("/reports/sales" + createMonthParam(month));
 
-  const query = new URLSearchParams([startDate, endDate].filter(Boolean));
-  return (query === "" ? "" : "?") + query;
+  downloadXLSXFromData(sheets, fileName);
+}
+
+export async function downloadEmployeeReport() {
+  const {
+    data: { fileName, sheets },
+  } = await auth.get("/reports/employee");
+
+  downloadXLSXFromData(sheets, fileName);
+}
+
+function createMonthParam(month) {
+  return month ? "?month=" + month : "";
 }

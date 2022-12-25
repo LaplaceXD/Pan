@@ -1,0 +1,31 @@
+.container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  color: var(--text-color);
+  padding: 1em 0 0 0;
+}
+
+.title {
+  font-weight: var(--font-regular);
+  font-size: 1.5rem;
+}
+
+.img {
+  align-self: center;
+  border-radius: 8px;
+}
+
+.buttons,
+.container fieldset {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.buttons {
+  flex: 1;
+  align-items: flex-end;
+}

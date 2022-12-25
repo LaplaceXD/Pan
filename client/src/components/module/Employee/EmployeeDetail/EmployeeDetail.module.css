@@ -1,0 +1,67 @@
+.container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  color: var(--text-color);
+  padding: 1em 0 2em 0;
+}
+
+.title {
+  font-weight: var(--font-regular);
+  font-size: 1.5rem;
+}
+
+.img {
+  align-self: center;
+  border-radius: 8px;
+}
+
+.name {
+  color: var(--secondary-color);
+  font-weight: var(--font-regular);
+  font-size: 2rem;
+}
+
+.description {
+  flex: 1;
+  font-size: 1.25rem;
+}
+
+.detail {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 16px;
+  align-items: center;
+}
+
+.email span:first-child {
+  align-self: flex-start;
+  margin-top: 4px;
+}
+
+.detail span:last-child {
+  color: var(--white);
+  font-size: 1.25rem;
+  max-inline-size: 264px;
+  overflow-wrap: break-word;
+}
+
+.detail span.active {
+  color: var(--tertiary-color);
+}
+
+.detail span.inactive {
+  color: var(--error-color);
+}
+
+.buttons {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.buttons button:last-child {
+  grid-column: span 2;
+}
