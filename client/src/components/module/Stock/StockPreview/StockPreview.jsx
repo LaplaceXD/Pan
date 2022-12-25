@@ -26,6 +26,7 @@ function StockPreview({
   disableSupplierField = false,
   disableProductField = false,
   showStockDeleteButton = false,
+  isLoading = false,
   onBack,
 }) {
   const deleteModal = useModal();
@@ -129,6 +130,7 @@ function StockPreview({
             showSupplier={disableProductField}
             showProduct={disableSupplierField}
             showStockDeleteButton={showStockDeleteButton}
+            isLoading={isLoading}
           />
           <div className={styles.buttons}>
             <Button label="Go Back" onClick={onBack} secondary />

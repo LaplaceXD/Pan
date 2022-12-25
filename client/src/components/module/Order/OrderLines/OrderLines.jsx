@@ -12,6 +12,7 @@ function OrderSummary({
   disabledLines = false,
   showCount = false,
   withCounter = false,
+  isLoading = false,
   onItemIncrement,
   onItemDecrement,
 }) {
@@ -22,6 +23,7 @@ function OrderSummary({
         className={styles.lines}
         items={lines}
         itemKey={(line) => line.product_id}
+        isLoading={isLoading}
         RenderComponent={(line) => (
           <OrderLine
             name={line.name}

@@ -74,6 +74,7 @@ function SupplierPreview({
         supplier={supplier}
         onBack={() => setView(views.SUPPLIER_DETAIL)}
         showStockDeleteButton={showStockDeleteButton}
+        isLoading={supplierQuery.stocks.isLoading}
         disableSupplierField
       />
     ),

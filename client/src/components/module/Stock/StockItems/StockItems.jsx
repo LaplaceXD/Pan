@@ -9,6 +9,7 @@ function StockItems({
   showSupplier = false,
   showProduct = false,
   showStockDeleteButton = false,
+  isLoading = false,
 }) {
   return (
     <div className={styles.container}>
@@ -16,7 +17,9 @@ function StockItems({
         column
         items={items}
         className={styles.list}
+        isLoading={isLoading}
         itemKey={(stock) => stock.stock_id}
+        emptyLabel={`This ${showSupplier ? "product" : "supplier"} has no stock in the database.`}
         RenderComponent={(stock) => (
           <StockItem
             key={stock.stock_id}

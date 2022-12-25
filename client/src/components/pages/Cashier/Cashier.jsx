@@ -145,6 +145,8 @@ function Cashier() {
         className={styles.productGrid}
         items={filteredProducts}
         itemKey={(product) => product.product_id}
+        isLoading={productsQuery.payload.isLoading}
+        emptyLabel="There are no available products to show."
         RenderComponent={({ product_id, name, unit_price, available_stock }) => (
           <Product.Card
             key={product_id}

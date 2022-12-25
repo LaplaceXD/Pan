@@ -27,7 +27,7 @@ const search = {
 function Employee() {
   const [employeeId, setEmployeeId] = useState(null);
   const {
-    payload: { data },
+    payload: { data, isLoading },
   } = useEmployees();
 
   const employees = data?.map(({ first_name, last_name, ...values }) => ({
@@ -55,6 +55,8 @@ function Employee() {
         column
         items={filteredData}
         itemKey={(employee) => employee.employee_id}
+        isLoading={isLoading}
+        emptyLabel="There are no employees to display."
         RenderComponent={({ employee_id, fullName, contact_no, date_employed }) => (
           <EmployeeModule.Item
             img={empImg}
