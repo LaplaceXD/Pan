@@ -19,9 +19,9 @@ class Report {
     const allProducts = await Report.retrieveProductPerformance({ startDate, endDate });
 
     const columns = [
-      { label: "Product", value: "name"},
-      { label: "Quantity Sold", value: "total_sales", format: '###,###,###.# "items"'},
-      { label: "Total Revenue", value: "total_revenue", format: '₱###,###,###.00' },
+      { label: "Product", value: "name" },
+      { label: "Quantity Sold", value: "total_sales", format: '###,###,###.# "items"' },
+      { label: "Total Revenue", value: "total_revenue", format: "₱###,###,###.00" },
     ];
 
     return [
@@ -63,9 +63,9 @@ class Report {
       {
         sheet: "Employee List",
         columns: [
-          { label: "First Name", value: "first_name"},
+          { label: "First Name", value: "first_name" },
           { label: "Last Name", value: "last_name" },
-          { label: "Contact Number", value: "contact_no" , format:'"+63"###########'},
+          { label: "Contact Number", value: "contact_no", format: '"+63"###########' },
           { label: "Email", value: "email" },
           { label: "Date Employed", value: "date_employed", format: "d-mmm-yy" },
           { label: "Role", value: "role" },
@@ -123,9 +123,9 @@ class Report {
           { label: "Number of Times Stocked", value: "times_stocked" },
           { label: "Quantity Used", value: "quantity_used", format: '###,###,###.# "items"' },
           { label: "Quantity Unused", value: "quantity_unused", format: '###,###,###.# "items"' },
-          { label: "Cost of Goods Sold", value: "cost_of_goods_sold", format: '₱###,###,###.00' },
-          { label: "Gross Profit", value: "gross_profit", format: '₱###,###,###.00' },
-          { label: "Net Profit", value: "net_profit", format: '₱###,###,###.00' },
+          { label: "Cost of Goods Sold", value: "cost_of_goods_sold", format: "₱###,###,###.00" },
+          { label: "Gross Profit", value: "gross_profit", format: "₱###,###,###.00" },
+          { label: "Net Profit", value: "net_profit", format: "₱###,###,###.00" },
         ],
         content,
       },
