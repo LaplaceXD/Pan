@@ -1,8 +1,11 @@
 .container {
-  border-radius: 16px;
   display: flex;
   flex-direction: column;
+
+  border-radius: 16px;
   background: var(--accent-color);
+
+  min-width: 312px;
   overflow: hidden;
 }
 
@@ -26,8 +29,8 @@
 }
 
 .form {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  display: flex;
+  flex-direction: column;
   gap: 16px;
 }
 

@@ -1,6 +1,6 @@
 import { clsx } from "clsx";
 
-import ReportForm from "../ReportForm";
+import { Button } from "@components/common";
 import styles from "./ReportItem.module.css";
 
 function ReportItem({ title, className, onDownload }) {
@@ -8,7 +8,7 @@ function ReportItem({ title, className, onDownload }) {
     <div className={clsx(styles.container, className)}>
       <h1 className={styles.title}>{title}</h1>
       <div className={styles.footer}>
-        <ReportForm className={styles.form} onDownload={onDownload} />
+        <Button type="button" label="Download Report" onClick={onDownload} />
       </div>
     </div>
   );

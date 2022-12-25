@@ -1,53 +1,41 @@
 const { xlsx } = require("../providers");
 const Report = require("../models/report.model");
+const date = require("../../helpers/date");
 
-function encloseWithBrackets(str) {
-  return !str ? null : str.padStart(str.length + 1, "[").padEnd(str.length + 2, "]");
-}
-
-function getFileName(fileName, startDate, endDate) {
-  let datePart = [startDate, endDate].map(encloseWithBrackets).filter(Boolean).join("");
-  datePart = datePart !== "" ? " " + datePart : datePart;
-  return `${fileName}${datePart}`;
+function getHeaders(fileName) {
+  return {
+    "Content-Type": "application/vnd.ms-excel",
+    "Content-Disposition": `attachment; filename=${fileName}.xlsx`,
+  };
 }
 
 const salesReport = async (req, res) => {
-  const { start_date, end_date } = req.query;
+  const month = date.getMonthOrDefault(req.query);
+  const { startDate, endDate } = date.getStartAndEndDates(month);
 
-  const data = await Report.productReport(start_date, end_date);
-  const fileName = getFileName("Sales Report", start_date, end_date);
+  const data = await Report.getSalesReportData(startDate, endDate);
   const report = xlsx.generateExcelReport(data);
 
-  res.writeHead(200, {
-    "Content-Type": "application/vnd.ms-excel",
-    "Content-Disposition": `attachment; filename=${fileName}.xlsx`,
-  });
+  res.writeHead(200, getHeaders(`Sales Report [${month}]`));
   res.end(report);
 };
-const employeeReport = async (req, res) => {
-  const { start_date, end_date } = req.query;
 
-  const data = await Report.employeeReport(start_date, end_date);
-  const fileName = getFileName("Employee Report", start_date, end_date);
+const employeeReport = async (_, res) => {
+  const data = await Report.getEmployeeReportData();
   const report = xlsx.generateExcelReport(data);
 
-  res.writeHead(200, {
-    "Content-Type": "application/vnd.ms-excel",
-    "Content-Disposition": `attachment; filename=${fileName}.xlsx`,
-  });
+  res.writeHead(200, getHeaders("Employee Report"));
   res.end(report);
 };
+
 const inventoryReport = async (req, res) => {
-  const { start_date, end_date } = req.query;
+  const month = date.getMonthOrDefault(req.query);
+  const { startDate, endDate } = date.getStartAndEndDates(month);
 
-  const data = await Report.inventoryReport(start_date, end_date);
-  const fileName = getFileName("Inventory Report", start_date, end_date);
+  const data = await Report.getInventoryReportData(startDate, endDate);
   const report = xlsx.generateExcelReport(data);
 
-  res.writeHead(200, {
-    "Content-Type": "application/vnd.ms-excel",
-    "Content-Disposition": `attachment; filename=${fileName}.xlsx`,
-  });
+  res.writeHead(200, getHeaders(`Inventory Report [${month}]`));
   res.end(report);
 };
 
