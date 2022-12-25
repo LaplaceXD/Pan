@@ -1,5 +1,4 @@
 import empImg from "@assets/imgs/emp-img.jpg";
-import format from "@utils/format";
 import styles from "./Employee.module.css";
 
 import { Button, Header, List, SearchBar } from "@components/common";
@@ -8,24 +7,19 @@ import { PreviewLayout } from "@components/template";
 import { useEmployees } from "@hooks/services/employee";
 
 function Employee() {
-  const EmployeePreview = (
-    <>
-      <EmployeeModule.EmployeePreview className={styles.employeePreview}></EmployeeModule.EmployeePreview>
-      <Button label="Add new Employee" />
-    </>
-  );
-
   const {
     payload: { data },
   } = useEmployees();
-  const employees = data?.map(
-    ({ employee_id, first_name, last_name, contact_no, date_employed, email }) => ({
-      employee_id: format.id(employee_id),
-      fullName: `${first_name} ${last_name}`,
-      contact_no,
-      date_employed: format.date(date_employed),
-      email,
-    })
+  const employees = data?.map(({ first_name, last_name, ...values }) => ({
+    fullName: `${first_name} ${last_name}`,
+    ...values,
+  }));
+
+  const EmployeePreview = (
+    <>
+      <EmployeeModule.Preview className={styles.employeePreview}></EmployeeModule.Preview>
+      <Button label="Add new Employee" />
+    </>
   );
 
   return (
@@ -33,13 +27,14 @@ function Employee() {
       <Header title="Employee List" className={styles.header}>
         <SearchBar className={styles.search} />
       </Header>
+
       <List
         className={styles.employeeList}
         column
         items={employees}
         itemKey={(employee) => employee.employee_id}
         RenderComponent={(employee) => (
-          <EmployeeModule.EmployeeCard
+          <EmployeeModule.Item
             img={empImg}
             id={employee.employee_id}
             name={employee.fullName}
