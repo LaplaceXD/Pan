@@ -1,32 +1,28 @@
 import auth from "@utils/auth";
-import { downloadXLSXfromBuffer } from "@utils/xlsx";
+import { downloadXLSXFromData } from "@utils/xlsx";
 
 export async function downloadInventoryReport(month) {
-  const res = await auth.get("/reports/inventory" + createMonthParam(month), { parsed: false });
-  const buffer = await res.arrayBuffer();
-  downloadXLSXfromBuffer(buffer, parseFilenameFromResponse(res));
+  const {
+    data: { fileName, sheets },
+  } = await auth.get("/reports/inventory" + createMonthParam(month));
+
+  downloadXLSXFromData(sheets, fileName);
 }
 
 export async function downloadSalesReport(month) {
-  const res = await auth.get("/reports/sales" + createMonthParam(month), { parsed: false });
-  const buffer = await res.arrayBuffer();
-  downloadXLSXfromBuffer(buffer, parseFilenameFromResponse(res));
+  const {
+    data: { fileName, sheets },
+  } = await auth.get("/reports/sales" + createMonthParam(month));
+
+  downloadXLSXFromData(sheets, fileName);
 }
 
 export async function downloadEmployeeReport() {
-  const res = await auth.get("/reports/employee", { parsed: false });
-  const buffer = await res.arrayBuffer();
-  downloadXLSXfromBuffer(buffer, parseFilenameFromResponse(res));
-}
-
-function parseFilenameFromResponse(res) {
-  const contentDisposition = res.headers.get("Content-Disposition");
-  const fileNameRegex = /filename=(?<fileName>.*)$/;
-
   const {
-    groups: { fileName },
-  } = fileNameRegex.exec(contentDisposition);
-  return fileName;
+    data: { fileName, sheets },
+  } = await auth.get("/reports/employee");
+
+  downloadXLSXFromData(sheets, fileName);
 }
 
 function createMonthParam(month) {

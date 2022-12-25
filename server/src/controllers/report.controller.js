@@ -14,18 +14,28 @@ const salesReport = async (req, res) => {
   const { startDate, endDate } = date.getStartAndEndDates(month);
 
   const data = await Report.getSalesReportData(startDate, endDate);
-  const report = xlsx.generateExcelReport(data);
+  const fileName = `Sales Report [${month}]`;
 
-  res.writeHead(200, getHeaders(`Sales Report [${month}]`));
-  res.end(report);
+  if (req.query?.type && req.query?.type === "xlsx") {
+    const report = xlsx.generateExcelReport(data);
+    res.writeHead(200, getHeaders(fileName));
+    res.end(report);
+  } else {
+    res.status(200).send({ fileName, sheets: data });
+  }
 };
 
-const employeeReport = async (_, res) => {
+const employeeReport = async (req, res) => {
   const data = await Report.getEmployeeReportData();
-  const report = xlsx.generateExcelReport(data);
+  const fileName = "Employee Report";
 
-  res.writeHead(200, getHeaders("Employee Report"));
-  res.end(report);
+  if (req.query?.type && req.query?.type === "xlsx") {
+    const report = xlsx.generateExcelReport(data);
+    res.writeHead(200, getHeaders(fileName));
+    res.end(report);
+  } else {
+    res.status(200).send({ fileName, sheets: data });
+  }
 };
 
 const inventoryReport = async (req, res) => {
@@ -33,10 +43,15 @@ const inventoryReport = async (req, res) => {
   const { startDate, endDate } = date.getStartAndEndDates(month);
 
   const data = await Report.getInventoryReportData(startDate, endDate);
-  const report = xlsx.generateExcelReport(data);
+  const fileName = `Inventory Report [${month}]`;
 
-  res.writeHead(200, getHeaders(`Inventory Report [${month}]`));
-  res.end(report);
+  if (req.query?.type && req.query?.type === "xlsx") {
+    const report = xlsx.generateExcelReport(data);
+    res.writeHead(200, getHeaders(fileName));
+    res.end(report);
+  } else {
+    res.status(200).send({ fileName, sheets: data });
+  }
 };
 
 module.exports = {
