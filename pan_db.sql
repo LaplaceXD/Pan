@@ -138,7 +138,7 @@ VALUES
         '09345678910',
         'jonh.buot@gmail.com',
         CURRENT_DATE(),
-        'manager',
+        'employee',
         '1'
     ), (
         2,
