@@ -112,7 +112,7 @@ class Report {
 
     return [
       {
-        sheet: "Top Selling Products",
+        sheet: "Inventory",
         columns: [
           { label: "Product	Name", value: "product_name" },
           { label: "Number of Times Stocked", value: "times_stocked" },
@@ -147,7 +147,7 @@ class Report {
         {
           startDate: startDate || Report.defaults.START_DATE,
           endDate: endDate || Report.defaults.END_DATE,
-          limit: limit || Report.defaults.LIMIT,
+          limit,
         }
       );
 
