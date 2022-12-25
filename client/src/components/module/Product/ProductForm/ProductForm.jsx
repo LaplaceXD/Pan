@@ -26,7 +26,7 @@ function ProductForm({
         .max(100)
         .matches(/^[\w\s\&]*$/, "Product Name must contain letters, digits, and spaces only.")
         .required(),
-      category: Yup.number().integer().label("Category").min(0).required(),
+      category: Yup.number().integer().label("Category").min(0).nullable(),
       description: Yup.string().label("Description").min(2).max(300).required(),
       price: Yup.number().label("Unit Price").min(0.01).required(),
     }),

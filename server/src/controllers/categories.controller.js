@@ -37,18 +37,9 @@ const remove = async (req, res) => {
   res.status(200).send({ message: "Successfully deleted category." });
 };
 
-const toggleStatus = async (req, res) => {
-  const category = await Category.findById(req.params.id);
-  if (!category) throw new NotFound(CATEGORY_404);
-
-  await category.toggleStatus();
-  res.status(200).send({ message: "Successfully changed category status." });
-};
-
 module.exports = {
   getAll,
   create,
   update,
   remove,
-  toggleStatus,
 };

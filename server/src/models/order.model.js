@@ -76,7 +76,7 @@ class Order {
       );
       await conn.end();
 
-      if (orders.length !== 0) retVal = orders.map((order) => new Order(order));
+      retVal = orders.map((order) => new Order(order));
     } catch (err) {
       console.log("[ORDER ERROR]", err.message);
       throw new InternalServerError();

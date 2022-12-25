@@ -10,6 +10,7 @@ function StockItem({
   unit = "unit",
   price = 0,
   supplier = "supplier",
+  product = "product",
   dateSupplied = new Date(),
   notes = "",
   onEdit,
@@ -22,11 +23,12 @@ function StockItem({
     <li className={styles.container}>
       <article className={styles.content}>
         <h4 className={styles.header}>
-          {quantity} {unit} <span className={styles.price}>@ {price} each</span>
+          {quantity} {unit.toLowerCase()}{" "}
+          <span className={styles.price}>@ {format.currency(price)} each</span>
         </h4>
         {showProduct ? (
           <p>
-            <MdProductionQuantityLimits /> {product_id}
+            <MdProductionQuantityLimits /> {product}
           </p>
         ) : null}
         {showSupplier ? (

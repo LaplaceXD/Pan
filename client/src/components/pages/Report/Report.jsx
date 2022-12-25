@@ -1,24 +1,31 @@
-import React from "react";
 import styles from "./Report.module.css";
 
 import { Header } from "@components/common";
 import { Report as ReportModule, UserBanner } from "@components/module";
+import { downloadEmployeeReport, downloadInventoryReport, downloadSalesReport } from "@services/report";
 
 function Report() {
+  function handle(cb) {
+    return async (values, setDownloading) => {
+      setDownloading(true);
+      await cb(values);
+      setDownloading(false);
+    };
+  }
+
   return (
     <div className={styles.container}>
       <Header title="Admin Dashboard" className={styles.header}>
         <UserBanner imgSize={56} />
       </Header>
       <div className={styles.content}>
-        <div className={styles.cards}>
-          <ReportModule.ReportCard title={"Inventory Report"} />
-          <ReportModule.ReportCard title={"Sales Report"} />
-          <ReportModule.ReportCard title={"Transaction List"} />
-        </div>
-        <div className={styles.item}>
-          <ReportModule.ReportItem title={"Employee Details"} />
-        </div>
+        <ReportModule.ReportCard title="Inventory Report" onDownload={handle(downloadInventoryReport)} />
+        <ReportModule.ReportCard title="Sales Report" onDownload={handle(downloadSalesReport)} />
+        <ReportModule.ReportItem
+          className={styles.fill}
+          title="Employee Details"
+          onDownload={handle(downloadEmployeeReport)}
+        />
       </div>
     </div>
   );

@@ -1,17 +1,12 @@
 const Joi = require("joi");
 
 const { InternalServerError } = require("../../helpers/errors");
-const { availability } = require("../constants/category");
 const { db } = require("../providers");
 
 class Category {
   constructor(category) {
     this.category_id = category.category_id || 0;
     this.name = category.name;
-    this.image_src = category.image_src || "";
-    this.is_available = category.is_available
-      ? category.is_available === true || category.is_available === availability.AVAILABLE
-      : true;
   }
 
   async save() {
@@ -61,23 +56,6 @@ class Category {
       await conn.end();
     } catch (err) {
       console.log("[CATEGORY DELETE ERROR]", err.message);
-      throw new InternalServerError();
-    }
-  }
-
-  async toggleStatus() {
-    try {
-      const is_available = this.is_available ? availability.UNAVAILABLE : availability.AVAILABLE;
-
-      const conn = await db.connect();
-      await conn.execute(
-        `UPDATE category SET is_available = :is_available WHERE category_id = :category_id`,
-        { ...this, is_available }
-      );
-
-      await conn.end();
-    } catch (err) {
-      console.log("[CATEGORY ERROR]", err.message);
       throw new InternalServerError();
     }
   }

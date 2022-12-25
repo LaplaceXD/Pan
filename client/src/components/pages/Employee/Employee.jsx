@@ -1,6 +1,5 @@
 import empImg from "@assets/imgs/emp-img.jpg";
 import format from "@utils/format";
-import React from "react";
 import styles from "./Employee.module.css";
 
 import { Button, Header, List, SearchBar } from "@components/common";

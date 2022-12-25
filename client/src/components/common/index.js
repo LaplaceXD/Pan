@@ -11,3 +11,4 @@ export { default as Portal } from "./Portal";
 export { default as SearchBar } from "./SearchBar";
 export { default as Select } from "./Select";
 export { default as TextAreaField } from "./TextAreaField";
+export { default as FillButton } from "./FillButton";

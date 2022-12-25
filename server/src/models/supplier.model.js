@@ -54,7 +54,6 @@ class Supplier {
 
       this.supplier_id = data.insertId;
       retVal = this;
-      console.log(this);
     } catch (err) {
       console.log("[SUPPLIER ERROR]", err.message);
       throw new InternalServerError();

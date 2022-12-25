@@ -89,7 +89,7 @@ function Product({
             stock={available_stock}
             isAvailable={is_available}
             unitPrice={parseFloat(unit_price)}
-            onClick={() => setProductId(product_id)}
+            onClick={() => setProductId(productId === product_id ? null : product_id)}
             isSelected={productId === product_id}
           />
         )}

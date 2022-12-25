@@ -7,8 +7,15 @@ function currency(currency) {
   }).format(currency);
 }
 
-function date(iso) {
-  return new Date(iso).toLocaleDateString();
+function date(iso, isoFormat = false) {
+  let date = new Date(iso).toLocaleDateString();
+
+  if (isoFormat) {
+    const [month, day, year] = date.split("/");
+    date = [year, month, day].join("-");
+  }
+
+  return date;
 }
 
 function datetime(iso) {

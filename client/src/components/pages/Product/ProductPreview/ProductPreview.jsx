@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { BsPlusCircle } from "react-icons/bs";
 import { toast } from "react-toastify";
 
 import placeholderImg from "@assets/imgs/placeholder-img.jpg";
+import { FillButton } from "@components/common";
 import { Product, Stock } from "@components/module";
 import { useProduct, useProducts } from "@hooks/services/product";
 import format from "@utils/format";
@@ -23,7 +23,7 @@ function ProductPreview({
   showProductAddButton = false,
   showProductEditButton = false,
 }) {
-  const [view, setview] = useState(views.DEFAULT);
+  const [view, setView] = useState(views.DEFAULT);
   const productsQuery = useProducts();
   const productQuery = useProduct(productId);
   const {
@@ -31,7 +31,7 @@ function ProductPreview({
     payload: { data: product },
   } = productQuery;
 
-  useEffect(() => setview(productId ? views.PRODUCT_DETAIL : views.DEFAULT), [productId]);
+  useEffect(() => setView(productId ? views.PRODUCT_DETAIL : views.DEFAULT), [productId]);
 
   async function handleProductEdit(values, setSubmitting) {
     setSubmitting(true);
@@ -42,7 +42,7 @@ function ProductPreview({
     if (error) return toast.error(format.error(error));
 
     await Promise.all([productsQuery.invalidate(), productQuery.invalidate()]);
-    setview(views.PRODUCT_DETAIL);
+    setView(views.PRODUCT_DETAIL);
     toast.success("Product edited successfully.");
   }
 
@@ -51,12 +51,11 @@ function ProductPreview({
     const { error, isRedirect } = await productsQuery.create.execute(values);
     setSubmitting(false);
 
-    console.log(error);
     if (isRedirect) return;
     if (error) return toast.error(format.error(error));
 
     await Promise.all([productsQuery.invalidate(), productQuery.invalidate()]);
-    setview(views.DEFAULT);
+    setView(views.DEFAULT);
     toast.success("Product added successfully.");
   }
 
@@ -74,7 +73,7 @@ function ProductPreview({
       <Stock.Preview
         stocks={stocks}
         product={product}
-        onBack={() => setview(views.PRODUCT_DETAIL)}
+        onBack={() => setView(views.PRODUCT_DETAIL)}
         showStockDeleteButton={showStockDeleteButton}
         disableProductField
       />
@@ -88,8 +87,8 @@ function ProductPreview({
         stock={product?.available_stock}
         isAvailable={product?.is_available}
         price={product?.unit_price}
-        onEdit={() => setview(views.PRODUCT_EDIT_FORM)}
-        onViewStock={() => setview(views.PRODUCT_STOCK)}
+        onEdit={() => setView(views.PRODUCT_EDIT_FORM)}
+        onViewStock={() => setView(views.PRODUCT_STOCK)}
         onStatusChange={handleProductStatusChange}
         statusChangeDisabled={productQuery.toggleStatus.isLoading}
         showProductEditButton={showProductEditButton}
@@ -103,7 +102,7 @@ function ProductPreview({
         categoryId={product?.category_id}
         img={placeholderImg}
         price={product?.unit_price}
-        onCancel={() => setview(views.PRODUCT_DETAIL)}
+        onCancel={() => setView(views.PRODUCT_DETAIL)}
         onSubmit={handleProductEdit}
       />
     ),
@@ -111,15 +110,16 @@ function ProductPreview({
       <Product.Form
         title="Add New Product"
         img={placeholderImg}
-        onCancel={() => setview(views.DEFAULT)}
+        onCancel={() => setView(views.DEFAULT)}
         onSubmit={handleProductAdd}
       />
     ),
     [views.DEFAULT]: showProductAddButton ? (
-      <button className={styles.addBtn} onClick={() => setview(views.PRODUCT_ADD_FORM)}>
-        <BsPlusCircle size={128} />
-        Add a new Product
-      </button>
+      <FillButton
+        className={styles.addBtn}
+        label="Add new Product"
+        onClick={() => setView(views.PRODUCT_ADD_FORM)}
+      />
     ) : null,
   };
 

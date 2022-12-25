@@ -28,6 +28,18 @@ function StockForm({
     payload: { data: suppliers },
   } = useSuppliers();
 
+  const product = products?.find(({ product_id }) => product_id === productId);
+  const supplier = suppliers?.find(({ supplier_id }) => supplier_id === supplierId);
+
+  // if the field is disabled only show the current item as the only option
+  // else filter the array for the active ones along with the current item
+  const selectableProducts = disableProductField
+    ? [product].filter(Boolean)
+    : products?.filter(({ product_id, is_available }) => is_available || product_id === productId);
+  const selectableSuppliers = disableSupplierField
+    ? [supplier].filter(Boolean)
+    : suppliers?.filter(({ supplier_id, is_active }) => is_active || supplier_id === supplierId);
+
   const formik = useFormik({
     initialValues: {
       product: productId,
@@ -75,7 +87,11 @@ function StockForm({
         <Select
           label="Supplier"
           id="supplier"
-          options={suppliers?.map(({ supplier_id, name }) => ({ label: name, value: supplier_id }))}
+          options={selectableSuppliers?.map(({ supplier_id, name }) => ({
+            label: name,
+            value: supplier_id,
+          }))}
+          filterOption={(item) => item.value !== supplierId || supplier?.is_active}
           isDisabled={disableSupplierField}
           onChange={(item) => formik.setFieldValue("supplier", item.value)}
           onBlur={formik.handleBlur}
@@ -85,7 +101,8 @@ function StockForm({
         <Select
           label="Product"
           id="product"
-          options={products?.map(({ product_id, name }) => ({ label: name, value: product_id }))}
+          options={selectableProducts?.map(({ product_id, name }) => ({ label: name, value: product_id }))}
+          filterOption={(item) => item.value !== productId || product?.is_available}
           isDisabled={disableProductField}
           onChange={(item) => formik.setFieldValue("product", item.value)}
           onBlur={formik.handleBlur}
