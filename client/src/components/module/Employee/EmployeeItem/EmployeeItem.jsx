@@ -1,36 +1,36 @@
-import styles from "./EmployeeItem.module.css";
-
-import format from "@utils/format";
 import { clsx } from "clsx";
 
-function EmployeeItem({ id, name, contact_no, date, img, onClick, isSelected = false, disabled = false }) {
+import { BoxImage } from "@components/common";
+import format from "@utils/format";
+import styles from "./EmployeeItem.module.css";
+
+function EmployeeItem({
+  id = 0,
+  name = "Employee Name",
+  contactNumber = "09999999999",
+  date = "1970-01-01",
+  img,
+  onClick,
+  isSelected = false,
+}) {
   return (
-    <li
-      className={clsx(
-        styles.item,
-        disabled && styles.disabled,
-        !disabled && isSelected && styles.isSelected
-      )}
-      onClick={onClick}
-    >
-      <div className={styles.img}>
-        <img src={img} className={styles.img} />
-      </div>
-      <div className={styles.content}>
+    <li className={clsx(styles.item, isSelected && styles.isSelected)} onClick={onClick}>
+      <BoxImage src={img} alt={`${name} image.`} className={styles.img} />
+      <article className={styles.content}>
         <h2 className={styles.name}>{name}</h2>
-        <div className={styles.line}>
-          <p className={styles.label}>ID:</p>
-          <p className={styles.data}>{format.id(id)}</p>
-        </div>
-        <div className={styles.line}>
-          <p className={styles.label}>Contact Number:</p>
-          <p className={styles.data}>{contact_no}</p>
-        </div>
-        <div className={styles.line}>
-          <p className={styles.label}>Employee Since:</p>
-          <p className={styles.data}>{format.date(date)}</p>
-        </div>
-      </div>
+        <p className={styles.detail}>
+          <span>ID:</span>
+          <span>{format.id(id)}</span>
+        </p>
+        <p className={styles.detail}>
+          <span>Contact Number:</span>
+          <span>{contactNumber}</span>
+        </p>
+        <p className={styles.detail}>
+          <span>Employee Since:</span>
+          <span>{format.date(date)}</span>
+        </p>
+      </article>
     </li>
   );
 }
