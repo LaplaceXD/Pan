@@ -8,7 +8,7 @@ function Report() {
   function handle(cb) {
     return async (values, setDownloading) => {
       setDownloading(true);
-      await cb(values);
+      await cb(values.month);
       setDownloading(false);
     };
   }

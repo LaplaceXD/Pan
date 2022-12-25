@@ -1,21 +1,38 @@
 const { xlsx } = require("../providers");
 const Report = require("../models/report.model");
 
-function encloseWithBrackets(str) {
-  return !str ? null : str.padStart(str.length + 1, "[").padEnd(str.length + 2, "]");
+// Default is the previous month, which contains the latest report
+function getMonthOrDefault(query) {
+  let { month } = query;
+
+  if (!month) {
+    const [year, month] = new Date().toISOString().split("T")[0].split("-");
+    month = [year, month - 1].join("-");
+  }
+
+  return month;
 }
 
-function getFileName(fileName, startDate, endDate) {
-  let datePart = [startDate, endDate].map(encloseWithBrackets).filter(Boolean).join("");
-  datePart = datePart !== "" ? " " + datePart : datePart;
-  return `${fileName}${datePart}`;
+function localeDateToISOString(date) {
+  const [month, day, year] = new Date(date).toLocaleDateString().split("/");
+  return [year, month.padStart(2, "0"), day.padStart(2, "0")].join("-");
+}
+
+function getStartAndEndDates(monthString) {
+  const [year, month] = monthString.split("-");
+
+  const startDate = localeDateToISOString(new Date(year, month - 1, 1));
+  const endDate = localeDateToISOString(new Date(year, month, 0));
+
+  return { startDate, endDate };
 }
 
 const salesReport = async (req, res) => {
-  const { start_date, end_date } = req.query;
+  const month = getMonthOrDefault(req.query);
+  const { startDate, endDate } = getStartAndEndDates(month);
 
-  const data = await Report.productReport(start_date, end_date);
-  const fileName = getFileName("Sales Report", start_date, end_date);
+  const data = await Report.productReport(startDate, endDate);
+  const fileName = `Sales Report [${month}]`;
   const report = xlsx.generateExcelReport(data);
 
   res.writeHead(200, {
@@ -25,10 +42,11 @@ const salesReport = async (req, res) => {
   res.end(report);
 };
 const employeeReport = async (req, res) => {
-  const { start_date, end_date } = req.query;
+  const month = getMonthOrDefault(req.query);
+  const { startDate, endDate } = getStartAndEndDates(month);
 
-  const data = await Report.employeeReport(start_date, end_date);
-  const fileName = getFileName("Employee Report", start_date, end_date);
+  const data = await Report.employeeReport(startDate, endDate);
+  const fileName = `Employee Report [${month}]`;
   const report = xlsx.generateExcelReport(data);
 
   res.writeHead(200, {
@@ -38,10 +56,11 @@ const employeeReport = async (req, res) => {
   res.end(report);
 };
 const inventoryReport = async (req, res) => {
-  const { start_date, end_date } = req.query;
+  const month = getMonthOrDefault(req.query);
+  const { startDate, endDate } = getStartAndEndDates(month);
 
-  const data = await Report.inventoryReport(start_date, end_date);
-  const fileName = getFileName("Inventory Report", start_date, end_date);
+  const data = await Report.inventoryReport(startDate, endDate);
+  const fileName = `Inventory Report [${month}]`;
   const report = xlsx.generateExcelReport(data);
 
   res.writeHead(200, {
