@@ -65,7 +65,7 @@ class Order {
           o.employee_id,
           concat(e.first_name, ' ', e.last_name) AS employee_name,
           o.date_placed,
-          SUM(p.unit_price * ol.quantity) AS total
+          SUM(ol.selling_price * ol.quantity) AS total
         FROM ${"`order`"} o
         INNER JOIN employee e ON e.employee_id = o.employee_id
         INNER JOIN order_line ol ON ol.order_id = o.order_id
@@ -96,7 +96,7 @@ class Order {
           o.employee_id,
           concat(e.first_name, ' ', e.last_name) AS employee_name,
           o.date_placed,
-          SUM(p.unit_price * ol.quantity) AS total
+          SUM(ol.selling_price * ol.quantity) AS total
         FROM ${"`order`"} o
         INNER JOIN employee e ON e.employee_id = o.employee_id
         INNER JOIN order_line ol ON ol.order_id = o.order_id
