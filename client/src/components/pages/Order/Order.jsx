@@ -6,6 +6,7 @@ import { Modal, Order as OrderModule } from "@components/module";
 import { PreviewLayout } from "@components/template";
 import { useFilter, useModal } from "@hooks";
 import { useOrder, useOrders } from "@hooks/services/order";
+import { useProducts } from "@hooks/services/product";
 import format from "@utils/format";
 
 import styles from "./Order.module.css";
@@ -24,6 +25,7 @@ const search = {
 function Order({ showDelete = false }) {
   const deleteModal = useModal();
 
+  const productsQuery = useProducts();
   const ordersQuery = useOrders();
   const { filter, data: filteredOrders } = useFilter(ordersQuery.payload.data, { search });
 
@@ -38,7 +40,7 @@ function Order({ showDelete = false }) {
     if (isRedirect) return;
     if (error) return toast.error(format.error(error));
 
-    await ordersQuery.invalidate();
+    await Promise.all([ordersQuery.invalidate(), productsQuery.invalidate()]);
     setOrderId(null);
     deleteModal.close();
     toast.success("Order deleted successfully.");
