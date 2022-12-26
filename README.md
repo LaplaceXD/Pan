@@ -45,7 +45,7 @@ npm start
 ```
 
 7. You should be able to login through the login portal using the following credentials.
-   > Employee
+> Employee
 
 ```
 email: employee@pan.com
