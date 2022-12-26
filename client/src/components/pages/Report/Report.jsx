@@ -2,9 +2,8 @@ import styles from "./Report.module.css";
 
 import { Header } from "@components/common";
 import { Report as ReportModule, UserBanner } from "@components/module";
-import { downloadEmployeeReport, downloadInventoryReport, downloadSalesReport } from "@services/report";
 
-function Report() {
+function Report({ reports }) {
   function handle(cb) {
     return async (values, setDownloading) => {
       setDownloading(true);
@@ -19,13 +18,18 @@ function Report() {
         <UserBanner imgSize={56} />
       </Header>
       <div className={styles.content}>
-        <ReportModule.ReportCard title="Inventory Report" onDownload={handle(downloadInventoryReport)} />
-        <ReportModule.ReportCard title="Sales Report" onDownload={handle(downloadSalesReport)} />
-        <ReportModule.ReportItem
-          className={styles.fill}
-          title="Employee Details"
-          onDownload={downloadEmployeeReport}
-        />
+        {reports?.map(({ title, onDownload, isItem = false }, idx) =>
+          isItem ? (
+            <ReportModule.ReportItem
+              key={idx}
+              className={styles.fill}
+              title={title}
+              onDownload={onDownload}
+            />
+          ) : (
+            <ReportModule.ReportCard key={idx} title={title} onDownload={handle(onDownload)} />
+          )
+        ) ?? null}
       </div>
     </div>
   );

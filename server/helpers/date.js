@@ -1,13 +1,13 @@
 // Default is the previous month, which contains the latest report
 function getMonthOrDefault(query) {
-  let { month } = query;
+  let { monthValue } = query;
 
-  if (!month) {
+  if (!monthValue) {
     const [year, month] = new Date().toISOString().split("T")[0].split("-");
-    month = [year, month - 1].join("-");
+    monthValue = [year, month - 1].join("-");
   }
 
-  return month;
+  return monthValue;
 }
 
 function localeDateToISOString(date) {

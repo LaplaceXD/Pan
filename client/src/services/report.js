@@ -28,3 +28,11 @@ export async function downloadEmployeeReport() {
 function createMonthParam(month) {
   return month ? "?month=" + month : "";
 }
+
+export async function downloadDailySalesReport() {
+  const {
+    data: { fileName, sheets },
+  } = await auth.get("/reports/sales/daily");
+
+  downloadXLSXFromData(sheets, fileName);
+}

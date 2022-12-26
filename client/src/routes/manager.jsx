@@ -7,6 +7,13 @@ import Order from "@components/pages/Order";
 import Product from "@components/pages/Product";
 import Report from "@components/pages/Report";
 import Supplier from "@components/pages/Supplier";
+
+import {
+  downloadDailySalesReport,
+  downloadEmployeeReport,
+  downloadInventoryReport,
+  downloadSalesReport,
+} from "@services/report";
 import { appendPath, getLinkProps, getRouteProps } from "@utils/routes";
 
 const directory = "/m";
@@ -16,7 +23,16 @@ const managerPages = [
     path: "",
     label: "Home",
     icon: <FiHome />,
-    element: <Report />,
+    element: (
+      <Report
+        reports={[
+          { title: "Inventory Report", onDownload: downloadInventoryReport },
+          { title: "Sales Report", onDownload: downloadSalesReport },
+          { title: "Employee Details", onDownload: downloadEmployeeReport, isItem: true },
+          { title: "Daily Sales Report", onDownload: downloadDailySalesReport, isItem: true },
+        ]}
+      />
+    ),
     index: true,
     navLink: true,
   },

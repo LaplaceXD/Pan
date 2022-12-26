@@ -25,6 +25,21 @@ const salesReport = async (req, res) => {
   }
 };
 
+const dailySalesReport = async (req, res) => {
+  const date = new Date().toISOString().split("T")[0];
+
+  const data = await Report.getDailySalesReportData(date);
+  const fileName = `Daily Sales Report [${date}]`;
+
+  if (req.query?.type && req.query?.type === "xlsx") {
+    const report = xlsx.generateExcelReport(data);
+    res.writeHead(200, getHeaders(fileName));
+    res.end(report);
+  } else {
+    res.status(200).send({ fileName, sheets: data });
+  }
+};
+
 const employeeReport = async (req, res) => {
   const data = await Report.getEmployeeReportData();
   const fileName = "Employee Report";
@@ -58,4 +73,5 @@ module.exports = {
   salesReport,
   employeeReport,
   inventoryReport,
+  dailySalesReport,
 };

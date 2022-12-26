@@ -7,6 +7,37 @@ class Report {
     END_DATE: new Date().toISOString().split("T")[0],
   };
 
+  static async getDailySalesReportData(date) {
+    const allProducts = await Report.retrieveProductPerformance({
+      startDate: date,
+      endDate: date,
+      desc: true,
+    });
+
+    const columns = [
+      { label: "Product", value: "name" },
+      { label: "Quantity Sold", value: "total_sales" },
+      { label: "Total Revenue", value: "total_revenue", format: "₱###,###,###.00" },
+    ];
+
+    return [
+      {
+        sheet: "Daily Sales",
+        columns,
+        content: [
+          ...allProducts,
+          {
+            name: null,
+            total_sales: "GRAND TOTAL",
+            total_revenue: allProducts
+              .reduce((acc, { total_revenue }) => acc + parseFloat(total_revenue), 0)
+              .toFixed(2),
+          },
+        ],
+      },
+    ];
+  }
+
   // Only retrieves products that were orders within the start date and end date
   static async getSalesReportData(startDate, endDate) {
     const topProducts = await Report.retrieveProductPerformance({
@@ -180,7 +211,7 @@ class Report {
                                 ol.product_id
                               FROM order_line ol
                               INNER JOIN ${"`order`"} o ON o.order_id = ol.order_id
-                              WHERE o.date_placed <= DATE_FORMAT(LAST_DAY(:endDate - INTERVAL 1 MONTH), '%Y-%m-%d')
+                              WHERE o.date_placed <= DATE_FORMAT(LAST_DAY(:endDate - INTERVAL 1 MONTH), '%Y-%m-%d 23:59:59')
                               GROUP BY ol.product_id) ol on ol.product_id = p.product_id) prev_inv ON prev_inv.product_id = p.product_id
         
         -- query purchases / stocks from stock
@@ -200,7 +231,9 @@ class Report {
                     ol.product_id
                   FROM order_line ol
                   INNER JOIN ${"`order`"} o ON o.order_id = ol.order_id
-                  WHERE o.date_placed BETWEEN :startDate AND :endDate
+                  WHERE o.date_placed 
+                    BETWEEN DATE_FORMAT(:startDate, '%Y-%m-%d 00:00:00') 
+                    AND DATE_FORMAT(:endDate, '%Y-%m-%d 23:59:59') 
                   GROUP BY ol.product_id) ol on ol.product_id = p.product_id
         ORDER BY gross_profit DESC, product_name ASC`,
         {
@@ -232,7 +265,9 @@ class Report {
         FROM product p 
         INNER JOIN order_line ol ON p.product_id = ol.product_id 
         INNER JOIN ${"`order`"} o ON ol.order_id = o.order_id 
-        WHERE o.date_placed BETWEEN :startDate AND :endDate 
+        WHERE o.date_placed 
+          BETWEEN DATE_FORMAT(:startDate, '%Y-%m-%d 00:00:00') 
+          AND DATE_FORMAT(:endDate, '%Y-%m-%d 23:59:59') 
         GROUP BY p.product_id 
         ORDER BY total_sales ${desc ? "DESC" : "ASC"}
         ${limit ? `LIMIT ${limit}` : ""}`,
