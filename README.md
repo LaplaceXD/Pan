@@ -51,7 +51,6 @@ npm start
 email: employee@pan.com
 password: pan@employee123!
 ```
-
 > Manager
 
 ```
