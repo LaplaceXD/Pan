@@ -1,6 +1,6 @@
 // Default is the previous month, which contains the latest report
 function getMonthOrDefault(query) {
-  let { monthValue } = query;
+  let { month: monthValue } = query;
 
   if (!monthValue) {
     const [year, month] = new Date().toISOString().split("T")[0].split("-");
