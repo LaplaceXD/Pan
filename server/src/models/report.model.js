@@ -43,7 +43,8 @@ class Report {
           contact_no, 
           email, 
           date_employed, 
-          role 
+          role,
+          CASE WHEN is_active = '1' THEN 'ACTIVE' ELSE 'INACTIVE' END AS status
         FROM employee 
         ORDER BY date_employed DESC`
       );
@@ -64,6 +65,7 @@ class Report {
           { label: "Email", value: "email" },
           { label: "Date Employed", value: "date_employed", format: "d-mmm-yy" },
           { label: "Role", value: "role" },
+          { label: "Status", value: "status" },
         ],
         content,
       },
@@ -78,6 +80,7 @@ class Report {
         sheet: "Monthly Inventory",
         columns: [
           { label: "Product	Name", value: "product_name" },
+          { label: "Status", value: "status" },
           { label: "Beginning Inventory (Qty)", value: "beginning_inventory" },
           {
             label: "Beginning Inventory (Avg Price)",
@@ -119,6 +122,7 @@ class Report {
       const [data] = await conn.execute(
         `SELECT
           p.name AS product_name,
+          CASE WHEN p.is_available = '1' THEN 'Shown' ELSE 'Hidden' END AS status,
           
           -- Beginning Inventory, which is the ending inventory of the previous month
           COALESCE(prev_inv.ending_inventory, 0) AS beginning_inventory,
