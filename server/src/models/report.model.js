@@ -134,19 +134,31 @@ class Report {
           
           -- Ending inventory which is beginning inventory + purchased stock this month - number of goods sold
           COALESCE(prev_inv.ending_inventory, 0) + COALESCE(purchases, 0) - COALESCE(number_of_goods_sold, 0) AS ending_inventory,
-          CAST(ROUND((COALESCE(prev_inv.avg_price_of_ending_inventory, 0) + COALESCE(avg_price_of_purchases, 0)) / 2, 2) AS DECIMAL(10,2)) AS avg_price_of_ending_inventory,
+          CAST(ROUND(CASE
+            WHEN ISNULL(prev_inv.avg_price_of_ending_inventory) THEN COALESCE(avg_price_of_purchases, 0)
+            WHEN ISNULL(avg_price_of_purchases) THEN COALESCE(prev_inv.avg_price_of_ending_inventory, 0)
+            ELSE (COALESCE(prev_inv.avg_price_of_ending_inventory, 0) + COALESCE(avg_price_of_purchases, 0)) / 2
+          END, 2) AS DECIMAL(10, 2)) AS avg_price_of_ending_inventory,
           
           -- Cost of Goods Sold = number of goods sold times avg price of ending inventory
-          CAST(ROUND(COALESCE(number_of_goods_sold, 0) * COALESCE(avg_price_of_ending_inventory, 0), 2) AS DECIMAL(15,2)) AS cost_of_goods_sold,
+          CAST(ROUND(COALESCE(ol.number_of_goods_sold, 0) * (CASE
+            WHEN ISNULL(prev_inv.avg_price_of_ending_inventory) THEN COALESCE(avg_price_of_purchases, 0)
+            WHEN ISNULL(avg_price_of_purchases) THEN COALESCE(prev_inv.avg_price_of_ending_inventory, 0)
+            ELSE (COALESCE(prev_inv.avg_price_of_ending_inventory, 0) + COALESCE(avg_price_of_purchases, 0)) / 2
+          END), 2) AS DECIMAL(15, 2)) AS cost_of_goods_sold,
           
           -- Total sold = total revenue from the product
           CAST(ROUND(COALESCE(ol.total_sold, 0), 2) AS DECIMAL(15,2)) AS total_sold,
 
           -- Gross Profit = Total Sold - Cost of Goods Sold
-          CAST(ROUND(COALESCE(total_sold, 0) - (COALESCE(number_of_goods_sold, 0) * COALESCE(avg_price_of_ending_inventory, 0)), 2) AS DECIMAL(15,2)) AS gross_profit
+          CAST(ROUND(COALESCE(total_sold, 0) - (COALESCE(ol.number_of_goods_sold, 0) * CASE
+            WHEN ISNULL(prev_inv.avg_price_of_ending_inventory) THEN COALESCE(avg_price_of_purchases, 0)
+            WHEN ISNULL(avg_price_of_purchases) THEN COALESCE(prev_inv.avg_price_of_ending_inventory, 0)
+            ELSE (COALESCE(prev_inv.avg_price_of_ending_inventory, 0) + COALESCE(avg_price_of_purchases, 0)) / 2
+          END), 2) AS DECIMAL(15,2)) AS gross_profit
         FROM product p
 
-        -- query unused stock from previous date
+        -- query unused stock from previous dates
         LEFT JOIN (SELECT 
                       COALESCE(s.purchases, 0) - COALESCE(ol.number_of_goods_sold, 0) AS ending_inventory,
                       s.avg_price_of_purchases AS avg_price_of_ending_inventory,
@@ -157,18 +169,14 @@ class Report {
                                 AVG(unit_price) AS avg_price_of_purchases,
                               product_id
                               FROM stock
-                              WHERE date_supplied 
-                                BETWEEN DATE_FORMAT(:startDate - INTERVAL 1 MONTH, '%Y-%m-01')
-                                AND DATE_FORMAT(LAST_DAY(:endDate - INTERVAL 1 MONTH), '%Y-%m-%d')
+                              WHERE date_supplied <= DATE_FORMAT(LAST_DAY(:endDate - INTERVAL 1 MONTH), '%Y-%m-%d')
                               GROUP BY product_id) s ON s.product_id = p.product_id
                   LEFT JOIN (SELECT
                                 SUM(ol.quantity) AS number_of_goods_sold,
                                 ol.product_id
                               FROM order_line ol
                               INNER JOIN ${"`order`"} o ON o.order_id = ol.order_id
-                              WHERE o.date_placed 
-                                BETWEEN DATE_FORMAT(:startDate - INTERVAL 1 MONTH, '%Y-%m-01')
-                                AND DATE_FORMAT(LAST_DAY(:endDate - INTERVAL 1 MONTH), '%Y-%m-%d')
+                              WHERE o.date_placed <= DATE_FORMAT(LAST_DAY(:endDate - INTERVAL 1 MONTH), '%Y-%m-%d')
                               GROUP BY ol.product_id) ol on ol.product_id = p.product_id) prev_inv ON prev_inv.product_id = p.product_id
         
         -- query purchases / stocks from stock
