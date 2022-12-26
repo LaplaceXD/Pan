@@ -9,6 +9,14 @@ export async function downloadInventoryReport(month) {
   downloadXLSXFromData(sheets, fileName);
 }
 
+export async function downloadSupplierStocksReport(month) {
+  const {
+    data: { fileName, sheets },
+  } = await auth.get("/reports/supplier" + createMonthParam(month));
+
+  downloadXLSXFromData(sheets, fileName);
+}
+
 export async function downloadSalesReport(month) {
   const {
     data: { fileName, sheets },

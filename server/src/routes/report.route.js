@@ -18,6 +18,12 @@ router.get(
 router.get("/employee", [auth, permit({ allow: [roles(role.MANAGER)] })], reportController.employeeReport);
 
 router.get(
+  "/supplier",
+  [auth, permit({ allow: [roles(role.MANAGER)] })],
+  reportController.supplierStocksReport
+);
+
+router.get(
   "/inventory",
   [auth, permit({ allow: [roles(role.MANAGER)] })],
   reportController.inventoryReport

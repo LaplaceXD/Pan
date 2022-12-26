@@ -13,6 +13,7 @@ import {
   downloadEmployeeReport,
   downloadInventoryReport,
   downloadSalesReport,
+  downloadSupplierStocksReport,
 } from "@services/report";
 import { appendPath, getLinkProps, getRouteProps } from "@utils/routes";
 
@@ -28,6 +29,7 @@ const managerPages = [
         reports={[
           { title: "Inventory Report", onDownload: downloadInventoryReport },
           { title: "Sales Report", onDownload: downloadSalesReport },
+          { title: "Supplier Report", onDownload: downloadSupplierStocksReport },
           { title: "Employee Details", onDownload: downloadEmployeeReport, isItem: true },
           { title: "Daily Sales Report", onDownload: downloadDailySalesReport, isItem: true },
         ]}

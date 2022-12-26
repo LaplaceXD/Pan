@@ -25,6 +25,22 @@ const salesReport = async (req, res) => {
   }
 };
 
+const supplierStocksReport = async (req, res) => {
+  const month = date.getMonthOrDefault(req.query);
+  const { startDate, endDate } = date.getStartAndEndDates(month);
+
+  const data = await Report.getSupplierStocksReportData(startDate, endDate);
+  const fileName = `Supplier Stocks Report [${month}]`;
+
+  if (req.query?.type && req.query?.type === "xlsx") {
+    const report = xlsx.generateExcelReport(data);
+    res.writeHead(200, getHeaders(fileName));
+    res.end(report);
+  } else {
+    res.status(200).send({ fileName, sheets: data });
+  }
+};
+
 const dailySalesReport = async (req, res) => {
   const date = new Date().toISOString().split("T")[0];
 
@@ -74,4 +90,5 @@ module.exports = {
   employeeReport,
   inventoryReport,
   dailySalesReport,
+  supplierStocksReport,
 };

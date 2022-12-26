@@ -7,6 +7,28 @@ class Report {
     END_DATE: new Date().toISOString().split("T")[0],
   };
 
+  static async getSupplierStocksReportData(startDate, endDate) {
+    const suppliers = await Report.retrieveAvailableSuppliers();
+    const stocks = await Promise.all(
+      suppliers.map(({ supplier_id }) => Report.retrieveSupplierStocks(supplier_id, startDate, endDate))
+    );
+
+    const columns = [
+      { label: "Product Name", value: "product_name" },
+      { label: "Date Supplied", value: "date_supplied" },
+      { label: "Stock In", value: "stock_in" },
+      { label: "Stock Price", value: "stock_price", format: "₱###,###,###.00" },
+      { label: "Total Cost", value: "total_cost", format: "₱###,###,###.00" },
+      { label: "Notes", value: "notes" },
+    ];
+
+    return suppliers.map(({ name }, idx) => ({
+      sheet: name,
+      columns,
+      content: stocks[idx],
+    }));
+  }
+
   static async getDailySalesReportData(date) {
     const allProducts = await Report.retrieveProductPerformance({
       startDate: date,
@@ -282,6 +304,64 @@ class Report {
       retVal = data;
     } catch (err) {
       console.log("[PRODUCT PERFORMANCE QUERY ERROR]", err.message);
+      throw new InternalServerError(err);
+    }
+
+    return retVal;
+  }
+
+  static async retrieveAvailableSuppliers() {
+    let retVal = [];
+
+    try {
+      const conn = await db.connect();
+      const [data] = await conn.execute(
+        `SELECT
+          name,
+          supplier_id
+        FROM supplier
+        WHERE is_active = '1'`
+      );
+      await conn.end();
+      retVal = data;
+    } catch (err) {
+      console.log("[AVAILABLE SUPPLIER QUERY ERROR]", err.message);
+      throw new InternalServerError(err);
+    }
+
+    return retVal;
+  }
+
+  static async retrieveSupplierStocks(supplierId, startDate, endDate) {
+    let retVal = [];
+
+    try {
+      const conn = await db.connect();
+      const [data] = await conn.execute(
+        `SELECT
+          p.name AS product_name,
+          s.date_supplied,
+          CONCAT(s.quantity, ' ', s.unit) AS stock_in,
+          s.unit_price AS stock_price,
+          s.quantity * s.unit_price AS total_cost,
+          s.notes
+        FROM stock s
+        INNER JOIN supplier sp ON sp.supplier_id = s.supplier_id
+        INNER JOIN product p on p.product_id = s.product_id
+        WHERE s.date_supplied BETWEEN :startDate AND :endDate
+          AND sp.supplier_id = :supplierId
+        GROUP BY p.product_id
+        ORDER BY s.date_supplied DESC, s.stock_id DESC`,
+        {
+          startDate: startDate || Report.defaults.START_DATE,
+          endDate: endDate || Report.defaults.END_DATE,
+          supplierId,
+        }
+      );
+      await conn.end();
+      retVal = data;
+    } catch (err) {
+      console.log("[SUPPLIER STOCKS QUERY ERROR]", err.message);
       throw new InternalServerError(err);
     }
 
