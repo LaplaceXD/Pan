@@ -5,9 +5,9 @@ class Report {
   static defaults = {
     START_DATE: "1970-01-01",
     END_DATE: new Date().toISOString().split("T")[0],
-    LIMIT: 5,
   };
 
+  // Only retrieves products that were orders within the start date and end date
   static async getSalesReportData(startDate, endDate) {
     const topProducts = await Report.retrieveProductPerformance({
       startDate,
@@ -16,7 +16,7 @@ class Report {
       desc: true,
     });
     const bottomProducts = await Report.retrieveProductPerformance({ startDate, endDate, limit: 5 });
-    const allProducts = await Report.retrieveProductPerformance({ startDate, endDate });
+    const allProducts = await Report.retrieveProductPerformance({ startDate, endDate, desc: true });
 
     const columns = [
       { label: "Product", value: "name" },
@@ -25,9 +25,9 @@ class Report {
     ];
 
     return [
-      { sheet: "Top Selling Products", columns, content: topProducts },
-      { sheet: "Least Selling Products", columns, content: bottomProducts },
-      { sheet: "Product Statistucs", columns, content: allProducts },
+      { sheet: "Top 5 Selling Products", columns, content: topProducts },
+      { sheet: "Least 5 Selling Products", columns, content: bottomProducts },
+      { sheet: "Product Statistics", columns, content: allProducts },
     ];
   }
 
@@ -84,9 +84,9 @@ class Report {
             value: "avg_price_of_beginning_inventory",
             format: "₱###,###,###.##",
           },
-          { label: "Purchases (Qty)", value: "purchases" },
+          { label: "Stock In (Qty)", value: "purchases" },
           {
-            label: "Purchases (Avg Price)",
+            label: "Stock In (Avg Price)",
             value: "avg_price_of_purchases",
             format: "₱###,###,###.##",
           },
@@ -231,11 +231,10 @@ class Report {
         WHERE o.date_placed BETWEEN :startDate AND :endDate 
         GROUP BY p.product_id 
         ORDER BY total_sales ${desc ? "DESC" : "ASC"}
-        ${limit ? "LIMIT :limit" : ""}`,
+        ${limit ? `LIMIT ${limit}` : ""}`,
         {
           startDate: startDate || Report.defaults.START_DATE,
           endDate: endDate || Report.defaults.END_DATE,
-          limit,
         }
       );
 
