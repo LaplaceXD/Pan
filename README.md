@@ -34,11 +34,13 @@ VITE_SERVER_URL   = http://localhost:3000/api/v1
 
 ```bash
 cd client
+npm i
 npm run dev
 ```
 
 ```bash
 cd server
+npm i
 npm start
 ```
 
