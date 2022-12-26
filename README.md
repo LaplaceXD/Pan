@@ -1,7 +1,7 @@
 # Pan
 
 ![Last Update](https://img.shields.io/github/last-commit/LaplaceXD/Pan?color=blue&label=Last%20Update)
-![Activity](https://img.shields.io/badge/Activity-InProgress-green)
+![Activity](https://img.shields.io/badge/Activity-Completed-blue)
 
 [Pan](https://pan-laplace.vercel.app/) is an inventory management system made for Pan. This system was made
 with the use of [MySQL](https://www.mysql.com/), [React](https://beta.reactjs.org/),
@@ -51,7 +51,6 @@ npm start
 email: employee@pan.com
 password: pan@employee123!
 ```
-
 > Manager
 
 ```
