@@ -17,13 +17,13 @@ with the use of [MySQL](https://www.mysql.com/), [React](https://beta.reactjs.or
 - Manage company resources such as employees, products, stocks, and suppliers.
 - Track, manage, and place orders based on the available products, and stocks in the system.
 - Filter data within the system.
-- Role-based access on different functionalities.
-- Authorization using [JWT tokens](https://jwt.io/).
+- Role-based authorization on different functionalities.
+- Authentication using [JWT tokens](https://jwt.io/).
 
 ## Setup
 
 1. Clone this project to your local machine.
-2. Import `pan_db.sql` into your local MySQL database.
+2. Import `pan_db.sql` into your local MySQL database, and run your MySQL database.
 3. Create a Redis instance locally or through [Redis Labs](https://app.redislabs.com/).
 4. Create a [SendGrid](https://sendgrid.com/) account.
 5. Create `.env` files in the `client directory` and `server directory.`
