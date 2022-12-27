@@ -172,92 +172,86 @@ class Report {
 
     try {
       const conn = await db.connect();
-      const [data] = await conn.execute(
-        `SELECT
+      const [data] = await conn.query(
+        `SET @start_date = DATE_FORMAT(:startDate, '%Y-%m-%d 00:00:00');
+        SET @end_date = DATE_FORMAT(:endDate, '%Y-%m-%d 23:59:59');
+        SET @prev_month_end_date = DATE_FORMAT(LAST_DAY(@end_date - INTERVAL 1 MONTH), '%Y-%m-%d 23:59:59');
+
+        CREATE TEMPORARY TABLE prev_month_inventory
+        SELECT
+          COALESCE(s.purchases, 0) - COALESCE(ol.number_of_goods_sold, 0) AS ending_inventory,
+          s.avg_price_of_purchases AS avg_price_of_ending_inventory,
+          p.product_id
+        FROM product p
+        LEFT JOIN (SELECT
+                    SUM(quantity) AS purchases,
+                    SUM(unit_price * quantity) / SUM(quantity) AS avg_price_of_purchases,
+                    product_id
+                  FROM stock
+                  WHERE date_supplied <= @prev_month_end_date
+                  GROUP BY product_id) s ON s.product_id = p.product_id
+        LEFT JOIN (SELECT
+                    SUM(ol.quantity) AS number_of_goods_sold,
+                    ol.product_id
+                    FROM order_line ol
+                  INNER JOIN ${"`order`"} o ON o.order_id = ol.order_id
+                  WHERE o.date_placed <= @prev_month_end_date
+                  GROUP BY ol.product_id) ol on ol.product_id = p.product_id;
+                  
+        CREATE TEMPORARY TABLE current_month_inventory
+        SELECT
           p.name AS product_name,
           CASE WHEN p.is_available = '1' THEN 'Shown' ELSE 'Hidden' END AS status,
-          
+
           -- Beginning Inventory, which is the ending inventory of the previous month
-          COALESCE(prev_inv.ending_inventory, 0) AS beginning_inventory,
-          CAST(ROUND(COALESCE(prev_inv.avg_price_of_ending_inventory, 0), 2) AS DECIMAL(10,2)) AS avg_price_of_beginning_inventory,
-          
+          COALESCE(pi.ending_inventory, 0) AS beginning_inventory,
+          CAST(ROUND(COALESCE(pi.avg_price_of_ending_inventory, 0), 2) AS DECIMAL(10,2)) AS avg_price_of_beginning_inventory,
+
           -- Stock purchased for this month
           COALESCE(s.purchases, 0) AS purchases,
           CAST(ROUND(COALESCE(s.avg_price_of_purchases, 0), 2) AS DECIMAL(10,2)) AS avg_price_of_purchases,
-          
+
           -- Number of Goods Sold
           COALESCE(ol.number_of_goods_sold, 0) AS number_of_goods_sold,
           CAST(ROUND(COALESCE(ol.avg_price_of_goods_sold, 0), 2) AS DECIMAL(10,2)) AS avg_price_of_goods_sold,
-          
+
           -- Ending inventory which is beginning inventory + purchased stock this month - number of goods sold
-          COALESCE(prev_inv.ending_inventory, 0) + COALESCE(purchases, 0) - COALESCE(number_of_goods_sold, 0) AS ending_inventory,
+          COALESCE(pi.ending_inventory, 0) + COALESCE(purchases, 0) - COALESCE(number_of_goods_sold, 0) AS ending_inventory,
           CAST(ROUND(CASE
-            WHEN ISNULL(prev_inv.avg_price_of_ending_inventory) THEN COALESCE(avg_price_of_purchases, 0)
-            WHEN ISNULL(avg_price_of_purchases) THEN COALESCE(prev_inv.avg_price_of_ending_inventory, 0)
-            ELSE (COALESCE(prev_inv.avg_price_of_ending_inventory, 0) + COALESCE(avg_price_of_purchases, 0)) / 2
-          END, 2) AS DECIMAL(10, 2)) AS avg_price_of_ending_inventory,
+                      WHEN ISNULL(pi.avg_price_of_ending_inventory) THEN COALESCE(avg_price_of_purchases, 0)
+                      WHEN ISNULL(avg_price_of_purchases) THEN COALESCE(pi.avg_price_of_ending_inventory, 0)
+                      ELSE (COALESCE(pi.avg_price_of_ending_inventory, 0) * COALESCE(pi.ending_inventory, 0) 
+                            + COALESCE(avg_price_of_purchases, 0) * COALESCE(purchases, 0))
+                            / (COALESCE(purchases, 0) + COALESCE(pi.ending_inventory, 0))
+                    END, 2) AS DECIMAL(10, 2)) AS avg_price_of_ending_inventory,
           
-          -- Cost of Goods Sold = number of goods sold times avg price of ending inventory
-          CAST(ROUND(COALESCE(ol.number_of_goods_sold, 0) * (CASE
-            WHEN ISNULL(prev_inv.avg_price_of_ending_inventory) THEN COALESCE(avg_price_of_purchases, 0)
-            WHEN ISNULL(avg_price_of_purchases) THEN COALESCE(prev_inv.avg_price_of_ending_inventory, 0)
-            ELSE (COALESCE(prev_inv.avg_price_of_ending_inventory, 0) + COALESCE(avg_price_of_purchases, 0)) / 2
-          END), 2) AS DECIMAL(15, 2)) AS cost_of_goods_sold,
-          
-          -- Total sold = total revenue from the product
-          CAST(ROUND(COALESCE(ol.total_sold, 0), 2) AS DECIMAL(15,2)) AS total_sold,
-
-          -- Gross Profit = Total Sold - Cost of Goods Sold
-          CAST(ROUND(COALESCE(total_sold, 0) - (COALESCE(ol.number_of_goods_sold, 0) * CASE
-            WHEN ISNULL(prev_inv.avg_price_of_ending_inventory) THEN COALESCE(avg_price_of_purchases, 0)
-            WHEN ISNULL(avg_price_of_purchases) THEN COALESCE(prev_inv.avg_price_of_ending_inventory, 0)
-            ELSE (COALESCE(prev_inv.avg_price_of_ending_inventory, 0) + COALESCE(avg_price_of_purchases, 0)) / 2
-          END), 2) AS DECIMAL(15,2)) AS gross_profit
+          -- Total sold = total revenue from the product     
+          CAST(ROUND(COALESCE(ol.total_sold, 0), 2) AS DECIMAL(15,2)) AS total_sold
         FROM product p
-
-        -- query unused stock from previous dates
-        LEFT JOIN (SELECT 
-                      COALESCE(s.purchases, 0) - COALESCE(ol.number_of_goods_sold, 0) AS ending_inventory,
-                      s.avg_price_of_purchases AS avg_price_of_ending_inventory,
-                      p.product_id
-                  FROM product p
-                  LEFT JOIN (SELECT 
-                                SUM(quantity) AS purchases,
-                                AVG(unit_price) AS avg_price_of_purchases,
-                              product_id
-                              FROM stock
-                              WHERE date_supplied <= DATE_FORMAT(LAST_DAY(:endDate - INTERVAL 1 MONTH), '%Y-%m-%d')
-                              GROUP BY product_id) s ON s.product_id = p.product_id
-                  LEFT JOIN (SELECT
-                                SUM(ol.quantity) AS number_of_goods_sold,
-                                ol.product_id
-                              FROM order_line ol
-                              INNER JOIN ${"`order`"} o ON o.order_id = ol.order_id
-                              WHERE o.date_placed <= DATE_FORMAT(LAST_DAY(:endDate - INTERVAL 1 MONTH), '%Y-%m-%d 23:59:59')
-                              GROUP BY ol.product_id) ol on ol.product_id = p.product_id) prev_inv ON prev_inv.product_id = p.product_id
-        
-        -- query purchases / stocks from stock
-        LEFT JOIN (SELECT 
+        LEFT JOIN prev_month_inventory pi ON pi.product_id = p.product_id
+        LEFT JOIN (SELECT
                     SUM(quantity) AS purchases,
-                    AVG(unit_price) AS avg_price_of_purchases,
+                    SUM(quantity * unit_price) / SUM(quantity) AS avg_price_of_purchases,
                     product_id
                   FROM stock
-                  WHERE date_supplied BETWEEN :startDate AND :endDate
-                  GROUP BY product_id) s ON s.product_id = p.product_id 
-        
-        -- query orders
+                  WHERE date_supplied BETWEEN @start_date AND @end_date
+                  GROUP BY product_id) s ON s.product_id = p.product_id
         LEFT JOIN (SELECT
                     SUM(ol.quantity) AS number_of_goods_sold,
-                    AVG(ol.selling_price) AS avg_price_of_goods_sold,
                     SUM(ol.selling_price * ol.quantity) AS total_sold,
+                    SUM(ol.selling_price * ol.quantity) / SUM(ol.quantity) AS avg_price_of_goods_sold,
                     ol.product_id
                   FROM order_line ol
                   INNER JOIN ${"`order`"} o ON o.order_id = ol.order_id
-                  WHERE o.date_placed 
-                    BETWEEN DATE_FORMAT(:startDate, '%Y-%m-%d 00:00:00') 
-                    AND DATE_FORMAT(:endDate, '%Y-%m-%d 23:59:59') 
-                  GROUP BY ol.product_id) ol on ol.product_id = p.product_id
-        ORDER BY gross_profit DESC, product_name ASC`,
+                  WHERE o.date_placed BETWEEN @start_date AND @end_date
+                  GROUP BY ol.product_id) ol on ol.product_id = p.product_id;
+                          
+        SELECT 
+          *,
+          number_of_goods_sold * avg_price_of_ending_inventory AS cost_of_goods_sold,
+          total_sold - (number_of_goods_sold * avg_price_of_ending_inventory) AS gross_profit
+        FROM current_month_inventory
+        ORDER BY gross_profit DESC, product_name ASC;`,
         {
           startDate: startDate || Report.defaults.START_DATE,
           endDate: endDate || Report.defaults.END_DATE,
@@ -265,7 +259,7 @@ class Report {
       );
 
       await conn.end();
-      retVal = data;
+      retVal = data[data.length - 1];
     } catch (err) {
       console.log("[INVENTORY REPORT]", err.message);
       throw new InternalServerError(err);
