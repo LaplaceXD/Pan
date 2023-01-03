@@ -1,5 +1,5 @@
 {
-  "name": "client",
+  "name": "@pan/client",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "client": "^0.0.1",
     "clsx": "^1.2.1",
     "formik": "^2.2.9",
     "json-as-xlsx": "^2.5.3",

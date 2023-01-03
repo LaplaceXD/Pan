@@ -1,8 +1,9 @@
 {
-  "name": "pan-api",
+  "name": "@pan/server",
   "version": "1.0.0",
   "description": "API for the Inventory Management System of Pan.",
   "main": "index.js",
+  "private": true,
   "scripts": {
     "build": "set NODE_ENV=production&& node index.js",
     "start": "nodemon index.js"
