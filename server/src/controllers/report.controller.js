@@ -1,6 +1,7 @@
 const { xlsx } = require("../providers");
 const Report = require("../models/report.model");
 const date = require("../../helpers/date");
+const { role } = require("../constants/employee");
 
 function getHeaders(fileName) {
   return {
@@ -42,10 +43,14 @@ const supplierStocksReport = async (req, res) => {
 };
 
 const dailySalesReport = async (req, res) => {
-  const date = new Date().toISOString().split("T")[0];
+  const isEmployee = req.auth.role === role.EMPLOYEE;
 
-  const data = await Report.getDailySalesReportData(date);
-  const fileName = `Daily Sales Report [${date}]`;
+  const [m, d, y] = new Date().toLocaleDateString().split("/");
+  const date = [y, m.padStart(2, "0"), d.padStart(2, "0")].join("-");
+
+  const data = await Report.getDailySalesReportData(date, isEmployee ? req.auth.id : null);
+  let fileName = `Daily Sales Report [${date}]`;
+  if (isEmployee) fileName += `[${req.auth.last_name}]`;
 
   if (req.query?.type && req.query?.type === "xlsx") {
     const report = xlsx.generateExcelReport(data);

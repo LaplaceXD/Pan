@@ -29,33 +29,31 @@ class Report {
     }));
   }
 
-  static async getDailySalesReportData(date) {
-    const allProducts = await Report.retrieveProductPerformance({
-      startDate: date,
-      endDate: date,
-      desc: true,
-    });
+  static async getDailySalesReportData(date, empId) {
+    const dailySales = await Report.retrieveDailySales(date, empId);
 
     const columns = [
-      { label: "Product", value: "name" },
-      { label: "Quantity Sold", value: "total_sales" },
-      { label: "Total Revenue", value: "total_revenue", format: "₱###,###,###.00" },
+      { label: "Employee Name", value: "employee_name" },
+      { label: "Order ID", value: "order_id" },
+      { label: "Placed On", value: "time_placed" },
+      { label: "Product ID", value: "product_id" },
+      { label: "Product Name", value: "product_name" },
+      { label: "Quantity Sold", value: "quantity" },
+      { label: "Product Price", value: "selling_price" },
+      { label: "Total Revenue", value: "total_sold" },
     ];
+
+    const grandTotalRow = columns.reduce((acc, { value }) => ({ ...acc, [value]: null }), {});
+    grandTotalRow["selling_price"] = "GRAND TOTAL";
+    grandTotalRow["total_sold"] = dailySales
+      .reduce((acc, { total_sold }) => acc + parseFloat(total_sold), 0)
+      .toFixed(2);
 
     return [
       {
         sheet: "Daily Sales",
         columns,
-        content: [
-          ...allProducts,
-          {
-            name: null,
-            total_sales: "GRAND TOTAL",
-            total_revenue: allProducts
-              .reduce((acc, { total_revenue }) => acc + parseFloat(total_revenue), 0)
-              .toFixed(2),
-          },
-        ],
+        content: [...dailySales, grandTotalRow],
       },
     ];
   }
@@ -356,6 +354,42 @@ class Report {
       retVal = data;
     } catch (err) {
       console.log("[SUPPLIER STOCKS QUERY ERROR]", err.message);
+      throw new InternalServerError(err);
+    }
+
+    return retVal;
+  }
+
+  static async retrieveDailySales(date, empId = null) {
+    let retVal = [];
+
+    try {
+      const conn = await db.connect();
+      const [data] = await conn.execute(
+        `SELECT 
+          CONCAT(e.first_name, ' ', e.last_name) AS employee_name,
+          o.order_id,
+          DATE_FORMAT(o.date_placed, '%h:%i:%s %p') AS time_placed,
+          p.product_id,
+          p.name AS product_name,
+          ol.quantity,
+          ol.selling_price,
+          ol.quantity * ol.selling_price AS total_sold
+        FROM ${"`order`"} o
+        INNER JOIN employee e ON e.employee_id = o.employee_id
+        INNER JOIN order_line ol ON ol.order_id = o.order_id
+        INNER JOIN product p ON p.product_id = ol.product_id
+        WHERE o.date_placed BETWEEN DATE_FORMAT(:date, '%Y-%m-%d 00:00:00') 
+          AND DATE_FORMAT(:date, '%Y-%m-%d 23:59:59')
+          ${empId ? "AND e.employee_id = :empId" : ""}
+        ORDER BY o.date_placed ASC;`,
+        { date, empId }
+      );
+
+      await conn.end();
+      retVal = data;
+    } catch (err) {
+      console.log("[DAILY SALES QUERY ERROR]", err.message);
       throw new InternalServerError(err);
     }
 
