@@ -9,7 +9,7 @@ function ReportForm({ className, onDownload }) {
   const id = useId();
 
   const [year, month] = format.date(new Date(), true).split("-");
-  const previousMonth = [year, month - 1].join("-");
+  const previousMonth = parseInt(month) !== 1 ? [year, month - 1].join("-") : [year - 1, 12].join("-");
 
   const formik = useFormik({
     initialValues: { date: previousMonth },
