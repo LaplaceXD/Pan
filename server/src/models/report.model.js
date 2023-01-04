@@ -33,6 +33,7 @@ class Report {
     const dailySales = await Report.retrieveDailySales(date, empId);
 
     const columns = [
+      { label: "Date Placed", value: "date_placed" },
       { label: "Employee Name", value: "employee_name" },
       { label: "Order ID", value: "order_id" },
       { label: "Placed On", value: "time_placed" },
@@ -367,6 +368,7 @@ class Report {
       const conn = await db.connect();
       const [data] = await conn.execute(
         `SELECT 
+          DATE_FORMAT(o.date_placed, '%Y-%m-%d') AS date_placed,
           CONCAT(e.first_name, ' ', e.last_name) AS employee_name,
           o.order_id,
           DATE_FORMAT(o.date_placed, '%h:%i:%s %p') AS time_placed,

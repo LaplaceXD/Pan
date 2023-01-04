@@ -44,9 +44,7 @@ const supplierStocksReport = async (req, res) => {
 
 const dailySalesReport = async (req, res) => {
   const isEmployee = req.auth.role === role.EMPLOYEE;
-
-  const [m, d, y] = new Date().toLocaleDateString().split("/");
-  const date = [y, m.padStart(2, "0"), d.padStart(2, "0")].join("-");
+  const date = new Date().toISOString().split("T")[0];
 
   const data = await Report.getDailySalesReportData(date, isEmployee ? req.auth.id : null);
   let fileName = `Daily Sales Report [${date}]`;
