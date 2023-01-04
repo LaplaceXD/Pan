@@ -33,15 +33,15 @@ class Report {
     const sales = await Report.retrieveSales(startDate, endDate, empId);
 
     const columns = [
-      { label: "Date Placed", value: "date_placed" },
-      { label: "Employee Name", value: "employee_name" },
+      { label: "Date", value: "date_placed" },
+      { label: "Time", value: "time_placed" },
+      { label: "Cashier", value: "employee_name" },
       { label: "Order ID", value: "order_id" },
-      { label: "Placed On", value: "time_placed" },
       { label: "Product ID", value: "product_id" },
       { label: "Product Name", value: "product_name" },
-      { label: "Quantity Sold", value: "quantity" },
-      { label: "Product Price", value: "selling_price" },
-      { label: "Total Revenue", value: "total_sold" },
+      { label: "Quantity", value: "quantity" },
+      { label: "Price", value: "selling_price" },
+      { label: "Sales Amount", value: "total_sold" },
     ];
 
     const grandTotalRow = columns.reduce((acc, { value }) => ({ ...acc, [value]: null }), {});
