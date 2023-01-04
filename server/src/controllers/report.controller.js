@@ -46,7 +46,7 @@ const dailySalesReport = async (req, res) => {
   const isEmployee = req.auth.role === role.EMPLOYEE;
   const date = new Date().toISOString().split("T")[0];
 
-  const data = await Report.getDailySalesReportData(date, isEmployee ? req.auth.id : null);
+  const data = await Report.getSalesReportData(date, date, isEmployee ? req.auth.id : null);
   let fileName = `Daily Sales Report [${date}]`;
   if (isEmployee) fileName += `[${req.auth.last_name}]`;
 

@@ -29,8 +29,8 @@ class Report {
     }));
   }
 
-  static async getDailySalesReportData(date, empId) {
-    const dailySales = await Report.retrieveDailySales(date, empId);
+  static async getSalesReportData(startDate, endDate, empId) {
+    const sales = await Report.retrieveDailySales(startDate, endDate, empId);
 
     const columns = [
       { label: "Date Placed", value: "date_placed" },
@@ -54,32 +54,8 @@ class Report {
       {
         sheet: "Daily Sales",
         columns,
-        content: [...dailySales, grandTotalRow],
+        content: [...sales, grandTotalRow],
       },
-    ];
-  }
-
-  // Only retrieves products that were orders within the start date and end date
-  static async getSalesReportData(startDate, endDate) {
-    const topProducts = await Report.retrieveProductPerformance({
-      startDate,
-      endDate,
-      limit: 5,
-      desc: true,
-    });
-    const bottomProducts = await Report.retrieveProductPerformance({ startDate, endDate, limit: 5 });
-    const allProducts = await Report.retrieveProductPerformance({ startDate, endDate, desc: true });
-
-    const columns = [
-      { label: "Product", value: "name" },
-      { label: "Quantity Sold", value: "total_sales", format: '###,###,###.# "items"' },
-      { label: "Total Revenue", value: "total_revenue", format: "₱###,###,###.00" },
-    ];
-
-    return [
-      { sheet: "Top 5 Selling Products", columns, content: topProducts },
-      { sheet: "Least 5 Selling Products", columns, content: bottomProducts },
-      { sheet: "Product Statistics", columns, content: allProducts },
     ];
   }
 
@@ -267,42 +243,6 @@ class Report {
     return retVal;
   }
 
-  static async retrieveProductPerformance({ startDate, endDate, limit, desc = false }) {
-    let retVal = [];
-
-    try {
-      const conn = await db.connect();
-      const [data] = await conn.execute(
-        `SELECT 
-          p.name, 
-          SUM(ol.quantity) AS total_sales,
-          SUM(ol.quantity * ol.selling_price) AS total_revenue 
-        FROM product p 
-        INNER JOIN order_line ol ON p.product_id = ol.product_id 
-        INNER JOIN ${"`order`"} o ON ol.order_id = o.order_id 
-        WHERE o.date_placed 
-          BETWEEN DATE_FORMAT(:startDate, '%Y-%m-%d 00:00:00') 
-          AND DATE_FORMAT(:endDate, '%Y-%m-%d 23:59:59') 
-        GROUP BY p.product_id 
-        ORDER BY total_sales ${desc ? "DESC" : "ASC"}
-        ${limit ? `LIMIT ${limit}` : ""}`,
-        {
-          startDate: startDate || Report.defaults.START_DATE,
-          endDate: endDate || Report.defaults.END_DATE,
-        }
-      );
-
-      await conn.end();
-
-      retVal = data;
-    } catch (err) {
-      console.log("[PRODUCT PERFORMANCE QUERY ERROR]", err.message);
-      throw new InternalServerError(err);
-    }
-
-    return retVal;
-  }
-
   static async retrieveAvailableSuppliers() {
     let retVal = [];
 
@@ -361,7 +301,7 @@ class Report {
     return retVal;
   }
 
-  static async retrieveDailySales(date, empId = null) {
+  static async retrieveSales(startDate, endDate, empId = null) {
     let retVal = [];
 
     try {
@@ -381,11 +321,16 @@ class Report {
         INNER JOIN employee e ON e.employee_id = o.employee_id
         INNER JOIN order_line ol ON ol.order_id = o.order_id
         INNER JOIN product p ON p.product_id = ol.product_id
-        WHERE o.date_placed BETWEEN DATE_FORMAT(:date, '%Y-%m-%d 00:00:00') 
-          AND DATE_FORMAT(:date, '%Y-%m-%d 23:59:59')
+        WHERE o.date_placed 
+          BETWEEN DATE_FORMAT(:startDate, '%Y-%m-%d 00:00:00') 
+          AND DATE_FORMAT(:endDate, '%Y-%m-%d 23:59:59')
           ${empId ? "AND e.employee_id = :empId" : ""}
         ORDER BY o.date_placed ASC;`,
-        { date, empId }
+        {
+          startDate: startDate || Report.defaults.START_DATE,
+          endDate: endDate || Report.defaults.END_DATE,
+          empId,
+        }
       );
 
       await conn.end();
