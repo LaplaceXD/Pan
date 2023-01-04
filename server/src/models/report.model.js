@@ -30,7 +30,7 @@ class Report {
   }
 
   static async getSalesReportData(startDate, endDate, empId) {
-    const sales = await Report.retrieveDailySales(startDate, endDate, empId);
+    const sales = await Report.retrieveSales(startDate, endDate, empId);
 
     const columns = [
       { label: "Date Placed", value: "date_placed" },
@@ -46,7 +46,7 @@ class Report {
 
     const grandTotalRow = columns.reduce((acc, { value }) => ({ ...acc, [value]: null }), {});
     grandTotalRow["selling_price"] = "GRAND TOTAL";
-    grandTotalRow["total_sold"] = dailySales
+    grandTotalRow["total_sold"] = sales
       .reduce((acc, { total_sold }) => acc + parseFloat(total_sold), 0)
       .toFixed(2);
 
