@@ -32,7 +32,14 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 app.get("/", (_, res) => {
-  res.status(200).send({ message: "Hello World!" });
+  res
+    .status(200)
+    .send({
+      message: "Hello World!",
+      offset: new Date().getTimezoneOffset(),
+      date: new Date(),
+      iso: new Date().toISOString(),
+    });
 });
 
 app.use("/api/v1/auth", authRoutes);
