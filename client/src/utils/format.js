@@ -13,13 +13,24 @@ function date(iso, isoFormat = false) {
   if (isoFormat) {
     const [month, day, year] = date.split("/");
     date = [year, month, day].join("-");
+  } else {
+    date = new Date(iso).toISOString();
+    const [y, m, d] = date.split("T")[0].split("-");
+    date = `${m.padStart(2, "0")}/${d.padStart(2, "0")}/${y}`;
   }
 
   return date;
 }
 
 function datetime(iso) {
-  return new Date(iso).toLocaleString();
+  const [date, time] = new Date(iso).toISOString().split("T");
+  const [y, m, d] = date.split("-");
+  const hms = time.split(".")[0];
+  const [hour, min, sec] = hms.split(":");
+
+  return `${m.padStart(2, "0")}/${d.padStart(2, "0")}/${y}, ${hour % 12 || 12}:${min}:${sec} ${
+    hour > 12 ? "PM" : "AM"
+  }`;
 }
 
 function id(id, prefix = "ID", pad = 4) {
