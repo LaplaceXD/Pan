@@ -22,7 +22,10 @@ class Order {
 
     try {
       const conn = await db.connect();
-      const [order] = await conn.execute("INSERT INTO `order` (employee_id) VALUES (:employee_id)", this);
+      const [order] = await conn.execute(
+        "INSERT INTO `order` (employee_id, date_placed) VALUES (:employee_id, :date_placed)",
+        this
+      );
       this.order_id = order.insertId;
       await conn.end();
 

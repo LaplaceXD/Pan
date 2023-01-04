@@ -30,8 +30,8 @@ class Product {
     try {
       const conn = await db.connect();
       const [data] = await conn.execute(
-        `INSERT INTO product (creator_id, category_id, name, description, unit_price)
-        VALUES (:creator_id, :category_id, :name, :description, :unit_price)`,
+        `INSERT INTO product (creator_id, category_id, name, description, unit_price, date_created)
+        VALUES (:creator_id, :category_id, :name, :description, :unit_price, :date_created)`,
         this
       );
       await conn.end();
