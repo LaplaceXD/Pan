@@ -31,15 +31,18 @@ app.use(compression());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+const { DateTime } = require("luxon");
+
 app.get("/", (_, res) => {
-  res
-    .status(200)
-    .send({
-      message: "Hello World!",
-      offset: new Date().getTimezoneOffset(),
-      date: new Date(),
-      iso: new Date().toISOString(),
-    });
+  res.status(200).send({
+    message: "Hello World!",
+    offset: new Date().getTimezoneOffset(),
+    date: new Date(),
+    iso: new Date().toISOString(),
+    luxon_date: DateTime.local().setLocale("en-US").setZone("Asia/Manila"),
+    luxon_offset: DateTime.local().setLocale("en-US").setZone("Asia/Manila").offsetNameLong,
+    luxon_iso: DateTime.local().setLocale("en-US").setZone("Asia/Manila").toISO(),
+  });
 });
 
 app.use("/api/v1/auth", authRoutes);
