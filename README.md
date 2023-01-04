@@ -43,18 +43,11 @@ REDIS_PORT        = <<your redis port>>
 VITE_SERVER_URL   = http://localhost:3000/api/v1
 ```
 
-6.  Run the following scripts in two different terminals.
+6.  Run the following script in a terminal.
 
 ```bash
-cd client
 npm i
 npm run dev
-```
-
-```bash
-cd server
-npm i
-npm start
 ```
 
 7. You should be able to login through the login portal using the following credentials.
