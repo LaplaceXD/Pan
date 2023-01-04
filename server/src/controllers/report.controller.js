@@ -1,6 +1,5 @@
-const { xlsx } = require("../providers");
+const { xlsx, DateTime } = require("../providers");
 const Report = require("../models/report.model");
-const date = require("../../helpers/date");
 const { role } = require("../constants/employee");
 
 function getHeaders(fileName) {
@@ -11,8 +10,11 @@ function getHeaders(fileName) {
 }
 
 const salesReport = async (req, res) => {
-  const month = date.getMonthOrDefault(req.query);
-  const { startDate, endDate } = date.getStartAndEndDates(month);
+  const month = req.query.month || new DateTime().previousMonth().toISODate();
+  const [y, m] = month.split("-");
+
+  const startDate = new DateTime(y, m).startOfMonth().toSQLDate();
+  const endDate = new DateTime(y, m).endOfMonth().toSQLDate();
 
   const data = await Report.getSalesReportData(startDate, endDate);
   const fileName = `Sales Report [${month}]`;
@@ -27,8 +29,11 @@ const salesReport = async (req, res) => {
 };
 
 const supplierStocksReport = async (req, res) => {
-  const month = date.getMonthOrDefault(req.query);
-  const { startDate, endDate } = date.getStartAndEndDates(month);
+  const month = req.query.month || new DateTime().previousMonth().toISODate();
+  const [y, m] = month.split("-");
+
+  const startDate = new DateTime(y, m).startOfMonth().toSQLDate();
+  const endDate = new DateTime(y, m).endOfMonth().toSQLDate();
 
   const data = await Report.getSupplierStocksReportData(startDate, endDate);
   const fileName = `Supplier Stocks Report [${month}]`;
@@ -44,7 +49,7 @@ const supplierStocksReport = async (req, res) => {
 
 const dailySalesReport = async (req, res) => {
   const isEmployee = req.auth.role === role.EMPLOYEE;
-  const date = new Date().toISOString().split("T")[0];
+  const date = DateTime.now().toISODate();
 
   const data = await Report.getSalesReportData(date, date, isEmployee ? req.auth.id : null);
   let fileName = `Daily Sales Report [${date}]`;
@@ -73,8 +78,11 @@ const employeeReport = async (req, res) => {
 };
 
 const inventoryReport = async (req, res) => {
-  const month = date.getMonthOrDefault(req.query);
-  const { startDate, endDate } = date.getStartAndEndDates(month);
+  const month = req.query.month || new DateTime().previousMonth().toISODate();
+  const [y, m] = month.split("-");
+
+  const startDate = new DateTime(y, m).startOfMonth().toSQLDate();
+  const endDate = new DateTime(y, m).endOfMonth().toSQLDate();
 
   const data = await Report.getInventoryReportData(startDate, endDate);
   const fileName = `Inventory Report [${month}]`;

@@ -1,10 +1,10 @@
 const { InternalServerError } = require("../../helpers/errors");
-const { db } = require("../providers");
+const { db, DateTime } = require("../providers");
 
 class Report {
   static defaults = {
     START_DATE: "1970-01-01",
-    END_DATE: new Date().toISOString().split("T")[0],
+    END_DATE: DateTime.now().toSQL({ includeOffset: false }),
   };
 
   static async getSupplierStocksReportData(startDate, endDate) {

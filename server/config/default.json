@@ -10,5 +10,9 @@
   },
   "mail": {
     "address": "pan.project.2104@gmail.com"
+  },
+  "date": {
+    "locale": "en-US",
+    "zone": "Asia/Manila"
   }
 }

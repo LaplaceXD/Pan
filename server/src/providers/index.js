@@ -4,6 +4,7 @@ const mail = require("./mail");
 const hash = require("./hash");
 const jwt = require("./jwt");
 const permissions = require("./permissions");
+const DateTime = require("./date");
 
 module.exports = {
   db,
@@ -12,4 +13,5 @@ module.exports = {
   permissions,
   mail,
   xlsx,
+  DateTime,
 };

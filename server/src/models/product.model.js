@@ -2,7 +2,7 @@ const Joi = require("joi");
 
 const { InternalServerError } = require("../../helpers/errors");
 
-const { db } = require("../providers");
+const { db, DateTime } = require("../providers");
 const { availability } = require("../constants/product");
 
 const Category = require("../models/categories.model");
@@ -13,7 +13,7 @@ class Product {
     this.category_id = product.category_id || null;
     this.category_name = product.category_name || "";
     this.creator_id = product.creator_id;
-    this.date_created = product.date_created || new Date();
+    this.date_created = product.date_created || DateTime.now().toSQL({ includeOffset: false });
     this.name = product.name;
     this.description = product.description;
     this.unit_price = parseFloat(product.unit_price);

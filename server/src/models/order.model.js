@@ -1,7 +1,7 @@
 const Joi = require("joi");
 
 const { InternalServerError } = require("../../helpers/errors");
-const { db } = require("../providers");
+const { db, DateTime } = require("../providers");
 
 const OrderLine = require("./orderline.model");
 const Product = require("./product.model");
@@ -11,7 +11,7 @@ class Order {
     this.order_id = order.order_id || 0;
     this.employee_id = order.employee_id;
     this.employee_name = order.employee_name || "";
-    this.date_placed = order.date_placed || new Date();
+    this.date_placed = order.date_placed || DateTime.now().toSQL({ includeOffset: false });
     this.details = order.details || [];
     this.total = order.total ? parseFloat(order.total) : 0;
   }

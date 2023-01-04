@@ -2,7 +2,7 @@ const Joi = require("joi");
 
 const { InternalServerError } = require("../../helpers/errors");
 
-const { db, jwt } = require("../providers");
+const { db, jwt, DateTime } = require("../providers");
 const { status, role } = require("../constants/employee");
 
 class Employee {
@@ -13,7 +13,7 @@ class Employee {
     this.password = employee.password || "";
     this.contact_no = employee.contact_no;
     this.email = employee.email;
-    this.date_employed = employee.date_employed || new Date();
+    this.date_employed = employee.date_employed || DateTime.now().toSQLDate();
     this.role = employee.role || role.EMPLOYEE;
     this.is_active = employee.is_active
       ? employee.is_active === true || employee.is_active === status.ACTIVE
