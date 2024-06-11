@@ -53,7 +53,7 @@ class JTIList {
   }
 }
 
-const redis = new Redis({ ...config.get("redis") });
+const redis = new Redis(config.get("redis.url"));
 const blackList = new JTIList("jti_blacklist", redis);
 const refreshList = new JTIList("jti_refreshlist", redis);
 

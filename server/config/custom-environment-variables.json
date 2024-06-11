@@ -5,10 +5,7 @@
     "password": "DB_PASSWORD"
   },
   "redis": {
-    "host": "REDIS_HOST",
-    "username": "REDIS_USERNAME",
-    "password": "REDIS_PASSWORD",
-    "port": "REDIS_PORT"
+    "url": "REDIS_URL"
   },
   "jwt": {
     "secret": "JWT_SECRET"
