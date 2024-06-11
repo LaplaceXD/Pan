@@ -5,6 +5,7 @@
   "main": "index.js",
   "private": true,
   "scripts": {
+    "build": "NODE_ENV=production node -r esm index.js",
     "start": "nodemon index.js"
   },
   "engines": {

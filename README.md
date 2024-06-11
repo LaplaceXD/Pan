@@ -46,6 +46,11 @@ VITE_SERVER_URL   = http://localhost:3000/api/v1
 6.  Run the following script in a terminal.
 
 ```bash
+cd client
+npm i
+npm run dev
+
+cd ../server
 npm i
 npm run dev
 ```
