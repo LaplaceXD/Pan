@@ -14,5 +14,8 @@
   "date": {
     "locale": "en-US",
     "zone": "Asia/Manila"
+  },
+  "client": {
+    "url": "http://localhost:5173"
   }
 }
