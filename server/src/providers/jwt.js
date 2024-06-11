@@ -36,9 +36,9 @@ function verify(token) {
 }
 
 class JTIList {
-  constructor(name) {
+  constructor(name, redis) {
     this.listName = name;
-    this.redis = new Redis({ ...config.get("redis") });
+    this.redis = redis;
   }
 
   async add(jti, exp = null) {
@@ -53,8 +53,9 @@ class JTIList {
   }
 }
 
-const blackList = new JTIList("jti_blacklist");
-const refreshList = new JTIList("jti_refreshlist");
+const redis = new Redis({ ...config.get("redis") });
+const blackList = new JTIList("jti_blacklist", redis);
+const refreshList = new JTIList("jti_refreshlist", redis);
 
 class TokenPair {
   constructor({ jti, rti = null, access, refresh = null }) {
